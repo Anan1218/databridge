@@ -6,19 +6,19 @@ export function Hero() {
     <div className="flex flex-col lg:flex-row items-center gap-12 py-20">
       <div className="flex-1 space-y-6">
         <h1 className="text-6xl font-bold">
-          ScanPass
+          DataBridge
         </h1>
         <p className="text-xl text-gray-300">
-          Setup a FastPass for your establishment. Maximize your revenue with{' '}
-          <span className="text-indigo-400">no sign up fee</span> and{' '}
-          <span className="text-indigo-400">no subscriptions</span>.
-          See how we helped make over $20,000 for our clients.
+          Simplify complex retail demand challenges using AI-powered forecasting.{' '}
+          <span className="text-indigo-400">Reduce inventory costs</span> and{' '}
+          <span className="text-indigo-400">optimize staffing</span> with data-driven predictions.
+          Join retailers saving over $100,000 annually in operational costs.
         </p>
         <Link 
           href="/signin" 
           className="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg font-medium"
         >
-          Join Now
+          Get Started
         </Link>
       </div>
       

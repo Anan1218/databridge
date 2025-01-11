@@ -20,9 +20,7 @@ export default function Navbar() {
 
   const navigation = [
     { name: "Home", href: "/" },
-    // { name: "Case Studies", href: "/case-studies" },
     { name: "Pricing", href: "/pricing" },
-    // { name: "Privacy Policy", href: "/privacy" },
   ];
 
   return (
@@ -34,14 +32,14 @@ export default function Navbar() {
             <span className="flex items-center space-x-2 text-2xl font-medium text-indigo-500 dark:text-gray-100">
               <span>
                 <Image
-                  src="/scanpasslogo.png"
-                  alt="ScanPass"
+                  src="/databridgelogo.png"
+                  alt="DataBridge"
                   width="48"
                   height="48"
                   className="w-8"
                 />
               </span>
-              <span>ScanPass</span>
+              <span>DataBridge</span>
             </span>
           </Link>
 
@@ -148,7 +146,6 @@ export default function Navbar() {
                 Sign Up/Sign In
               </Link>
             </>
-            
           )}
         </div>
       </nav>

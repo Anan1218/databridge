@@ -9,7 +9,7 @@ export default function PrivacyPolicy() {
         <section>
           <h2 className="text-2xl font-semibold mb-4 text-white">Introduction</h2>
           <p>
-            At ScanPass, we take your privacy seriously. This Privacy Policy explains how we collect, 
+            At DataBridge, we take your privacy seriously. This Privacy Policy explains how we collect, 
             use, disclose, and safeguard your information when you use our service.
           </p>
         </section>

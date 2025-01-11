@@ -1,30 +1,30 @@
 "use client";
 import { useState } from 'react';
 
-const faqItems = [
-  {
-    question: "How does the ScanPass system work?",
-    answer: "Our ScanPass system allows you to skip regular lines at attractions by reserving specific time slots. Simply select your desired attraction and preferred time, and you'll receive a designated return window."
-  },
-  {
-    question: "How many ScanPasses can I hold at once?",
-    answer: "You can hold up to 3 ScanPasses at a time. Once you use your first ScanPass, you can book another one, allowing you to continuously maximize your experience throughout the day."
-  },
-  {
-    question: "Can I modify my ScanPass reservations?",
-    answer: "Yes, you can modify or cancel your ScanPass reservations through our mobile app or website, subject to availability. Changes can be made up until your scheduled time slot."
-  },
-  {
-    question: "Are ScanPasses included with my ticket?",
-    answer: "Yes, ScanPasses are included with all standard admission tickets at no additional cost. Premium pass holders may receive additional ScanPass benefits."
-  },
-  {
-    question: "What happens if I miss my ScanPass time window?",
-    answer: "ScanPass return windows have a one-hour duration. If you miss your scheduled time window, your ScanPass will expire and you'll need to make a new reservation."
-  }
-];
-
 export function Faq() {
+  const faqs = [
+    {
+      question: "How does DataBridge's AI forecasting work?",
+      answer: "Our AI system analyzes your historical sales data, local events, weather patterns, and other relevant factors to generate accurate demand forecasts. The system continuously learns and adapts to improve prediction accuracy over time.",
+    },
+    {
+      question: "What data do I need to get started?",
+      answer: "You'll need at least 6 months of historical sales data to begin. Our system can integrate with most major POS systems and inventory management platforms to automatically import your data.",
+    },
+    {
+      question: "How accurate are the predictions?",
+      answer: "Our AI typically achieves 85-95% accuracy in demand forecasting, depending on the industry and data quality. The system's accuracy improves over time as it learns from your specific business patterns.",
+    },
+    {
+      question: "Can DataBridge integrate with my existing systems?",
+      answer: "Yes, DataBridge integrates with major retail management systems, POS systems, and inventory platforms. We provide APIs and pre-built integrations for seamless data flow.",
+    },
+    {
+      question: "How quickly can I see results?",
+      answer: "Most retailers see meaningful improvements in inventory efficiency within the first month. The full benefits of staff optimization and automated planning typically materialize within 2-3 months of implementation.",
+    },
+  ];
+
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {
@@ -33,7 +33,7 @@ export function Faq() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-4 pb-20">
-      {faqItems.map((item, index) => (
+      {faqs.map((item, index) => (
         <div key={index} className="w-full">
           <button
             onClick={() => toggleFaq(index)}

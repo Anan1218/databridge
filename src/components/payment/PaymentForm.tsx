@@ -58,9 +58,9 @@ const PaymentForm = ({ storeId, quantity, price, phoneNumber, disabled, onSucces
         <div className="text-center text-gray-600">
           Please enter a valid phone number to proceed with payment
         </div>
-        <div className="text-xs text-gray-500 text-center">
-          By purchasing, you authorize ScanPass to send a text message with a link to your pass. Message/data rates apply.
-        </div>
+        <p className="text-sm text-gray-500 mt-2">
+          By purchasing, you authorize DataBridge to send a text message with a link to your pass. Message/data rates apply.
+        </p>
       </div>
     );
   }
