@@ -23,13 +23,13 @@ export function Hero() {
       </div>
       
       <div className="flex-1 flex justify-center">
-        <div className="relative rounded-lg overflow-hidden">
+        <div className="relative rounded-lg overflow-hidden w-full max-w-2xl">
           <Image 
             src="/homepage/image1.png"
             alt="Demo"
-            width={400}
-            height={800}
-            className="h-auto object-contain rounded-lg"
+            width={800}
+            height={1000}
+            className="w-full h-auto object-contain rounded-lg"
             priority
           />
         </div>
