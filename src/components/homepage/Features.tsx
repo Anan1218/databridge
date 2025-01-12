@@ -1,7 +1,11 @@
-import { HiChartBar } from "react-icons/hi2"
-import { HiClock } from "react-icons/hi2"
-import { HiUserGroup } from "react-icons/hi2"
-import { HiCog } from "react-icons/hi2"
+import { 
+  HiNewspaper, 
+  HiStar, 
+  HiMegaphone,
+  HiChatBubbleBottomCenterText,
+  HiEnvelope,
+  HiCalendar
+} from "react-icons/hi2"
 
 interface FeatureItem {
   icon: React.ReactNode
@@ -11,24 +15,34 @@ interface FeatureItem {
 
 const features: FeatureItem[] = [
   {
-    icon: <HiChartBar className="w-8 h-8 text-indigo-400" />,
-    title: 'Demand Forecasting',
-    description: 'Leverage AI to predict customer demand patterns, optimize inventory levels, and reduce stockouts and overstock situations.',
+    icon: <HiNewspaper className="w-8 h-8 text-indigo-400" />,
+    title: 'Local News & Social Media Monitoring',
+    description: 'Automatically collect and analyze mentions of your business from local news sources and social media platforms.',
   },
   {
-    icon: <HiClock className="w-8 h-8 text-indigo-400" />,
-    title: 'Staff Optimization',
-    description: 'Schedule the right number of staff at the right time based on predicted customer traffic and sales volumes.',
+    icon: <HiStar className="w-8 h-8 text-indigo-400" />,
+    title: 'Reputation Monitoring',
+    description: 'Track and analyze your business reputation across review sites and social platforms to maintain a positive brand image.',
   },
   {
-    icon: <HiUserGroup className="w-8 h-8 text-indigo-400" />,
-    title: 'Customer Insights',
-    description: 'Understand customer behavior patterns and preferences to make data-driven merchandising and marketing decisions.',
+    icon: <HiMegaphone className="w-8 h-8 text-indigo-400" />,
+    title: 'Brand Mention Tracking',
+    description: 'Stay informed about every mention of your brand online with our comprehensive web scraping technology.',
   },
   {
-    icon: <HiCog className="w-8 h-8 text-indigo-400" />,
-    title: 'Automated Planning',
-    description: 'Automate inventory planning and staff scheduling with AI-powered recommendations tailored to your business.',
+    icon: <HiChatBubbleBottomCenterText className="w-8 h-8 text-indigo-400" />,
+    title: 'AI-Powered Insights',
+    description: 'Get concise, GPT-powered summaries of trends and insights displayed directly on your dashboard.',
+  },
+  {
+    icon: <HiEnvelope className="w-8 h-8 text-indigo-400" />,
+    title: 'Weekly Email Reports',
+    description: 'Receive detailed weekly email reports summarizing key metrics and insights about your business.',
+  },
+  {
+    icon: <HiCalendar className="w-8 h-8 text-indigo-400" />,
+    title: 'Google Calendar Integration',
+    description: 'Seamlessly integrate business insights with your Google Calendar for better operational planning.',
   },
 ]
 
@@ -37,12 +51,14 @@ export function Features() {
     <section className="relative py-20 bg-black">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white mb-4">AI-Powered Retail Intelligence</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">Transform your retail operations with DataBridge's advanced demand forecasting and optimization tools.</p>
+          <h2 className="text-3xl font-bold text-white mb-4">Your Business Command Center</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Monitor, analyze, and act on real-time business intelligence with our comprehensive suite of tools.
+          </p>
         </div>
         
         <div className="flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl">
             {features.map((feature, index) => (
               <div key={index} className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800 hover:border-indigo-500/50 transition-all duration-300">
                 <div className="flex items-start gap-4">
