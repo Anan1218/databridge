@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 export default function PricingPage() {
   return (
     <div className="py-12 px-4">
