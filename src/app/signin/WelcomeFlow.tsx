@@ -143,13 +143,41 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
         // Create user document
         await setDoc(doc(db, "users", user.uid), userDocData);
         
-        // Create empty reports collection
+        // Create empty reports collection with initial pending status
         const reportsRef = collection(db, "users", user.uid, "reports");
         await setDoc(doc(reportsRef, "initial"), {
           createdAt: new Date(),
           data: {},
           status: "pending"
         });
+
+        // Trigger report generation via FastAPI
+        try {
+          const response = await fetch('/api/generate-report', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId: user.uid,
+              email: user.email,
+              location: userData.location,
+              businessName: userData.businessName,
+              website: userData.website,
+              googleMaps: userData.googleMaps,
+              yelpUrl: userData.yelpUrl
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to trigger report generation');
+          }
+
+          console.log('Report generation triggered successfully');
+        } catch (error) {
+          console.error('Error triggering report generation:', error);
+          // Note: We don't throw here as we still want to complete the signup process
+        }
 
         onComplete(true);
       } catch (error) {
