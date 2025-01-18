@@ -31,7 +31,7 @@ const sampleNews: NewsItem[] = [
     headline: 'Global Markets Show Strong Recovery',
     summary: 'Stock markets worldwide demonstrate robust growth as investor confidence returns amid positive economic indicators.',
     source: 'Financial Times',
-    category: 'Business',
+    category: 'Social Media',
     imageUrl: 'https://source.unsplash.com/random/800x600?business',
     timestamp: new Date(),
   },
@@ -40,7 +40,7 @@ const sampleNews: NewsItem[] = [
     headline: 'New Climate Change Initiative Launched',
     summary: 'Major nations announce collaborative effort to reduce carbon emissions with ambitious targets set for 2030.',
     source: 'Environmental Report',
-    category: 'Environment',
+    category: 'Data Insights',
     imageUrl: 'https://source.unsplash.com/random/800x600?climate',
     timestamp: new Date(),
   }
@@ -57,17 +57,16 @@ export default function NewsSummary({ news = sampleNews }: NewsSummaryProps) {
   );
 
   const getCategoryColor = (category: string): string => {
+    
     const colors: { [key: string]: string } = {
-      'Local Events': 'bg-blue-100 text-blue-800',
-      business: 'bg-green-100 text-green-800',
-      health: 'bg-red-100 text-red-800',
-      politics: 'bg-purple-100 text-purple-800',
-      entertainment: 'bg-yellow-100 text-yellow-800',
-      environment: 'bg-emerald-100 text-emerald-800',
-      science: 'bg-teal-100 text-teal-800',
+      'Local Events': 'bg-green-100 text-gray-700',
+      'Social Media': 'bg-purple-100 text-gray-700',
+      'Data Insights': 'bg-blue-100 text-gray-700',
       default: 'bg-gray-100 text-gray-800'
     };
-    return colors[category.toLowerCase()] || colors.default;
+    
+    const color = colors[category] || colors.default;
+    return color;
   };
 
   const formatDate = (date: Date): string => {
@@ -116,7 +115,7 @@ export default function NewsSummary({ news = sampleNews }: NewsSummaryProps) {
           filteredNews.map(item => (
             <div 
               key={item.id}
-              className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+              className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full"
             >
               {item.imageUrl && (
                 <div className="h-48 overflow-hidden">
@@ -127,10 +126,9 @@ export default function NewsSummary({ news = sampleNews }: NewsSummaryProps) {
                   />
                 </div>
               )}
-              <div className="p-4">
+              <div className="p-4 flex flex-col flex-grow">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium
-                    ${getCategoryColor(item.category)}`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(item.category)}`}>
                     {item.category}
                   </span>
                   <span className="text-xs text-gray-500">
@@ -143,7 +141,7 @@ export default function NewsSummary({ news = sampleNews }: NewsSummaryProps) {
                 <p className="text-gray-600 text-sm line-clamp-3 mb-4">
                   {item.summary}
                 </p>
-                <div className="flex items-center justify-between">
+                <div className="mt-auto flex items-center justify-between">
                   <span className="text-xs text-gray-500">
                     Source: {item.source}
                   </span>
