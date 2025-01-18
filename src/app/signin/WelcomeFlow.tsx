@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, collection } from "firebase/firestore";
 import { db } from "./firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
 
@@ -17,6 +17,7 @@ interface UserData {
   googleMaps?: string;
   yelpUrl?: string;
   createdAt: Date;
+  email: string;
 }
 
 export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
@@ -33,6 +34,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     googleMaps: "",
     yelpUrl: "",
     createdAt: new Date(),
+    email: user?.email || "",
   });
 
   // Add effect to handle body scroll lock
@@ -45,6 +47,16 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
       document.body.style.overflow = 'unset';
     };
   }, []); // Empty dependency array means this runs once on mount
+
+  // Add effect to set email when user is available
+  useEffect(() => {
+    if (user?.email) {
+      setUserData(prev => ({
+        ...prev,
+        email: user.email!
+      }));
+    }
+  }, [user?.email]);
 
   const validateLocation = async (location: string) => {
     setIsValidating(true);
@@ -113,12 +125,36 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     } else {
       // Save user data only on completion
       try {
-        if (user?.uid) {
-          await setDoc(doc(db, "users", user.uid), userData);
-          onComplete(true); // Pass true to indicate complete setup
+        if (!user?.uid) {
+          throw new Error('No authenticated user found');
         }
+
+        if (!user.email) {
+          throw new Error('No email found for user');
+        }
+
+        const userDocData = {
+          ...userData,
+          email: user.email,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+
+        // Create user document
+        await setDoc(doc(db, "users", user.uid), userDocData);
+        
+        // Create empty reports collection
+        const reportsRef = collection(db, "users", user.uid, "reports");
+        await setDoc(doc(reportsRef, "initial"), {
+          createdAt: new Date(),
+          data: {},
+          status: "pending"
+        });
+
+        onComplete(true);
       } catch (error) {
         console.error("Error saving user data:", error);
+        alert('There was an error saving your information. Please try again.');
       }
     }
   };
