@@ -10,6 +10,8 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  isWelcomeFlow: boolean;
+  setIsWelcomeFlow: (value: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,6 +27,7 @@ export function useAuthContext() {
 export function AuthContextProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isWelcomeFlow, setIsWelcomeFlow] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -59,6 +62,8 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
         signIn: signInHandler,
         signUp: signUpHandler,
         signOut: signOutHandler,
+        isWelcomeFlow,
+        setIsWelcomeFlow,
       }}
     >
       {children}
