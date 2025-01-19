@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from "./firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
+import { businessTypes } from '@/utils/businessQueries';
 
 interface WelcomeFlowProps {
   onComplete: (completed: boolean) => void;
@@ -17,7 +18,10 @@ interface UserData {
   yelpUrl?: string;
   createdAt: Date;
   email: string;
+  businessType: string;
 }
+
+const businessTypeOptions = Object.values(businessTypes);
 
 export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
   const [step, setStep] = useState(1);
@@ -32,6 +36,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     yelpUrl: "",
     createdAt: new Date(),
     email: user?.email || "",
+    businessType: 'restaurant'
   });
 
   // Add effect to handle body scroll lock
@@ -231,17 +236,33 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
           )}
 
           {step === 2 && (
-            <div>
-              <label className="block">
-                <span className="text-gray-700 text-sm font-medium mb-2 block">Business Name</span>
-                <input
-                  type="text"
-                  value={userData.businessName || ''}
-                  onChange={(e) => setUserData({ ...userData, businessName: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900"
-                  placeholder="Enter your business name"
-                />
-              </label>
+            <div className="space-y-4">
+              <h2 className="text-2xl font-bold mb-4">What type of establishment do you run?</h2>
+              <select
+                value={userData.businessType}
+                onChange={(e) => setUserData({ ...userData, businessType: e.target.value })}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              >
+                {businessTypeOptions.map(type => (
+                  <option key={type.value} value={type.value}>
+                    {type.label}
+                  </option>
+                ))}
+              </select>
+              <div className="flex justify-between mt-6">
+                <button
+                  onClick={() => setStep(step - 1)}
+                  className="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Next
+                </button>
+              </div>
             </div>
           )}
 

@@ -197,6 +197,33 @@ export default function AdminDashboard() {
   return (
     <div className="container mx-auto px-4 py-8">
       <NewsSummary />
+      <button
+            onClick={async () => {
+              try {
+                const response = await fetch('/api/generate-report', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    email: user?.email,
+                    userId: user?.uid,
+                    searchQueries: [],
+                    urls: []
+                  }),
+                });
+                if (!response.ok) {
+                  throw new Error('Failed to generate report');
+                }
+                setReportStatus('pending');
+              } catch (error) {
+                console.error('Error generating report:', error);
+              }
+            }}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Generate Report
+          </button>
     </div>
   );
 }

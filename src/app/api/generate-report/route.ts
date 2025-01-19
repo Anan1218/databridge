@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/utils/firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import { businessTypeQueries } from '@/utils/businessQueries';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
@@ -9,6 +10,8 @@ interface ReportRequest {
   userId: string;
   searchQueries: string[];
   urls: string[];
+  location: string;
+  businessName: string;
 }
 
 export async function POST(request: Request) {
@@ -42,6 +45,8 @@ export async function POST(request: Request) {
       userId: data.userId,
       searchQueries: searchQueries,
       urls: urls,
+      location: userData?.location,
+      businessName: userData?.businessName
     };
 
     // Forward the enriched request to FastAPI
