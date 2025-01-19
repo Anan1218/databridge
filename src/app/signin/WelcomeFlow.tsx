@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { doc, setDoc, collection } from "firebase/firestore";
+import { doc, setDoc } from 'firebase/firestore';
 import { db } from "./firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
 
@@ -22,10 +21,8 @@ interface UserData {
 
 export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
   const [step, setStep] = useState(1);
-  const [isValidating, setIsValidating] = useState(false);
   const [locationError, setLocationError] = useState("");
   const { user } = useAuthContext();
-  const router = useRouter();
 
   const [userData, setUserData] = useState<UserData>({
     location: "",
@@ -59,13 +56,11 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
   }, [user?.email]);
 
   const validateLocation = async (location: string) => {
-    setIsValidating(true);
     setLocationError("");
     
     // Check for minimum length
     if (!location || location.trim().length < 5) {
       setLocationError("Please enter a complete address (e.g., 123 Main St, New York, NY)");
-      setIsValidating(false);
       return false;
     }
 
@@ -73,7 +68,6 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     const hasStreetNumber = /^\d+/.test(location);
     if (!hasStreetNumber) {
       setLocationError("Address must start with a street number");
-      setIsValidating(false);
       return false;
     }
 
@@ -81,7 +75,6 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     const hasStreetName = /\d+\s+[a-zA-Z\s]+/.test(location);
     if (!hasStreetName) {
       setLocationError("Please include a street name");
-      setIsValidating(false);
       return false;
     }
 
@@ -90,7 +83,6 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     const cityStatePattern = /,\s*[a-zA-Z\s]+,\s*[a-zA-Z]{2}(?:\s*\d{5})?$/i;
     if (!cityStatePattern.test(location)) {
       setLocationError("Please include city and state (e.g., New York, NY)");
-      setIsValidating(false);
       return false;
     }
 
@@ -98,7 +90,6 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     const parts = location.split(',').map(part => part.trim());
     if (parts.length < 3) { // Street, City, State (with optional ZIP)
       setLocationError("Please enter a complete address with street, city, and state");
-      setIsValidating(false);
       return false;
     }
 
@@ -106,11 +97,9 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     const state = parts[parts.length - 1].split(' ')[0];
     if (!/^[A-Z]{2}$/i.test(state)) {
       setLocationError("Please include a valid two-letter state code (e.g., NY)");
-      setIsValidating(false);
       return false;
     }
 
-    setIsValidating(false);
     return true;
   };
 

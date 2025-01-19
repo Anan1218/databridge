@@ -12,7 +12,7 @@ export default function SignIn() {
   const [error, setError] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const router = useRouter();
-  const { user, signIn, signUp } = useAuthContext();
+  const { signIn, signUp } = useAuthContext();
   const [showWelcomeFlow, setShowWelcomeFlow] = useState(false);
 
   const getErrorMessage = (error: FirebaseError) => {

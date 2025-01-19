@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import Image from 'next/image';
 
 interface NewsItem {
   id: string;
@@ -48,7 +49,7 @@ const sampleNews: NewsItem[] = [
 
 export default function NewsSummary({ news = sampleNews }: NewsSummaryProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(true);
   
   const categories = ['all', ...new Set(news.map(item => item.category))];
 
@@ -121,10 +122,11 @@ export default function NewsSummary({ news = sampleNews }: NewsSummaryProps) {
             >
               {item.imageUrl && (
                 <div className="h-48 overflow-hidden">
-                  <img 
+                  <Image 
                     src={item.imageUrl} 
                     alt={item.headline}
-                    className="w-full h-full object-cover"
+                    width={200}
+                    height={150}
                   />
                 </div>
               )}

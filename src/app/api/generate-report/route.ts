@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/firebase-admin';
+import { db } from '@/utils/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
@@ -14,9 +15,9 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
-    // Fetch user data from Firebase
-    const userDoc = await db.collection('users').doc(data.userId).get();
-    if (!userDoc.exists) {
+    // Fetch user data from Firebase using client SDK
+    const userDoc = await getDoc(doc(db, 'users', data.userId));
+    if (!userDoc.exists()) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
