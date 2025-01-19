@@ -23,7 +23,7 @@ const sampleNews: NewsItem[] = [
     headline: 'AI Breakthrough in Medical Research',
     summary: 'Scientists have developed a new AI model that can predict disease progression with 95% accuracy, marking a significant advancement in medical diagnostics.',
     source: 'Tech Daily',
-    category: 'Local Trends',
+    category: 'Local Events',
     imageUrl: 'https://source.unsplash.com/random/800x600?ai',
     timestamp: new Date(),
   },
@@ -49,7 +49,7 @@ const sampleNews: NewsItem[] = [
 
 export default function NewsSummary({ news = sampleNews }: NewsSummaryProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [isLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   
   const categories = ['all', ...new Set(news.map(item => item.category))];
 
@@ -120,16 +120,6 @@ export default function NewsSummary({ news = sampleNews }: NewsSummaryProps) {
               key={item.id}
               className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
             >
-              {item.imageUrl && (
-                <div className="h-48 overflow-hidden">
-                  <Image 
-                    src={item.imageUrl} 
-                    alt={item.headline}
-                    width={200}
-                    height={150}
-                  />
-                </div>
-              )}
               <div className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium
