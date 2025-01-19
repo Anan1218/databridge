@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { collection, query, getDocs, limit, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
+import NewsSummary from "./components/NewsSummary";
 
 interface Report {
   status: 'pending' | 'completed' | 'error' | 'no_reports';
@@ -195,106 +196,7 @@ export default function AdminDashboard() {
   // Only show dashboard if report status is 'completed'
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Analytics Card */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-3">Analytics</h2>
-          <div className="space-y-3">
-            <div>
-              <p className="text-gray-600">Total Views</p>
-              <p className="text-2xl font-bold">1,234</p>
-            </div>
-            <div>
-              <p className="text-gray-600">Conversion Rate</p>
-              <p className="text-2xl font-bold">2.6%</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Reports Card */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-3">Recent Reports</h2>
-          <div className="space-y-3">
-            <div className="border-b pb-2">
-              <p className="font-medium">Weekly Summary</p>
-              <p className="text-sm text-gray-600">Generated on May 1, 2024</p>
-            </div>
-            <div className="border-b pb-2">
-              <p className="font-medium">Performance Analysis</p>
-              <p className="text-sm text-gray-600">Generated on April 24, 2024</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Settings Card */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-3">Quick Settings</h2>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span>Email Notifications</span>
-              <button className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                Enabled
-              </button>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Auto-generate Reports</span>
-              <button className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                Weekly
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Statistics */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-3">Statistics</h2>
-          <div className="space-y-3">
-            <div>
-              <p className="text-gray-600">Active Users</p>
-              <p className="text-2xl font-bold">856</p>
-            </div>
-            <div>
-              <p className="text-gray-600">Average Session</p>
-              <p className="text-2xl font-bold">24m</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Activity */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-3">Recent Activity</h2>
-          <div className="space-y-3">
-            <div className="border-b pb-2">
-              <p className="font-medium">New Report Generated</p>
-              <p className="text-sm text-gray-600">2 hours ago</p>
-            </div>
-            <div className="border-b pb-2">
-              <p className="font-medium">Settings Updated</p>
-              <p className="text-sm text-gray-600">5 hours ago</p>
-            </div>
-          </div>
-        </div>
-
-        {/* System Status */}
-        <div className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-3">System Status</h2>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span>API Status</span>
-              <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                Operational
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Database</span>
-              <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                Healthy
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <NewsSummary />
     </div>
   );
 }
