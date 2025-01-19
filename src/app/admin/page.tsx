@@ -6,6 +6,7 @@ import { collection, onSnapshot, getDoc, doc, addDoc, serverTimestamp } from "fi
 import { db } from "@/utils/firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
 import NewsSummary from "./components/NewsSummary";
+import { businessTypes } from "@/utils/businessQueries";
 
 interface Report {
   status: 'pending' | 'completed' | 'error' | 'no_reports';
@@ -75,19 +76,12 @@ export default function AdminDashboard() {
     try {
       setIsGenerating(true);
       
-      // Create report document
-      const reportsRef = collection(db, 'users', user.uid, 'reports');
-      // const newReport = await addDoc(reportsRef, {
-      //   userId: user.uid,
-      //   email: user.email,
-      //   status: 'pending',
-      //   timestamp: serverTimestamp(),
-      //   location: userData.location,
-      //   businessName: userData.businessName,
-      //   searchQueries: userData.searchQueries || [],
-      //   urls: userData.urls || []
-      // });
-
+      // Get the business type queries based on userData.businessType
+      const businessTypeData = businessTypes[userData.businessType as keyof typeof businessTypes] || {
+        queries: [],
+        urls: []
+      };
+      
       // Send all necessary data to the API
       const response = await fetch('/api/process-report', {
         method: 'POST',
@@ -95,10 +89,17 @@ export default function AdminDashboard() {
         body: JSON.stringify({
           userId: user.uid,
           email: user.email,
-          searchQueries: userData.searchQueries || [],
-          urls: userData.urls || [],
+          searchQueries: [
+            ...businessTypeData.queries,           // Add predefined queries for business type
+            ...(userData.searchQueries || [])      // Add custom user queries
+          ],
+          urls: [
+            ...businessTypeData.urls,              // Add predefined URLs for business type
+            ...(userData.urls || [])               // Add custom user URLs
+          ],
           location: userData.location || null,
-          businessName: userData.businessName || null
+          businessName: userData.businessName || null,
+          businessType: userData.businessType || null
         }),
       });
 
