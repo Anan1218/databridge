@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { collection, query, getDocs, limit, orderBy } from "firebase/firestore";
+import { collection, query, getDocs, limit, orderBy, onSnapshot } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
 
 interface Report {
-  status: 'pending' | 'completed' | 'error';
+  status: 'pending' | 'completed' | 'error' | 'no_reports';
   createdAt: Date;
   data: any;
 }
@@ -18,33 +18,47 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const checkReports = async () => {
-      if (!user?.uid) {
-        setReportStatus(null);
+    if (!user?.uid) return;
+
+    const reportsRef = collection(db, 'users', user.uid, 'reports');
+    const unsubscribe = onSnapshot(reportsRef, (snapshot) => {
+      if (snapshot.empty) {
+        setReportStatus('no_reports');
         return;
       }
 
-      try {
-        console.log("Checking reports for user:", user.uid);
-        const reportsRef = collection(db, "users", user.uid, "reports");
-        const q = query(reportsRef, orderBy('createdAt', 'desc'), limit(1));
-        const snapshot = await getDocs(q);
-        
-        if (snapshot.empty) {
-          setReportStatus(null);
-        } else {
-          const latestReport = snapshot.docs[0].data() as Report;
-          setReportStatus(latestReport.status);
-          console.log("Latest report status:", latestReport.status);
-        }
-      } catch (error) {
-        console.error("Error checking reports:", error);
+      // Get the most recent report
+      const latestReport = snapshot.docs
+        .map(doc => ({
+          status: doc.data().status,
+          createdAt: doc.data().createdAt,
+          data: doc.data().data,
+          id: doc.id
+        }))
+        .sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate())[0] as Report;
+
+      if (latestReport) {
+        console.log("Latest report status:", latestReport.status);
+        setReportStatus(latestReport.status);
+      } else {
         setReportStatus(null);
       }
-    };
+    });
 
-    checkReports();
-  }, [user?.uid]);
+    return () => unsubscribe();
+  }, [user]);
+
+  if (!user) {
+    return null;
+  }
+
+  if (reportStatus === null) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   if (!user || !reportStatus || reportStatus === 'pending') {
     return (
@@ -62,6 +76,37 @@ export default function AdminDashboard() {
           >
             Return Home
           </button>
+
+          {/** Regenerate Report Button , can remove this later*/}
+          <div className="space-y-4">
+            <button
+              onClick={async () => {
+                try {
+                  const response = await fetch('/api/generate-report', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      email: user?.email,
+                      userId: user?.uid,
+                      searchQueries: [],
+                      urls: []
+                    }),
+                  });
+                  if (!response.ok) {
+                    throw new Error('Failed to regenerate report');
+                  }
+                  setReportStatus('pending');
+                } catch (error) {
+                  console.error('Error regenerating report:', error);
+                }
+              }}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Regenerate Report
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -73,14 +118,74 @@ export default function AdminDashboard() {
         <div className="text-center max-w-md p-4">
           <h2 className="text-2xl font-bold mb-4 text-red-600">Report Generation Failed</h2>
           <p className="text-gray-500 mb-6">
-            There was an error generating your report. Our team has been notified and will look into this.
-            Please try again later.
+            There was an error generating your report. Please try regenerating the report.
           </p>
           <button
-            onClick={() => router.push("/")}
+            onClick={async () => {
+              try {
+                const response = await fetch('/api/generate-report', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    email: user?.email,
+                    userId: user?.uid,
+                    searchQueries: [],
+                    urls: []
+                  }),
+                });
+                if (!response.ok) {
+                  throw new Error('Failed to regenerate report');
+                }
+                setReportStatus('pending');
+              } catch (error) {
+                console.error('Error regenerating report:', error);
+              }
+            }}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Return Home
+            Regenerate Report
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (reportStatus === 'no_reports') {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <div className="text-center max-w-md p-4">
+          <h2 className="text-2xl font-bold mb-4">No Reports Available</h2>
+          <p className="text-gray-500 mb-6">
+            You haven't generated any reports yet. Click below to generate your first report.
+          </p>
+          <button
+            onClick={async () => {
+              try {
+                const response = await fetch('/api/generate-report', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    email: user?.email,
+                    userId: user?.uid,
+                    searchQueries: [],
+                    urls: []
+                  }),
+                });
+                if (!response.ok) {
+                  throw new Error('Failed to generate report');
+                }
+                setReportStatus('pending');
+              } catch (error) {
+                console.error('Error generating report:', error);
+              }
+            }}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Generate Report
           </button>
         </div>
       </div>

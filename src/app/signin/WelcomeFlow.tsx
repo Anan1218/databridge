@@ -144,12 +144,12 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
         await setDoc(doc(db, "users", user.uid), userDocData);
         
         // Create empty reports collection with initial pending status
-        const reportsRef = collection(db, "users", user.uid, "reports");
-        await setDoc(doc(reportsRef, "initial"), {
-          createdAt: new Date(),
-          data: {},
-          status: "pending"
-        });
+        // const reportsRef = collection(db, "users", user.uid, "reports");
+        // await setDoc(doc(reportsRef, "initial"), {
+        //   createdAt: new Date(),
+        //   data: {},
+        //   status: "pending"
+        // });
 
         // Trigger report generation via FastAPI
         try {
