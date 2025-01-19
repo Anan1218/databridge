@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { collection, onSnapshot, getDoc, doc } from "firebase/firestore";
+import { collection, onSnapshot, getDoc, doc, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
 import NewsSummary from "./components/NewsSummary";
@@ -18,6 +18,7 @@ export default function AdminDashboard() {
   const { user } = useAuthContext();
   const router = useRouter();
   const [userData, setUserData] = useState<any>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -33,11 +34,15 @@ export default function AdminDashboard() {
       const latestReport = snapshot.docs
         .map(doc => ({
           status: doc.data().status,
-          createdAt: doc.data().createdAt,
+          createdAt: doc.data().timestamp,
           data: doc.data().data,
           id: doc.id
         }))
-        .sort((a, b) => b.createdAt.toDate() - a.createdAt.toDate())[0] as Report;
+        .sort((a, b) => {
+          const dateA = a.createdAt?.toDate?.() || new Date(0);
+          const dateB = b.createdAt?.toDate?.() || new Date(0);
+          return dateB.getTime() - dateA.getTime();
+        })[0] as Report;
 
       if (latestReport) {
         console.log("Latest report status:", latestReport.status);
@@ -63,6 +68,49 @@ export default function AdminDashboard() {
 
     fetchUserData();
   }, [user]);
+
+  const generateReport = async () => {
+    if (!user?.uid || !userData || isGenerating) return;
+    
+    try {
+      setIsGenerating(true);
+      
+      // Create report document
+      const reportsRef = collection(db, 'users', user.uid, 'reports');
+      // const newReport = await addDoc(reportsRef, {
+      //   userId: user.uid,
+      //   email: user.email,
+      //   status: 'pending',
+      //   timestamp: serverTimestamp(),
+      //   location: userData.location,
+      //   businessName: userData.businessName,
+      //   searchQueries: userData.searchQueries || [],
+      //   urls: userData.urls || []
+      // });
+
+      // Send all necessary data to the API
+      const response = await fetch('/api/process-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.uid,
+          email: user.email,
+          searchQueries: userData.searchQueries || [],
+          urls: userData.urls || [],
+          location: userData.location || null,
+          businessName: userData.businessName || null
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to process report');
+      setReportStatus('pending');
+    } catch (error) {
+      console.error('Error generating report:', error);
+      setReportStatus('error');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   if (!user) {
     return null;
@@ -92,39 +140,6 @@ export default function AdminDashboard() {
           >
             Return Home
           </button>
-
-          {/** Regenerate Report Button , can remove this later*/}
-          <div className="space-y-4">
-            <button
-              onClick={async () => {
-                try {
-                  const response = await fetch('/api/generate-report', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      email: user?.email,
-                      userId: user?.uid,
-                      searchQueries: [],
-                      urls: [],
-                      location: userData?.location,
-                      businessName: userData?.businessName
-                    }),
-                  });
-                  if (!response.ok) {
-                    throw new Error('Failed to regenerate report');
-                  }
-                  setReportStatus('pending');
-                } catch (error) {
-                  console.error('Error regenerating report:', error);
-                }
-              }}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Regenerate Report
-            </button>
-          </div>
         </div>
       </div>
     );
@@ -139,30 +154,7 @@ export default function AdminDashboard() {
             There was an error generating your report. Please try regenerating the report.
           </p>
           <button
-            onClick={async () => {
-              try {
-                const response = await fetch('/api/generate-report', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    email: user?.email,
-                    userId: user?.uid,
-                    searchQueries: [],
-                    urls: [],
-                    location: userData?.location,
-                    businessName: userData?.businessName
-                  }),
-                });
-                if (!response.ok) {
-                  throw new Error('Failed to regenerate report');
-                }
-                setReportStatus('pending');
-              } catch (error) {
-                console.error('Error regenerating report:', error);
-              }
-            }}
+            onClick={generateReport}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Regenerate Report
@@ -181,30 +173,7 @@ export default function AdminDashboard() {
             You haven't generated any reports yet. Click below to generate your first report.
           </p>
           <button
-            onClick={async () => {
-              try {
-                const response = await fetch('/api/generate-report', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    email: user?.email,
-                    userId: user?.uid,
-                    searchQueries: [],
-                    urls: [],
-                    location: userData?.location,
-                    businessName: userData?.businessName
-                  }),
-                });
-                if (!response.ok) {
-                  throw new Error('Failed to generate report');
-                }
-                setReportStatus('pending');
-              } catch (error) {
-                console.error('Error generating report:', error);
-              }
-            }}
+            onClick={generateReport}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Generate Report
@@ -219,34 +188,14 @@ export default function AdminDashboard() {
     <div className="container mx-auto px-4 py-8">
       <NewsSummary />
       <button
-            onClick={async () => {
-              try {
-                const response = await fetch('/api/generate-report', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({
-                    email: user?.email,
-                    userId: user?.uid,
-                    location: userData?.location,
-                    businessName: userData?.businessName,
-                    searchQueries: [],
-                    urls: []
-                  }),
-                });
-                if (!response.ok) {
-                  throw new Error('Failed to generate report');
-                }
-                setReportStatus('pending');
-              } catch (error) {
-                console.error('Error generating report:', error);
-              }
-            }}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Generate Report
-          </button>
+        onClick={generateReport}
+        disabled={isGenerating}
+        className={`bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors ${
+          isGenerating ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+        }`}
+      >
+        {isGenerating ? 'Generating...' : 'Generate Report'}
+      </button>
     </div>
   );
 }

@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
+import { db } from '@/utils/firebase';
+import { useAuthContext } from '@/contexts/AuthContext';
 import Image from 'next/image';
 
 interface NewsItem {
@@ -17,40 +20,52 @@ interface NewsSummaryProps {
   news?: NewsItem[];
 }
 
-const sampleNews: NewsItem[] = [
-  {
-    id: '1',
-    headline: 'AI Breakthrough in Medical Research',
-    summary: 'Scientists have developed a new AI model that can predict disease progression with 95% accuracy, marking a significant advancement in medical diagnostics.',
-    source: 'Tech Daily',
-    category: 'Local Events',
-    imageUrl: 'https://source.unsplash.com/random/800x600?ai',
-    timestamp: new Date(),
-  },
-  {
-    id: '2',
-    headline: 'Global Markets Show Strong Recovery',
-    summary: 'Stock markets worldwide demonstrate robust growth as investor confidence returns amid positive economic indicators.',
-    source: 'Financial Times',
-    category: 'Social Media',
-    imageUrl: 'https://source.unsplash.com/random/800x600?business',
-    timestamp: new Date(),
-  },
-  {
-    id: '3',
-    headline: 'New Climate Change Initiative Launched',
-    summary: 'Major nations announce collaborative effort to reduce carbon emissions with ambitious targets set for 2030.',
-    source: 'Environmental Report',
-    category: 'Analytics',
-    imageUrl: 'https://source.unsplash.com/random/800x600?climate',
-    timestamp: new Date(),
-  }
-];
-
-export default function NewsSummary({ news = sampleNews }: NewsSummaryProps) {
+export default function NewsSummary() {
+  const [news, setNews] = useState<NewsItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuthContext();
   
+  useEffect(() => {
+    async function fetchNews() {
+      if (!user?.uid) return;
+      
+      try {
+        // First, get the latest report
+        const reportsRef = collection(db, 'users', user.uid, 'reports');
+        const reportsQuery = query(reportsRef, orderBy('timestamp', 'desc'), limit(1));
+        const reportsSnapshot = await getDocs(reportsQuery);
+        
+        if (reportsSnapshot.empty) return;
+        
+        const latestReportId = reportsSnapshot.docs[0].id;
+        
+        // Then get events from the latest report
+        const eventsRef = collection(db, 'users', user.uid, 'reports', latestReportId, 'events');
+        const eventsQuery = query(eventsRef, orderBy('timestamp', 'desc'), limit(10));
+        
+        const querySnapshot = await getDocs(eventsQuery);
+        const newsItems = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          headline: doc.data().name || '',
+          summary: doc.data().description || '',
+          source: doc.data().url || 'Unknown',
+          category: doc.data().category || 'General',
+          imageUrl: doc.data().imageUrl,
+          timestamp: doc.data().timestamp?.toDate() || new Date(),
+        }));
+        
+        setNews(newsItems);
+      } catch (error) {
+        console.error('Error fetching news:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchNews();
+  }, [user]);
+
   const categories = ['all', ...new Set(news.map(item => item.category))];
 
   const filteredNews = news.filter(item => 
