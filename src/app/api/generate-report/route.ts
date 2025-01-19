@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/utils/firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { businessTypeQueries } from '@/utils/businessQueries';
+import { businessTypes } from '@/utils/businessQueries';
+import { getDoc, doc } from 'firebase/firestore';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
 
@@ -18,35 +18,35 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
-    // Fetch user data from Firebase using client SDK
+    // Fetch user data from Firebase
     const userDoc = await getDoc(doc(db, 'users', data.userId));
     if (!userDoc.exists()) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     const userData = userDoc.data();
-
-    // Collect all URLs into an array, filtering out empty strings
-    const urls = [
-      userData?.website,
-      userData?.googleMaps,
-      userData?.yelpUrl
-    ].filter(url => url && url.trim() !== '');
+    const businessType = businessTypes[userData?.businessType || 'restaurant'];
 
     // Create search queries array with business name and location
     const searchQueries = [
       userData?.businessName,
-      userData?.location
+      userData?.location,
+      ...businessType.queries
     ].filter(query => query && query.trim() !== '');
 
-    // Combine the request data with user data from Firebase
-    const enrichedData: ReportRequest = {
+    // Collect all URLs into an array
+    const urls = [
+      userData?.website,
+      userData?.googleMaps,
+      userData?.yelpUrl,
+      ...businessType.urls || []
+    ].filter(url => url && url.trim() !== '');
+
+    const enrichedData = {
       email: data.email,
       userId: data.userId,
-      searchQueries: searchQueries,
-      urls: urls,
-      location: userData?.location,
-      businessName: userData?.businessName
+      searchQueries,
+      urls
     };
 
     // Forward the enriched request to FastAPI
