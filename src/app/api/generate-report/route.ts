@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
     const userData = userDoc.data();
     const businessType = businessTypes[userData?.businessType || 'restaurant'];
-
+    
     // Create search queries array with business name and location
     const searchQueries = [
       userData?.businessName,
