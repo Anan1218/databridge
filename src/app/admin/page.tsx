@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { collection, onSnapshot, getDoc, doc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
-import NewsSummary from "./components/NewsSummary";
+import NewsSummary from "./components/LocalEvents";
 import { businessTypes } from "@/utils/businessQueries";
 import DashboardMetrics from "./components/DashboardMetrics";
 import WebsitePerformance from "./components/WebsitePerformance";
@@ -223,19 +223,6 @@ export default function AdminDashboard() {
         <div className="bg-white">
           <WebsitePerformance />
         </div>
-      </div>
-
-      {/* Generate Report Button */}
-      <div className="px-6">
-        <button
-          onClick={generateReport}
-          disabled={isGenerating}
-          className={`w-full bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors ${
-            isGenerating ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
-          }`}
-        >
-          {isGenerating ? 'Generating...' : 'Generate Report'}
-        </button>
       </div>
     </div>
   );
