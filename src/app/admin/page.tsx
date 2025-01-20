@@ -188,7 +188,7 @@ export default function AdminDashboard() {
 
   // Only show dashboard if report status is 'completed'
   return (
-    <div className="flex-1 bg-gray-100">
+    <div className="flex-1">
       <div className="bg-slate-700 sticky top-0 z-10">
         <div className="container mx-auto">
           {/* Report Filter Bar */}
@@ -217,25 +217,25 @@ export default function AdminDashboard() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Overview Section */}
-        <div className="bg-white rounded-lg shadow-sm mb-8">
-          <div className="p-6">
-            <h2 className="text-xl font-bold text-slate-700 mb-6">OVERVIEW</h2>
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-slate-700 mb-6">OVERVIEW</h2>
+          <div className="bg-white rounded-lg shadow-sm p-6">
             <DashboardMetrics />
           </div>
         </div>
 
         {/* Website Performance Section */}
-        <div className="bg-white rounded-lg shadow-sm mb-8">
-          <div className="p-6">
-            <h2 className="text-xl font-bold text-slate-700 mb-6">WEBSITE PERFORMANCE</h2>
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-slate-700 mb-6">WEBSITE PERFORMANCE</h2>
+          <div className="bg-white rounded-lg shadow-sm p-6">
             <WebsitePerformance />
           </div>
         </div>
 
         {/* News Summary Section */}
-        <div className="bg-white rounded-lg shadow-sm mb-8">
-          <div className="p-6">
-            <h2 className="text-xl font-bold text-slate-700 mb-6">NEWS & UPDATES</h2>
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-slate-700 mb-6">NEWS & UPDATES</h2>
+          <div className="bg-white rounded-lg shadow-sm p-6">
             <NewsSummary />
           </div>
         </div>
