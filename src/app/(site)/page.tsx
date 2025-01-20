@@ -1,8 +1,8 @@
-import { Container } from "../components/Container";
-import { Hero } from "../components/homepage/Hero";
-import { SectionTitle } from "../components/homepage/SectionTitle";
-import { Faq } from "../components/homepage/Faq";
-import { Features } from "../components/homepage/Features";
+import { Container } from "../../components/Container";
+import { Hero } from "../../components/homepage/Hero";
+import { SectionTitle } from "../../components/homepage/SectionTitle";
+import { Faq } from "../../components/homepage/Faq";
+import { Features } from "../../components/homepage/Features";
 
 export default function Home() {
   return (

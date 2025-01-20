@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthContextProvider } from '@/contexts/AuthContext';
-import Navbar from '@/components/Navbar/Navbar';
-import Footer from '@/components/Footer/Footer';
 
 export const metadata: Metadata = {
   title: "DataBridge",
@@ -22,13 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthContextProvider>
-          <div className="min-h-screen bg-background flex flex-col">
-            <Navbar />
-            <main className="container mx-auto px-4 py-8 flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          {children}
         </AuthContextProvider>
       </body>
     </html>
