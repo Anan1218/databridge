@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
 import { useAuthContext } from '@/contexts/AuthContext';
-import Image from 'next/image';
 
 interface NewsItem {
   id: string;
@@ -13,10 +12,6 @@ interface NewsItem {
   status: string;
   timestamp: Date;
   userId: string;
-}
-
-interface NewsSummaryProps {
-  news?: NewsItem[];
 }
 
 export default function NewsSummary() {
@@ -101,7 +96,7 @@ export default function NewsSummary() {
             </div>
           ))
         ) : (
-          news.map(item => (
+          news.map((item) => (
             <div 
               key={item.id}
               className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
@@ -122,8 +117,9 @@ export default function NewsSummary() {
                   {expandedItems.has(item.id) ? item.content : getContentPreview(item.content)}
                 </p>
                 <div className="flex items-center justify-between">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium
-                    ${item.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    item.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                  }`}>
                     {item.status}
                   </span>
                   <button
@@ -140,4 +136,4 @@ export default function NewsSummary() {
       </div>
     </div>
   );
-} 
+}
