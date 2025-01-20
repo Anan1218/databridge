@@ -5,18 +5,33 @@ import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
 import { useAuthContext } from '@/contexts/AuthContext';
 
-interface NewsItem {
+interface BaseItem {
   id: string;
-  content: string;
-  email: string;
-  status: string;
   timestamp: Date;
-  userId: string;
   type: string;
 }
 
+interface NewsItem extends BaseItem {
+  content: string;
+  email: string;
+  status: string;
+  userId: string;
+  type: 'report';
+}
+
+interface EventItem extends BaseItem {
+  name: string;
+  description: string;
+  date: string;
+  location: string;
+  url: string;
+  type: 'event';
+}
+
+type LocalItem = NewsItem | EventItem;
+
 export default function LocalEvents() {
-  const [news, setNews] = useState<NewsItem[]>([]);
+  const [news, setNews] = useState<LocalItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const { user } = useAuthContext();
@@ -26,8 +41,10 @@ export default function LocalEvents() {
       if (!user?.uid) return;
       
       try {
+        console.log('Current user ID:', user.uid);
         // Fetch reports
         const eventsRef = collection(db, 'users', user.uid, 'reports');
+        console.log('Fetching from path:', `users/${user.uid}/reports`);
         const reportsQuery = query(
           eventsRef,
           orderBy('timestamp', 'desc'),
@@ -35,21 +52,27 @@ export default function LocalEvents() {
         );
         
         const reportsSnapshot = await getDocs(reportsQuery);
-        const reportItems = reportsSnapshot.docs.map(doc => ({
-          id: doc.id,
-          content: doc.data().content || '',
-          email: doc.data().email || '',
-          status: doc.data().status || 'unknown',
-          timestamp: doc.data().timestamp?.toDate() || new Date(),
-          userId: doc.data().userId || '',
-          type: 'report'
-        }));
+        console.log('Reports found:', reportsSnapshot.size);
+        
+        const reportItems = reportsSnapshot.docs.map(doc => {
+          console.log('Report data:', doc.data());
+          return ({
+            id: doc.id,
+            content: doc.data().content || '',
+            email: doc.data().email || '',
+            status: doc.data().status || 'unknown',
+            timestamp: doc.data().timestamp?.toDate() || new Date(),
+            userId: doc.data().userId || '',
+            type: 'report' as const
+          });
+        });
 
         // Fetch events from the events subcollection of each report
         const allEvents = [];
         for (const report of reportItems) {
           const eventsRef = collection(db, 'users', user.uid, 'reports', report.id, 'events');
           const eventsSnapshot = await getDocs(eventsRef);
+          console.log(`Events found for report ${report.id}:`, eventsSnapshot.size);
           const events = eventsSnapshot.docs.map(doc => ({
             id: doc.id,
             name: doc.data().name || '',
@@ -58,7 +81,7 @@ export default function LocalEvents() {
             location: doc.data().location || '',
             url: doc.data().url || '',
             timestamp: doc.data().timestamp?.toDate() || new Date(),
-            type: 'event'
+            type: 'event' as const
           }));
           allEvents.push(...events);
         }

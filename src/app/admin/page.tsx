@@ -5,10 +5,9 @@ import { useRouter } from "next/navigation";
 import { collection, onSnapshot, getDoc, doc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
-import NewsSummary from "./components/LocalEvents";
-import { businessTypes } from "@/utils/businessQueries";
 import DashboardMetrics from "./components/DashboardMetrics";
 import WebsitePerformance from "./components/WebsitePerformance";
+import GenerateReport from "./components/GenerateReport";
 
 interface Report {
   status: 'pending' | 'completed' | 'error' | 'no_reports';
@@ -21,7 +20,6 @@ export default function AdminDashboard() {
   const { user } = useAuthContext();
   const router = useRouter();
   const [userData, setUserData] = useState<any>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -72,62 +70,15 @@ export default function AdminDashboard() {
     fetchUserData();
   }, [user]);
 
-  const generateReport = async () => {
-    if (!user?.uid || !userData || isGenerating) return;
-    
-    try {
-      setIsGenerating(true);
-      
-      // Get the business type queries based on userData.businessType
-      const businessTypeData = businessTypes[userData.businessType as keyof typeof businessTypes] || {
-        queries: [],
-        urls: []
-      };
-      
-      // Send all necessary data to the API
-      const response = await fetch('/api/process-report', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user.uid,
-          email: user.email,
-          searchQueries: [
-            ...businessTypeData.queries,           // Add predefined queries for business type
-            ...(userData.searchQueries || [])      // Add custom user queries
-          ],
-          urls: [
-            ...businessTypeData.urls,              // Add predefined URLs for business type
-            ...(userData.urls || [])               // Add custom user URLs
-          ],
-          location: userData.location || null,
-          businessName: userData.businessName || null,
-          businessType: userData.businessType || null
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to process report');
-      setReportStatus('pending');
-    } catch (error) {
-      console.error('Error generating report:', error);
-      setReportStatus('error');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   if (!user) {
     return null;
   }
 
-  if (reportStatus === null) {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-    );
+  if (reportStatus === null || reportStatus === 'no_reports') {
+    return <GenerateReport type="business" onSuccess={() => setReportStatus('pending')} />;
   }
 
-  if (!user || !reportStatus || reportStatus === 'pending') {
+  if (reportStatus === 'pending') {
     return (
       <div className="flex items-center justify-center h-[50vh]">
         <div className="text-center max-w-md p-4">
@@ -149,41 +100,7 @@ export default function AdminDashboard() {
   }
 
   if (reportStatus === 'error') {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="text-center max-w-md p-4">
-          <h2 className="text-2xl font-bold mb-4 text-red-600">Report Generation Failed</h2>
-          <p className="text-gray-500 mb-6">
-            There was an error generating your report. Please try regenerating the report.
-          </p>
-          <button
-            onClick={generateReport}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Regenerate Report
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (reportStatus === 'no_reports') {
-    return (
-      <div className="flex items-center justify-center h-[50vh]">
-        <div className="text-center max-w-md p-4">
-          <h2 className="text-2xl font-bold mb-4">No Reports Available</h2>
-          <p className="text-gray-500 mb-6">
-            You haven't generated any reports yet. Click below to generate your first report.
-          </p>
-          <button
-            onClick={generateReport}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Generate Report
-          </button>
-        </div>
-      </div>
-    );
+    return <GenerateReport type="business" onSuccess={() => setReportStatus('pending')} />;
   }
 
   // Only show dashboard if report status is 'completed'
