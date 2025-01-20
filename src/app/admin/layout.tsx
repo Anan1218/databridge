@@ -1,13 +1,9 @@
-import { AuthContextProvider } from '@/contexts/AuthContext';
+import AdminLayout from './components/AdminLayout';
 
-export default function AdminLayout({
+export default function Layout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen bg-background">
-      {children}
-    </div>
-  );
+  return <AdminLayout>{children}</AdminLayout>;
 } 
