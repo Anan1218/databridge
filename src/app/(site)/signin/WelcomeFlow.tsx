@@ -116,68 +116,33 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     
     if (step < 5) {
       setStep(step + 1);
-    } else {
-      // Save user data only on completion
-      try {
-        if (!user?.uid) {
-          throw new Error('No authenticated user found');
-        }
+    }
+  };
 
-        if (!user.email) {
-          throw new Error('No email found for user');
-        }
-
-        const userDocData = {
-          ...userData,
-          email: user.email,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-
-        // Create user document
-        await setDoc(doc(db, "users", user.uid), userDocData);
-        
-        // Create empty reports collection with initial pending status
-        // const reportsRef = collection(db, "users", user.uid, "reports");
-        // await setDoc(doc(reportsRef, "initial"), {
-        //   createdAt: new Date(),
-        //   data: {},
-        //   status: "pending"
-        // });
-
-        // Trigger report generation via FastAPI
-        try {
-          const response = await fetch('/api/generate-report', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              userId: user.uid,
-              email: user.email,
-              location: userData.location,
-              businessName: userData.businessName,
-              website: userData.website,
-              googleMaps: userData.googleMaps,
-              yelpUrl: userData.yelpUrl
-            }),
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to trigger report generation');
-          }
-
-          console.log('Report generation triggered successfully');
-        } catch (error) {
-          console.error('Error triggering report generation:', error);
-          // Note: We don't throw here as we still want to complete the signup process
-        }
-
-        onComplete(true);
-      } catch (error) {
-        console.error("Error saving user data:", error);
-        alert('There was an error saving your information. Please try again.');
+  const handleFinish = async () => {
+    try {
+      if (!user?.uid) {
+        throw new Error('No authenticated user found');
       }
+
+      if (!user.email) {
+        throw new Error('No email found for user');
+      }
+
+      const userDocData = {
+        ...userData,
+        email: user.email,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      // Create user document
+      await setDoc(doc(db, "users", user.uid), userDocData);
+      
+      onComplete(true);
+    } catch (error) {
+      console.error("Error during finish:", error);
+      alert('There was an error completing your setup. Please try again.');
     }
   };
 
@@ -194,7 +159,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
       <div className="bg-white rounded-xl w-[600px] p-10 relative shadow-2xl">
         <button 
           onClick={handleExit}
-          className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute top-6 right-6 text-gray-600 hover:text-gray-800 transition-colors"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -202,28 +167,26 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
         </button>
 
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900">Let's Get Started!</h2>
-          <p className="text-gray-500 mt-2">Please fill in your business details</p>
+          <h2 className="text-2xl font-semibold text-gray-900">Let's Get Started!</h2>
+          <p className="text-gray-600 mt-2">Please fill in your business details</p>
         </div>
         
-        <div className="min-h-[180px]">
+        <div className="min-h-[180px] space-y-6">
           {step === 1 && (
-            <div>
-              <label className="block">
-                <span className="text-gray-700 text-sm font-medium block mb-2">
-                  Location <span className="text-red-500">*</span>
-                </span>
-                <input
-                  type="text"
-                  value={userData.location}
-                  onChange={(e) => setUserData({ ...userData, location: e.target.value })}
-                  className={`w-full px-4 py-3 rounded-lg border ${
-                    locationError ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
-                  } focus:ring-2 focus:border-transparent transition-all text-gray-900`}
-                  placeholder="e.g., 123 Main St, New York, NY"
-                  required
-                />
+            <div className="space-y-2">
+              <label className="block text-gray-700 text-sm font-medium">
+                Location <span className="text-red-500">*</span>
               </label>
+              <input
+                type="text"
+                value={userData.location}
+                onChange={(e) => setUserData({ ...userData, location: e.target.value })}
+                className={`w-full px-4 py-3 rounded-lg border ${
+                  locationError ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                } focus:ring-2 focus:border-transparent transition-all text-gray-700`}
+                placeholder="e.g., 123 Main St, New York, NY"
+                required
+              />
               {locationError && (
                 <div className="mt-2 text-red-500 text-sm flex items-start">
                   <svg className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -237,11 +200,11 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
 
           {step === 2 && (
             <div className="space-y-4">
-              <h2 className="text-2xl font-bold mb-4">What type of establishment do you run?</h2>
+              <label className="block text-gray-700 text-sm font-medium">Establishment Type</label>
               <select
                 value={userData.businessType}
                 onChange={(e) => setUserData({ ...userData, businessType: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700"
               >
                 {businessTypeOptions.map(type => (
                   <option key={type.value} value={type.value}>
@@ -249,107 +212,66 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
                   </option>
                 ))}
               </select>
-              <div className="flex justify-between mt-6">
-                <button
-                  onClick={() => setStep(step - 1)}
-                  className="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Next
-                </button>
-              </div>
             </div>
           )}
 
           {step === 3 && (
             <div>
-              <label className="block">
-                <span className="text-gray-700 text-sm font-medium mb-2 block">Website</span>
-                <input
-                  type="url"
-                  value={userData.website || ''}
-                  onChange={(e) => setUserData({ ...userData, website: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900"
-                  placeholder="https://www.example.com"
-                />
-              </label>
+              <label className="block text-gray-700 text-sm font-medium mb-2">Website</label>
+              <input
+                type="url"
+                value={userData.website || ''}
+                onChange={(e) => setUserData({ ...userData, website: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700"
+                placeholder="https://www.example.com"
+              />
             </div>
           )}
 
           {step === 4 && (
             <div>
-              <label className="block">
-                <span className="text-gray-700 text-sm font-medium mb-2 block">Google Maps Link</span>
-                <input
-                  type="url"
-                  value={userData.googleMaps || ''}
-                  onChange={(e) => setUserData({ ...userData, googleMaps: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900"
-                  placeholder="https://maps.google.com/..."
-                />
-              </label>
+              <label className="block text-gray-700 text-sm font-medium mb-2">Google Maps Link</label>
+              <input
+                type="url"
+                value={userData.googleMaps || ''}
+                onChange={(e) => setUserData({ ...userData, googleMaps: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700"
+                placeholder="https://maps.google.com/..."
+              />
             </div>
           )}
 
           {step === 5 && (
             <div>
-              <label className="block">
-                <span className="text-gray-700 text-sm font-medium mb-2 block">Yelp Link</span>
-                <input
-                  type="url"
-                  value={userData.yelpUrl || ''}
-                  onChange={(e) => setUserData({ ...userData, yelpUrl: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900"
-                  placeholder="https://www.yelp.com/..."
-                />
-              </label>
+              <label className="block text-gray-700 text-sm font-medium mb-2">Yelp Link</label>
+              <input
+                type="url"
+                value={userData.yelpUrl || ''}
+                onChange={(e) => setUserData({ ...userData, yelpUrl: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700"
+                placeholder="https://www.yelp.com/..."
+              />
             </div>
           )}
-
-          <div className="flex justify-between mt-6">
-            {step > 1 ? (
-              <button
-                onClick={() => setStep(step - 1)}
-                className="px-6 py-2 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-              >
-                Back
-              </button>
-            ) : (
-              <div></div>
-            )}
-            
-            <button
-              onClick={async () => {
-                if (step === 1) {
-                  if (userData.location) {
-                    const isValid = await validateLocation(userData.location);
-                    if (isValid) setStep(step + 1);
-                  }
-                } else if (step === 5) {
-                  handleNext();
-                } else {
-                  setStep(step + 1);
-                }
-              }}
-              disabled={step === 1 && !userData.location}
-              className={`px-6 py-2 rounded-lg font-medium transition-colors
-                ${step === 1 && !userData.location 
-                  ? 'bg-blue-300 text-white cursor-not-allowed' 
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-            >
-              {step === 5 ? 'Complete' : 'Next'}
-            </button>
-          </div>
         </div>
 
-        <div className="mt-8 text-center">
-          <p className="text-sm text-gray-500 mb-4">
+        <div className="flex justify-between mt-8">
+          <button
+            onClick={() => setStep(step - 1)}
+            className="px-6 py-2 bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 rounded-lg transition-colors"
+          >
+            Back
+          </button>
+          <button
+            onClick={step === 5 ? handleFinish : handleNext}
+            className="px-6 py-2 bg-blue-600 text-white font-medium hover:bg-blue-700 rounded-lg transition-colors"
+          >
+            {step === 5 ? 'Finish' : 'Next'}
+          </button>
+        </div>
+
+        <div className="mt-4 text-center">
+          <p className="text-gray-600 text-sm">
             Step {step} of 5 {step === 1 ? "- Required" : "- Optional"}
           </p>
           <div className="flex gap-1 justify-center">
