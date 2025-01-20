@@ -189,44 +189,44 @@ export default function AdminDashboard() {
   // Only show dashboard if report status is 'completed'
   return (
     <div className="flex-1">
-      <div className="container mx-auto px-4 py-8">
-        {/* Report Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold text-slate-700">RESTAURANT MARKETING REPORT</h1>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-slate-600 font-medium">Report for</span>
-              <select className="bg-white text-slate-700 border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
-                <option>Dec 1, 2024 - Dec 31, 2024</option>
-                <option>Nov 1, 2024 - Nov 30, 2024</option>
-                <option>Oct 1, 2024 - Oct 31, 2024</option>
-              </select>
-            </div>
-            <button className="text-slate-400 hover:text-slate-600">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
-              </svg>
-            </button>
+      {/* Report Header */}
+      <div className="flex justify-between items-center p-6">
+        <h1 className="text-2xl font-bold text-slate-700">RESTAURANT MARKETING REPORT</h1>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-slate-600 font-medium">Report for</span>
+            <select className="bg-white text-slate-700 border border-slate-200 rounded-lg px-3 py-2 shadow-sm">
+              <option>Dec 1, 2024 - Dec 31, 2024</option>
+              <option>Nov 1, 2024 - Nov 30, 2024</option>
+              <option>Oct 1, 2024 - Oct 31, 2024</option>
+            </select>
           </div>
+          <button className="text-slate-400 hover:text-slate-600">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+            </svg>
+          </button>
         </div>
+      </div>
 
-        {/* Overview Section */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold text-slate-700 mb-6">OVERVIEW</h2>
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <DashboardMetrics />
-          </div>
+      {/* Overview Section */}
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-slate-700 px-6 mb-4">OVERVIEW</h2>
+        <div className="bg-white">
+          <DashboardMetrics />
         </div>
+      </div>
 
-        {/* Website Performance Section */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold text-slate-700 mb-6">WEBSITE PERFORMANCE</h2>
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <WebsitePerformance />
-          </div>
+      {/* Website Performance Section */}
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-slate-700 px-6 mb-4">WEBSITE PERFORMANCE</h2>
+        <div className="bg-white">
+          <WebsitePerformance />
         </div>
+      </div>
 
-        {/* Generate Report Button */}
+      {/* Generate Report Button */}
+      <div className="px-6">
         <button
           onClick={generateReport}
           disabled={isGenerating}

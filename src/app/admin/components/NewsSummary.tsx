@@ -78,17 +78,14 @@ export default function NewsSummary() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-white">Reports</h2>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="p-6">
+      {/* Grid Layout */}
+      <div className="grid grid-cols-3 gap-6">
         {isLoading ? (
-          // Loading skeleton
+          // Loading skeleton - always 3 columns
           Array.from({ length: 3 }).map((_, index) => (
             <div key={index} className="animate-pulse">
-              <div className="p-4 bg-white rounded-lg">
+              <div className="bg-white rounded-lg p-4 shadow-sm">
                 <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
                 <div className="h-6 bg-gray-200 rounded mb-2"></div>
                 <div className="h-4 bg-gray-200 rounded w-3/4"></div>
