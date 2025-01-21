@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/utils/firebase';
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -13,6 +16,59 @@ interface EventCalendarProps {
 
 export default function EventCalendar({ onDateChange }: EventCalendarProps) {
   const [dateRange, setDateRange] = useState<Value>(new Date());
+  const [isLoading, setIsLoading] = useState(false);
+  const [userLocation, setUserLocation] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const { user } = useAuthContext();
+
+  useEffect(() => {
+    const fetchUserLocation = async () => {
+      if (!user?.uid) return;
+      
+      try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (userDoc.exists()) {
+          setUserLocation(userDoc.data().location);
+        }
+      } catch (error) {
+        console.error('Error fetching user location:', error);
+      }
+    };
+
+    fetchUserLocation();
+  }, [user]);
+
+  const fetchEvents = async () => {
+    if (!user?.uid || !userLocation) {
+      setMessage({ text: 'User location not found', type: 'error' });
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: user.uid,
+          location: userLocation
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch events');
+      }
+
+      const data = await response.json();
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      setMessage({ text: 'Failed to fetch events', type: 'error' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleDateChange = (value: Value) => {
     setDateRange(value);
@@ -33,21 +89,20 @@ export default function EventCalendar({ onDateChange }: EventCalendarProps) {
           </h2>
           <p className="text-sm text-gray-500 mt-1">Today you have 0 upcoming events</p>
         </div>
-      </div>
-
-      <div className="flex gap-4 mb-6">
-        <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
-          All Task
-        </button>
-        <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
-          Backlog
-        </button>
-        <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
-          Active
-        </button>
-        <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md">
-          Closed
-        </button>
+        <div className="flex items-center gap-4">
+          {message && (
+            <div className={`text-sm ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+              {message.text}
+            </div>
+          )}
+          <button
+            onClick={fetchEvents}
+            disabled={isLoading}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            {isLoading ? 'Fetching...' : 'Fetch Events'}
+          </button>
+        </div>
       </div>
 
       <Calendar
