@@ -39,11 +39,6 @@ export default function EventCalendar({ onDateChange }: EventCalendarProps) {
   }, [user]);
 
   const fetchEvents = async () => {
-    if (!user?.uid || !userLocation) {
-      setMessage({ text: 'User location not found', type: 'error' });
-      return;
-    }
-    
     setIsLoading(true);
     try {
       const response = await fetch('/api/events', {
@@ -52,7 +47,7 @@ export default function EventCalendar({ onDateChange }: EventCalendarProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: user.uid,
+          user_id: user?.uid,
           location: userLocation
         }),
       });
@@ -61,7 +56,7 @@ export default function EventCalendar({ onDateChange }: EventCalendarProps) {
         throw new Error('Failed to fetch events');
       }
 
-      const data = await response.json();
+      await response.json();
     } catch (error) {
       console.error('Error fetching events:', error);
       setMessage({ text: 'Failed to fetch events', type: 'error' });
