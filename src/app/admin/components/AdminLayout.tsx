@@ -77,13 +77,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </nav>
 
         {/* Add the GlowButton here */}
-        <GlowButton 
-          text="Buy Premium" 
-          onClick={() => {
-            // Add your premium upgrade logic here
-            console.log('Premium button clicked');
-          }} 
-        />
+        <GlowButton text="Buy Premium" />
       </div>
 
       {/* Main Content Area - removed border and adjusted background */}
