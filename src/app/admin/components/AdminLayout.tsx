@@ -4,6 +4,7 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import GlowButton from '@/components/GlowButton';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -74,6 +75,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             ))}
           </ul>
         </nav>
+
+        {/* Add the GlowButton here */}
+        <GlowButton 
+          text="Buy Premium" 
+          onClick={() => {
+            // Add your premium upgrade logic here
+            console.log('Premium button clicked');
+          }} 
+        />
       </div>
 
       {/* Main Content Area - removed border and adjusted background */}
