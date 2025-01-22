@@ -23,12 +23,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@utils/*": [
-        "src/utils/*"
-      ]
+      "@/*": ["./src/*"]
     },
     "baseUrl": ".",
     "jsxImportSource": "react",
