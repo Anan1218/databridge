@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { collection, onSnapshot, getDoc, doc } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
 import DashboardMetrics from "./components/DashboardMetrics";
@@ -19,7 +19,6 @@ export default function AdminDashboard() {
   const [reportStatus, setReportStatus] = useState<Report['status'] | null>(null);
   const { user } = useAuthContext();
   const router = useRouter();
-  const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -54,20 +53,6 @@ export default function AdminDashboard() {
     });
 
     return () => unsubscribe();
-  }, [user]);
-
-  useEffect(() => {
-    if (!user?.uid) return;
-
-    // Fetch user data from Firestore
-    const fetchUserData = async () => {
-      const userDoc = await getDoc(doc(db, 'users', user.uid));
-      if (userDoc.exists()) {
-        setUserData(userDoc.data());
-      }
-    };
-
-    fetchUserData();
   }, [user]);
 
   if (!user) {

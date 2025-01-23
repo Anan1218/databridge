@@ -42,9 +42,9 @@ const MetricCard = ({ title, value, chart, comparison }: MetricCardProps) => (
 
 export default function DashboardMetrics() {
   // Sample data - replace with actual data
-  const sessionsData = Array(12).fill(0).map((_, i) => ({ value: Math.random() * 1000 + 500 }));
-  const reservationsData = Array(12).fill(0).map((_, i) => ({ value: Math.random() * 3000 + 2000 }));
-  const conversionData = Array(12).fill(0).map((_, i) => ({ value: Math.random() * 20 + 60 }));
+  const sessionsData = Array(12).fill(0).map(() => ({ value: Math.random() * 1000 + 500 }));
+  const reservationsData = Array(12).fill(0).map(() => ({ value: Math.random() * 3000 + 2000 }));
+  const conversionData = Array(12).fill(0).map(() => ({ value: Math.random() * 20 + 60 }));
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

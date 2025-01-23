@@ -31,10 +31,11 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
     return NextResponse.json(data);
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, message: 'Failed to fetch events' },
-      { status: 500 }
-    );
+  } catch (err) {
+    console.error('Error fetching events:', err);
+    return new Response(JSON.stringify({ error: 'Failed to fetch events' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 } 

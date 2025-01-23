@@ -10,11 +10,11 @@ import { db } from '@/utils/firebase';
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-interface EventCalendarProps {
-  onDateChange: (dates: Value) => void;
-}
+// interface EventCalendarProps {
+//   onDateChange: (dates: Value) => void;
+// }
 
-export default function EventCalendar({ onDateChange }: EventCalendarProps) {
+export default function EventCalendar() {
   const [dateRange, setDateRange] = useState<Value>(new Date());
   const [isLoading, setIsLoading] = useState(false);
   const [userLocation, setUserLocation] = useState<string | null>(null);
@@ -67,7 +67,7 @@ export default function EventCalendar({ onDateChange }: EventCalendarProps) {
 
   const handleDateChange = (value: Value) => {
     setDateRange(value);
-    onDateChange(value);
+    // onDateChange(value); // Temporarily commented out
   };
 
   return (
@@ -105,9 +105,7 @@ export default function EventCalendar({ onDateChange }: EventCalendarProps) {
         value={dateRange}
         selectRange={true}
         className="w-full border-none shadow-none custom-calendar"
-        tileClassName={({ date }) => {
-          return "text-sm p-3 rounded-lg hover:bg-gray-100 transition-colors"
-        }}
+        tileClassName={() => "text-sm p-3 rounded-lg hover:bg-gray-100 transition-colors"}
         navigationLabel={({ date }) =>
           date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
         }
