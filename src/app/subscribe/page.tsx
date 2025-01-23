@@ -3,11 +3,11 @@
 import { useRouter } from 'next/navigation';
 import { useAuthContext } from '@/contexts/AuthContext';
 
-// Payment link URLs from Stripe
-const PAYMENT_LINKS = {
-  trial: 'https://buy.stripe.com/14k00NdqOeq60b6eUU',
-  monthly: 'https://buy.stripe.com/dR6fZL4Ui1Dk0b6bIK',
-  yearly: 'https://buy.stripe.com/test_28o3fbaSFetZggg000' //https://buy.stripe.com/28o14R86u95M7Dy3cf
+// Stripe price IDs (get these from your Stripe dashboard)
+const PRICE_IDS = {
+  trial: process.env.NEXT_PUBLIC_STRIPE_TRIAL_PRICE_ID!,
+  monthly: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID!,
+  yearly: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID!
 } as const;
 
 // Checkmark icon component
@@ -21,14 +21,32 @@ export default function SubscribePage() {
   const router = useRouter();
   const { user } = useAuthContext();
 
-  const handlePlanSelect = (planType: 'trial' | 'monthly' | 'yearly') => {
+  const handlePlanSelect = async (planType: 'trial' | 'monthly' | 'yearly') => {
     if (!user) {
       router.push('/signup?return_to=subscribe');
       return;
     }
-    
-    // Open payment link in new tab
-    window.open(PAYMENT_LINKS[planType], '_blank');
+
+    try {
+      const response = await fetch('/api/create-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priceId: PRICE_IDS[planType],
+          userId: user.uid,
+          email: user.email,
+        }),
+      });
+
+      const { url } = await response.json();
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
