@@ -6,6 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
+import PremiumFeatureOverlay from '@/components/PremiumFeatureOverlay';
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -19,7 +20,7 @@ export default function EventCalendar() {
   const [isLoading, setIsLoading] = useState(false);
   const [userLocation, setUserLocation] = useState<string | null>(null);
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
-  const { user } = useAuthContext();
+  const { user, subscription } = useAuthContext();
 
   useEffect(() => {
     const fetchUserLocation = async () => {
@@ -70,8 +71,18 @@ export default function EventCalendar() {
     // onDateChange(value); // Temporarily commented out
   };
 
+  const isPremium = subscription?.status === 'active';
+
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
+    <div className="bg-white rounded-lg shadow-sm p-6 relative">
+      {/* Premium overlay */}
+      {!isPremium && (
+        <PremiumFeatureOverlay 
+          title="Premium Feature"
+          description="Upgrade to Premium to access local events tracking and get real-time updates about what's happening in your area."
+        />
+      )}
+
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-xl font-semibold text-gray-900">

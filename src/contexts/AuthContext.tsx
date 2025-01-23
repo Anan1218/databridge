@@ -12,6 +12,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   isWelcomeFlow: boolean;
   setIsWelcomeFlow: (value: boolean) => void;
+  subscription: { status: string } | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -64,6 +65,7 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
         signOut: signOutHandler,
         isWelcomeFlow,
         setIsWelcomeFlow,
+        subscription: null,
       }}
     >
       {children}
