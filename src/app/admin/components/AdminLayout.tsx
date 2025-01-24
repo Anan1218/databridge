@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import AdminNavbar from "./AdminNavbar";
-import { MdStorage } from "react-icons/md";
+import { MdStorage, MdHome, MdEvent, MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -15,27 +15,19 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const sidebarItems = [
     { 
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-        </svg>
-      ),
+      icon: <MdHome className="w-5 h-5" />,
       label: "Home",
       href: "/admin",
     },
     { 
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-      ),
+      icon: <MdEvent className="w-5 h-5" />,
       label: "Local Events",
       href: "/admin/events",
     },
     {
       key: 'data-sources',
       label: 'Data Sources',
-      icon: <MdStorage />, // Changed icon
+      icon: <MdStorage className="w-5 h-5" />,
       href: '/admin/data-sources'
     },
   ];
@@ -76,7 +68,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="text-gray-400 hover:text-white transition-colors flex items-center justify-center h-8 w-8 rounded-lg hover:bg-gray-700"
           >
-            {isCollapsed ? '→' : '←'}
+            {isCollapsed ? <MdChevronRight size={20} /> : <MdChevronLeft size={20} />}
           </button>
         </div>
       </aside>
