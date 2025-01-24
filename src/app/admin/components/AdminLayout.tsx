@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import AdminNavbar from "./AdminNavbar";
+import { MdStorage } from "react-icons/md";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -32,13 +33,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       href: "/admin/events",
     },
     {
-      icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-        </svg>
-      ),
-      label: "Data Sources",
-      href: "/admin/data-sources",
+      key: 'data-sources',
+      label: 'Data Sources',
+      icon: <MdStorage />, // Changed icon
+      href: '/admin/data-sources'
     },
   ];
 

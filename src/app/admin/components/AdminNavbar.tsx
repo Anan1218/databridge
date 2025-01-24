@@ -56,11 +56,19 @@ export default function AdminNavbar() {
             {showDropdown && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-50">
                 <Link
-                  href="/account"
+                  // href="/account"
+                  href=""
                   onClick={() => setShowDropdown(false)}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
                   Account Settings
+                </Link>
+                <Link
+                  href="/subscribe"
+                  onClick={() => setShowDropdown(false)}
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Subscription
                 </Link>
                 <button
                   onClick={() => {
