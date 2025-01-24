@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
-import DashboardMetrics from "./components/DashboardMetrics";
-import WebsitePerformance from "./components/WebsitePerformance";
 import GenerateReport from "./components/GenerateReport";
 
 interface Report {
@@ -108,22 +106,6 @@ export default function AdminDashboard() {
               <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
             </svg>
           </button>
-        </div>
-      </div>
-
-      {/* Overview Section */}
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-slate-700 px-6 mb-4">OVERVIEW</h2>
-        <div className="bg-white">
-          <DashboardMetrics />
-        </div>
-      </div>
-
-      {/* Website Performance Section */}
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-slate-700 px-6 mb-4">WEBSITE PERFORMANCE</h2>
-        <div className="bg-white">
-          <WebsitePerformance />
         </div>
       </div>
     </div>
