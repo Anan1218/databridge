@@ -77,17 +77,17 @@ export default function SubscriptionPlans() {
       
       <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
         {/* Free Trial Plan */}
-        <div className="bg-[#1a1f37] rounded-2xl p-8 border border-gray-800 flex flex-col justify-between">
+        <div className="bg-white rounded-2xl p-8 border border-gray-200 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
           <div>
-            <h3 className="text-2xl font-bold text-center">Free Trial</h3>
+            <h3 className="text-2xl font-bold text-center text-gray-800">Free Trial</h3>
             <div className="mt-4 text-center">
-              <span className="text-4xl font-bold text-[#8b5cf6]">$0</span>
-              <span className="text-gray-400">/3 days</span>
+              <span className="text-4xl font-bold text-indigo-600">$0</span>
+              <span className="text-gray-500">/3 days</span>
             </div>
             <div className="mt-2 text-center">
-              <span className="text-green-500 text-sm">Try Premium Features!</span>
+              <span className="text-green-600 text-sm">Try Premium Features!</span>
             </div>
-            <ul className="mt-8 space-y-4">
+            <ul className="mt-8 space-y-4 text-gray-600">
               <li className="flex items-center">
                 <CheckIcon />
                 Full Platform Access
@@ -108,24 +108,24 @@ export default function SubscriptionPlans() {
           </div>
           <button
             onClick={() => handlePlanSelect('trial')}
-            className="mt-8 w-full bg-transparent border-2 border-[#8b5cf6] text-white rounded-lg py-3 px-4 hover:bg-[#8b5cf6] hover:bg-opacity-90 transition-all"
+            className="mt-8 w-full bg-transparent border-2 border-indigo-600 text-indigo-600 rounded-lg py-3 px-4 hover:bg-indigo-600 hover:text-white transition-all"
           >
             Start Free Trial
           </button>
         </div>
 
         {/* Monthly Plan */}
-        <div className="bg-[#1a1f37] rounded-2xl p-8 border border-[#8b5cf6] flex flex-col justify-between transform scale-105 relative">
+        <div className="bg-white rounded-2xl p-8 border-2 border-indigo-600 flex flex-col justify-between transform scale-105 relative shadow-lg">
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <span className="bg-[#8b5cf6] text-white px-4 py-1 rounded-full text-sm">Most Popular</span>
+            <span className="bg-indigo-600 text-white px-4 py-1 rounded-full text-sm">Most Popular</span>
           </div>
           <div>
-            <h3 className="text-2xl font-bold text-center">Monthly</h3>
+            <h3 className="text-2xl font-bold text-center text-gray-800">Monthly</h3>
             <div className="mt-4 text-center">
-              <span className="text-4xl font-bold text-[#8b5cf6]">$5</span>
-              <span className="text-gray-400">/month</span>
+              <span className="text-4xl font-bold text-indigo-600">$5</span>
+              <span className="text-gray-500">/month</span>
             </div>
-            <ul className="mt-8 space-y-4">
+            <ul className="mt-8 space-y-4 text-gray-600">
               <li className="flex items-center">
                 <CheckIcon />
                 Full Platform Access
@@ -146,24 +146,24 @@ export default function SubscriptionPlans() {
           </div>
           <button
             onClick={() => handlePlanSelect('monthly')}
-            className="mt-8 w-full bg-[#8b5cf6] text-white rounded-lg py-3 px-4 hover:bg-opacity-90 transition-all"
+            className="mt-8 w-full bg-indigo-600 text-white rounded-lg py-3 px-4 hover:bg-indigo-700 transition-all"
           >
             Get Started Monthly
           </button>
         </div>
 
         {/* Yearly Plan */}
-        <div className="bg-[#1a1f37] rounded-2xl p-8 border border-gray-800 flex flex-col justify-between">
+        <div className="bg-white rounded-2xl p-8 border border-gray-200 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
           <div>
-            <h3 className="text-2xl font-bold text-center">Yearly</h3>
+            <h3 className="text-2xl font-bold text-center text-gray-800">Yearly</h3>
             <div className="mt-4 text-center">
-              <span className="text-4xl font-bold text-[#8b5cf6]">$50</span>
-              <span className="text-gray-400">/year</span>
+              <span className="text-4xl font-bold text-indigo-600">$50</span>
+              <span className="text-gray-500">/year</span>
             </div>
             <div className="mt-2 text-center">
-              <span className="text-green-500 text-sm">Get 2 Months Free!</span>
+              <span className="text-green-600 text-sm">Get 2 Months Free!</span>
             </div>
-            <ul className="mt-8 space-y-4">
+            <ul className="mt-8 space-y-4 text-gray-600">
               <li className="flex items-center">
                 <CheckIcon />
                 Full Platform Access
@@ -184,7 +184,7 @@ export default function SubscriptionPlans() {
           </div>
           <button
             onClick={() => handlePlanSelect('yearly')}
-            className="mt-8 w-full bg-transparent border-2 border-[#8b5cf6] text-white rounded-lg py-3 px-4 hover:bg-[#8b5cf6] hover:bg-opacity-90 transition-all"
+            className="mt-8 w-full bg-transparent border-2 border-indigo-600 text-indigo-600 rounded-lg py-3 px-4 hover:bg-indigo-600 hover:text-white transition-all"
           >
             Get Started Yearly
           </button>
