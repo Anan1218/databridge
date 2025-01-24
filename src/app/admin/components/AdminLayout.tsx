@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -13,6 +14,7 @@ interface AdminLayoutProps {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const { user } = useAuthContext();
   const router = useRouter();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const sidebarItems = [
     { 
@@ -46,45 +48,49 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className="w-64 bg-[#1a1f37] fixed h-screen overflow-y-auto">
-        {/* Logo Section */}
-        <div className="flex items-center gap-2 px-6 py-4 border-b border-gray-700">
+      <aside className={`bg-[#1a1f37] fixed h-screen overflow-y-auto transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'} flex flex-col`}>
+        <div className="flex-grow">
+        <div className="flex items-center gap-2 px-6 py-4">
           <Image
             src="/databridgelogo.png"
             alt="Logo"
             width={32}
             height={32}
           />
-          <span className="text-white text-xl font-semibold">DataBridge</span>
+          {!isCollapsed && <span className="text-white text-xl font-semibold">DataBridge</span>}
         </div>
 
-        {/* Navigation Items */}
-        <nav className="px-4 py-4">
+        <nav className="px-2 py-4">
           <ul className="space-y-2">
             {sidebarItems.map((item, index) => (
               <li key={index}>
                 <Link
                   href={item.href}
-                  className="flex items-center gap-3 px-4 py-2.5 text-gray-300 hover:bg-[#252d4a] rounded-lg transition-colors"
+                  className={`flex items-center gap-3 ${isCollapsed ? 'px-3 justify-center' : 'px-4'} py-2.5 text-gray-300 hover:bg-[#252d4a] rounded-lg transition-colors`}
                 >
                   <span>{item.icon}</span>
-                  <span className="flex-1">{item.label}</span>
+                  {!isCollapsed && <span className="flex-1">{item.label}</span>}
                 </Link>
               </li>
             ))}
           </ul>
         </nav>
-      </div>
+        </div>
 
-      {/* Main Content Area */}
-      <div className="ml-64 flex-1 bg-gray-50">
+        <div className="p-4 border-t border-gray-700 flex justify-end">
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="text-gray-400 hover:text-white transition-colors flex items-center justify-center h-8 w-8 rounded-lg hover:bg-gray-700"
+          >
+            {isCollapsed ? '→' : '←'}
+          </button>
+        </div>
+      </aside>
+
+      <main className={`flex-1 transition-all duration-300 ${isCollapsed ? 'ml-20' : 'ml-64'}`}>
         <AdminNavbar />
-        {/* Page Content */}
-        <main className="p-6 bg-gray-50">
-          {children}
-        </main>
-      </div>
+        <div className="p-6">{children}</div>
+      </main>
     </div>
   );
 }
