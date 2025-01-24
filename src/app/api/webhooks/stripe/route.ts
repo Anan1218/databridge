@@ -10,7 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = headers().get('stripe-signature')!;
+  const signature = (await headers()).get('stripe-signature')!;
 
   let event: Stripe.Event;
 
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     );
   } catch (err) {
     return NextResponse.json(
-      { error: 'Webhook signature verification failed' },
+      { error: err },
       { status: 400 }
     );
   }
@@ -33,6 +33,9 @@ export async function POST(req: Request) {
         const session = event.data.object as Stripe.Checkout.Session;
         const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
         
+        if (!session.metadata?.userId) {
+          throw new Error('Missing user ID in session metadata');
+        }
         // Update user's subscription status in Firebase
         const userRef = doc(db, 'users', session.metadata.userId);
         await setDoc(userRef, {

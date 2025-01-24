@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useAuthContext } from "@/contexts/AuthContext";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import AdminNavbar from "./AdminNavbar";
@@ -12,8 +10,6 @@ interface AdminLayoutProps {
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  const { user } = useAuthContext();
-  const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const sidebarItems = [
