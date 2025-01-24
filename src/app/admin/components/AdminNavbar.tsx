@@ -64,7 +64,7 @@ export default function AdminNavbar() {
                   Account Settings
                 </Link>
                 <Link
-                  href="/subscribe"
+                  href="/admin/subscription"
                   onClick={() => setShowDropdown(false)}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
