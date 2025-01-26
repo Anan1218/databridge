@@ -20,8 +20,6 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     location: "",
     businessName: "",
     website: "",
-    googleMaps: "",
-    yelpUrl: "",
     createdAt: new Date(),
     email: user?.email || "",
     businessType: 'restaurant'
@@ -62,7 +60,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
       return false;
     }
 
-    const cityStatePattern = /,\s*[a-zA-Z\s]+,\s*[a-zA-Z]{2}(?:\s*\d{5})?$/i;
+    const cityStatePattern = /,\s*[a-zA-Z\s]+,\s*[A-Z]{2}(?:\s*\d{5})?$/;
     if (!cityStatePattern.test(location)) {
       setLocationError("Please include city and state (e.g., New York, NY)");
       return false;
@@ -75,7 +73,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     }
 
     const state = parts[parts.length - 1].split(' ')[0];
-    if (!/^[A-Z]{2}$/i.test(state)) {
+    if (!/^[A-Z]{2}$/.test(state)) {
       setLocationError("Please include a valid two-letter state code (e.g., NY)");
       return false;
     }
@@ -89,7 +87,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
       if (!isValid) return;
     }
     
-    if (step < 5) {
+    if (step < 3) {
       setStep(step + 1);
     }
   };
@@ -167,23 +165,6 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
           )}
 
           {step === 2 && (
-            <div className="space-y-4">
-              <label className="block text-gray-700 text-sm font-medium">Establishment Type</label>
-              <select
-                value={userData.businessType}
-                onChange={(e) => setUserData({ ...userData, businessType: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700"
-              >
-                {businessTypeOptions.map(type => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {step === 3 && (
             <div>
               <label className="block text-gray-700 text-sm font-medium mb-2">Website</label>
               <input
@@ -195,55 +176,29 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
               />
             </div>
           )}
-
-          {step === 4 && (
-            <div>
-              <label className="block text-gray-700 text-sm font-medium mb-2">Google Maps Link</label>
-              <input
-                type="url"
-                value={userData.googleMaps || ''}
-                onChange={(e) => setUserData({ ...userData, googleMaps: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700"
-                placeholder="https://maps.google.com/..."
-              />
-            </div>
-          )}
-
-          {step === 5 && (
-            <div>
-              <label className="block text-gray-700 text-sm font-medium mb-2">Yelp Link</label>
-              <input
-                type="url"
-                value={userData.yelpUrl || ''}
-                onChange={(e) => setUserData({ ...userData, yelpUrl: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-700"
-                placeholder="https://www.yelp.com/..."
-              />
-            </div>
-          )}
         </div>
-
         <div className="flex justify-between mt-8">
           <button
             onClick={() => setStep(step - 1)}
-            className="px-6 py-2 bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 rounded-lg transition-colors"
+            disabled={step === 1}
+            className="px-6 py-2 bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Back
           </button>
           <button
-            onClick={step === 5 ? handleFinish : handleNext}
+            onClick={step === 3 ? handleFinish : handleNext}
             className="px-6 py-2 bg-blue-600 text-white font-medium hover:bg-blue-700 rounded-lg transition-colors"
           >
-            {step === 5 ? 'Finish' : 'Next'}
+            {step === 3 ? 'Finish' : 'Next'}
           </button>
         </div>
 
         <div className="mt-4 text-center">
           <p className="text-gray-600 text-sm">
-            Step {step} of 5 {step === 1 ? "- Required" : "- Optional"}
+            Step {step} of 3 {step === 1 ? "- Required" : "- Optional"}
           </p>
           <div className="flex gap-1 justify-center">
-            {[1, 2, 3, 4, 5].map((s) => (
+            {[1, 2, 3].map((s) => (
               <div
                 key={s}
                 className={`h-1 w-16 rounded-full ${s === step ? 'bg-blue-600' : 'bg-gray-200'}`}
