@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { doc, setDoc } from 'firebase/firestore';
-import { db } from "@/utils/firebase";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { businessTypes } from '@/utils/businessQueries';
 
@@ -39,18 +37,12 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     businessType: 'restaurant'
   });
 
-  // Add effect to handle body scroll lock
   useEffect(() => {
-    // Lock scroll when component mounts
     document.body.style.overflow = 'hidden';
-    
-    // Cleanup function to remove lock when component unmounts
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, []); // Empty dependency array means this runs once on mount
-
-  // Add effect to set email when user is available
+  }, []);
   useEffect(() => {
     if (user?.email) {
       setUserData(prev => ({
@@ -63,42 +55,35 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
   const validateLocation = async (location: string) => {
     setLocationError("");
     
-    // Check for minimum length
     if (!location || location.trim().length < 5) {
       setLocationError("Please enter a complete address (e.g., 123 Main St, New York, NY)");
       return false;
     }
 
-    // Check for street number
     const hasStreetNumber = /^\d+/.test(location);
     if (!hasStreetNumber) {
       setLocationError("Address must start with a street number");
       return false;
     }
 
-    // Check for street name
     const hasStreetName = /\d+\s+[a-zA-Z\s]+/.test(location);
     if (!hasStreetName) {
       setLocationError("Please include a street name");
       return false;
     }
 
-    // Check for city and state
-    // Matches patterns like: "city, ST" or "city, state"
     const cityStatePattern = /,\s*[a-zA-Z\s]+,\s*[a-zA-Z]{2}(?:\s*\d{5})?$/i;
     if (!cityStatePattern.test(location)) {
       setLocationError("Please include city and state (e.g., New York, NY)");
       return false;
     }
 
-    // Split the address to verify city and state are present
     const parts = location.split(',').map(part => part.trim());
-    if (parts.length < 3) { // Street, City, State (with optional ZIP)
+    if (parts.length < 3) {
       setLocationError("Please enter a complete address with street, city, and state");
       return false;
     }
 
-    // Verify state format (2 letters)
     const state = parts[parts.length - 1].split(' ')[0];
     if (!/^[A-Z]{2}$/i.test(state)) {
       setLocationError("Please include a valid two-letter state code (e.g., NY)");
@@ -121,37 +106,30 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
 
   const handleFinish = async () => {
     try {
-      if (!user?.uid) {
-        throw new Error('No authenticated user found');
-      }
-
-      if (!user.email) {
-        throw new Error('No email found for user');
-      }
-
-      const userDocData = {
+      const response = await fetch('/api/users/init', {
+        method: 'POST',
+        body: JSON.stringify({
+          uid: user?.uid,
+          userData: {
         ...userData,
-        email: user.email,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+            email: user?.email
+          }
+        })
+      });
 
-      // Create user document
-      await setDoc(doc(db, "users", user.uid), userDocData);
-      
+      if (!response.ok) throw new Error('Init failed');
       onComplete(true);
     } catch (error) {
       console.error("Error during finish:", error);
-      alert('There was an error completing your setup. Please try again.');
+      alert('Setup failed. Please try again.');
     }
   };
 
   const handleExit = () => {
-    // Delete the user account if it exists since setup wasn't completed
     if (user?.uid) {
       user.delete().catch(console.error);
     }
-    onComplete(false); // Pass false to indicate incomplete setup
+    onComplete(false);
   };
 
   return (
