@@ -17,3 +17,14 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
 } 
+
+export interface UserData {
+  location: string;
+  businessName?: string;
+  website?: string;
+  googleMaps?: string;
+  yelpUrl?: string;
+  createdAt: Date;
+  email: string;
+  businessType: string;
+}

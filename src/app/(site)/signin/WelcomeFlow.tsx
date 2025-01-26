@@ -3,20 +3,10 @@
 import { useState, useEffect } from "react";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { businessTypes } from '@/utils/businessQueries';
+import { UserData } from '@/types/user';
 
 interface WelcomeFlowProps {
   onComplete: (completed: boolean) => void;
-}
-
-interface UserData {
-  location: string;
-  businessName?: string;
-  website?: string;
-  googleMaps?: string;
-  yelpUrl?: string;
-  createdAt: Date;
-  email: string;
-  businessType: string;
 }
 
 const businessTypeOptions = Object.values(businessTypes);
