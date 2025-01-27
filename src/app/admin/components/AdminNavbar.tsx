@@ -3,9 +3,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MdStorage, MdHome, MdEvent } from "react-icons/md";
+import { useState } from 'react';
+import { useAuthContext } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { MdStorage, MdHome, MdEvent, MdSettings, MdAccountCircle, MdArrowDropDown } from "react-icons/md";
 
 export default function AdminNavbar() {
+  const { signOut, user } = useAuthContext();
+  const router = useRouter();
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
+  
   const navItems = [
     {
       icon: <MdHome className="w-5 h-5" />,
@@ -23,6 +30,15 @@ export default function AdminNavbar() {
       href: "/admin/data-sources"
     },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   return (
     <nav className="bg-[#1a1f37] border-b border-gray-700">
@@ -50,7 +66,53 @@ export default function AdminNavbar() {
             </div>
           </div>
           
-          {/* Optional: Add profile/settings dropdown here if needed */}
+          <div className="flex items-center gap-4">
+            <Link 
+              href="/admin/settings" 
+              className="text-gray-300 hover:text-white p-2 rounded-lg transition-colors"
+            >
+              <MdSettings className="w-5 h-5" />
+            </Link>
+            
+            <div className="relative">
+              <button 
+                onClick={() => setShowAccountDropdown(!showAccountDropdown)}
+                className="flex items-center gap-2 text-gray-300 hover:text-white p-2 rounded-lg transition-colors"
+              >
+                <div className="h-8 w-8 rounded-full bg-[#8b5cf6] flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">
+                    {user?.email?.[0].toUpperCase()}
+                  </span>
+                </div>
+                <MdArrowDropDown className="w-5 h-5" />
+              </button>
+
+              {showAccountDropdown && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-50">
+                  <Link
+                    href="/admin/account"
+                    onClick={() => setShowAccountDropdown(false)}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Account Settings
+                  </Link>
+                  <Link
+                    href="/admin/subscription"
+                    onClick={() => setShowAccountDropdown(false)}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Subscription
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Sign Out
+                  </button>
+        </div>
+              )}
+        </div>
+      </div>
         </div>
       </div>
     </nav>
