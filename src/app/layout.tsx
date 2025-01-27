@@ -4,7 +4,7 @@ import { AuthContextProvider } from '@/contexts/AuthContext';
 
 export const metadata: Metadata = {
   title: "DataBridge",
-  description: "QR Code Validation System",
+  description: "Connect, monitor, and analyze data with AI",
   icons: {
     icon: '/databridgelogo.png',
     apple: '/databridgelogo.png',

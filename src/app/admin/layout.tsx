@@ -5,5 +5,9 @@ export default function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  return <AdminLayout>{children}</AdminLayout>;
-} 
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <AdminLayout>{children}</AdminLayout>
+    </div>
+  );
+}
