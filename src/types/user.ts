@@ -18,9 +18,6 @@ export interface User {
   updatedAt: Date;
 } 
 
-// I don't need googlemaps, yelpUrl
-// these can be in an array or our DataSources tab.
-// I should also have an array of enabled dashboards to display
 export interface UserData {
   location: string;
   businessName?: string;
@@ -28,4 +25,6 @@ export interface UserData {
   createdAt: Date;
   email: string;
   businessType: string;
+  dataSources: string[];
+  enabledDashboards: string[];
 }

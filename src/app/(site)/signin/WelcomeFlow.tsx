@@ -22,7 +22,9 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     website: "",
     createdAt: new Date(),
     email: user?.email || "",
-    businessType: 'restaurant'
+    businessType: 'restaurant',
+    dataSources: [],
+    enabledDashboards: []
   });
 
   useEffect(() => {
