@@ -19,7 +19,7 @@ export default function SecondaryNavbar() {
               <MdWork className="w-5 h-5" />
               <span className="text-sm font-medium">Workspace Name</span>
               <MdArrowDropDown className="w-5 h-5" />
-              </button>
+            </button>
 
             {showWorkspaceDropdown && (
               <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
@@ -39,15 +39,22 @@ export default function SecondaryNavbar() {
             )}
           </div>
 
-          <div className="flex-1 max-w-2xl">
-            <input
-              type="text"
-              placeholder="Search across admin panels..."
-              className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/50"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-      </div>
+          <div className="flex items-center gap-4">
+            <div className="w-64">
+              <input
+                type="text"
+                placeholder="Search dashboards..."
+                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/50"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            
+            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+              <MdAdd className="w-5 h-5" />
+              New Dashboard
+            </button>
+          </div>
         </div>
       </div>
     </nav>
