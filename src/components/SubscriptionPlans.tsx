@@ -21,6 +21,8 @@ const CheckIcon = () => (
 export default function SubscriptionPlans() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+  const [currentPlan, setCurrentPlan] = useState<'trial' | 'monthly' | 'yearly' | null>(null);
   const { user } = useAuthContext();
   const router = useRouter();
 
@@ -75,14 +77,35 @@ export default function SubscriptionPlans() {
         </div>
       )}
       
-      <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-        {/* Free Trial Plan */}
-        <div className="bg-white rounded-2xl p-8 border border-gray-200 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex justify-center mb-8">
+        <div className="inline-flex items-center bg-gray-100 p-2 rounded-full">
+          <span 
+            className={`px-4 py-2 rounded-full cursor-pointer text-sm transition-colors ${
+              !isPremium ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600'
+            }`}
+            onClick={() => setIsPremium(false)}
+          >
+            Monthly
+          </span>
+          <span 
+            className={`px-4 py-2 rounded-full cursor-pointer text-sm transition-colors ${
+              isPremium ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600'
+            }`}
+            onClick={() => setIsPremium(true)}
+          >
+            Yearly
+          </span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 max-w-4xl mx-auto">
+        {/* Free Plan */}
+        <div className="bg-white rounded-2xl p-8 border border-gray-200 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow h-full">
           <div>
-            <h3 className="text-2xl font-bold text-center text-gray-800">Free Trial</h3>
+            <h3 className="text-2xl font-bold text-center text-gray-800">Free</h3>
             <div className="mt-4 text-center">
-              <span className="text-4xl font-bold text-indigo-600">$0</span>
-              <span className="text-gray-500">/3 days</span>
+              <span className="text-4xl font-bold text-indigo-600">$0.00</span>
+              <span className="text-gray-500">/month</span>
             </div>
             <div className="mt-2 text-center">
               <span className="text-green-600 text-sm">Try Premium Features!</span>
@@ -94,37 +117,54 @@ export default function SubscriptionPlans() {
               </li>
               <li className="flex items-center">
                 <CheckIcon />
-                24/7 Support
+                Link up to 3 data sources
               </li>
               <li className="flex items-center">
                 <CheckIcon />
-                All Features Included
+                1 space
               </li>
               <li className="flex items-center">
                 <CheckIcon />
-                No Credit Card Required
+                2 team members
               </li>
             </ul>
           </div>
           <button
             onClick={() => handlePlanSelect('trial')}
-            className="mt-8 w-full bg-transparent border-2 border-indigo-600 text-indigo-600 rounded-lg py-3 px-4 hover:bg-indigo-600 hover:text-white transition-all"
+            disabled={currentPlan === 'trial'}
+            className={`mt-8 w-full ${
+              currentPlan === 'trial'
+                ? 'bg-gray-100 text-gray-600 cursor-default'
+                : 'bg-transparent border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white'
+            } rounded-lg py-3 px-4 transition-all`}
           >
-            Start Free Trial
+            {currentPlan === 'trial' ? 'Your current plan' : 'Start Free Trial'}
           </button>
         </div>
 
-        {/* Monthly Plan */}
-        <div className="bg-white rounded-2xl p-8 border-2 border-indigo-600 flex flex-col justify-between transform scale-105 relative shadow-lg">
+        {/* Monthly/Premium Plan */}
+        <div className="bg-white rounded-2xl p-8 border-2 border-indigo-600 flex flex-col justify-between shadow-lg h-full">
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <span className="bg-indigo-600 text-white px-4 py-1 rounded-full text-sm">Most Popular</span>
           </div>
+          <h3 className="text-2xl font-bold text-center text-gray-800">
+              {isPremium ? 'Yearly' : 'Monthly'}
+            </h3>
           <div>
-            <h3 className="text-2xl font-bold text-center text-gray-800">Monthly</h3>
+            
             <div className="mt-4 text-center">
-              <span className="text-4xl font-bold text-indigo-600">$5</span>
-              <span className="text-gray-500">/month</span>
+              <span className="text-4xl font-bold text-indigo-600">
+                {isPremium ? '$49.99' : '$4.99'}
+              </span>
+              <span className="text-gray-500">
+                {isPremium ? '/year' : '/month'}
+              </span>
             </div>
+            {isPremium && (
+              <div className="mt-2 text-center">
+                <span className="text-green-600 text-sm">Get 2 Months Free!</span>
+              </div>
+            )}
             <ul className="mt-8 space-y-4 text-gray-600">
               <li className="flex items-center">
                 <CheckIcon />
@@ -132,41 +172,11 @@ export default function SubscriptionPlans() {
               </li>
               <li className="flex items-center">
                 <CheckIcon />
-                24/7 Support
+                Link up to 10 data sources
               </li>
               <li className="flex items-center">
                 <CheckIcon />
-                All Features Included
-              </li>
-              <li className="flex items-center">
-                <CheckIcon />
-                Cancel Anytime
-              </li>
-            </ul>
-          </div>
-          <button
-            onClick={() => handlePlanSelect('monthly')}
-            className="mt-8 w-full bg-indigo-600 text-white rounded-lg py-3 px-4 hover:bg-indigo-700 transition-all"
-          >
-            Get Started Monthly
-          </button>
-        </div>
-
-        {/* Yearly Plan */}
-        <div className="bg-white rounded-2xl p-8 border border-gray-200 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
-          <div>
-            <h3 className="text-2xl font-bold text-center text-gray-800">Yearly</h3>
-            <div className="mt-4 text-center">
-              <span className="text-4xl font-bold text-indigo-600">$50</span>
-              <span className="text-gray-500">/year</span>
-            </div>
-            <div className="mt-2 text-center">
-              <span className="text-green-600 text-sm">Get 2 Months Free!</span>
-            </div>
-            <ul className="mt-8 space-y-4 text-gray-600">
-              <li className="flex items-center">
-                <CheckIcon />
-                Full Platform Access
+                Create up to 3 spaces
               </li>
               <li className="flex items-center">
                 <CheckIcon />
@@ -174,19 +184,26 @@ export default function SubscriptionPlans() {
               </li>
               <li className="flex items-center">
                 <CheckIcon />
-                All Features Included
+                30 day money back guarantee
               </li>
               <li className="flex items-center">
                 <CheckIcon />
-                Priority Support
+                {isPremium ? 'Priority Support' : 'Cancel Anytime'}
               </li>
             </ul>
           </div>
           <button
-            onClick={() => handlePlanSelect('yearly')}
-            className="mt-8 w-full bg-transparent border-2 border-indigo-600 text-indigo-600 rounded-lg py-3 px-4 hover:bg-indigo-600 hover:text-white transition-all"
+            onClick={() => handlePlanSelect(isPremium ? 'yearly' : 'monthly')}
+            disabled={currentPlan === (isPremium ? 'yearly' : 'monthly')}
+            className={`mt-8 w-full ${
+              currentPlan === (isPremium ? 'yearly' : 'monthly')
+                ? 'bg-gray-400 hover:bg-gray-400 cursor-default'
+                : 'bg-indigo-600 hover:bg-indigo-700'
+            } text-white rounded-lg py-3 px-4 transition-all`}
           >
-            Get Started Yearly
+            {currentPlan === (isPremium ? 'yearly' : 'monthly')
+              ? 'Your current plan'
+              : `Get Started ${isPremium ? 'Yearly' : 'Monthly'}`}
           </button>
         </div>
       </div>

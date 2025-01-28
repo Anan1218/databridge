@@ -71,7 +71,7 @@ export default function SecondaryNavbar() {
               />
             </div>
             
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700">
               <MdAdd className="w-5 h-5" />
               New Dashboard
             </button>
