@@ -21,7 +21,9 @@ export default function BillingPage() {
             <h2 className="text-4xl font-bold">Simple, Affordable Pricing</h2>
             <p className="mt-4 text-xl text-gray-400">Choose the plan that works best for you</p>
           </div>
-          <SubscriptionPlans />
+          <div className="mt-6">
+            <SubscriptionPlans />
+          </div>
         </div>
       </div>
     </div>
