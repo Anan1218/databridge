@@ -143,8 +143,8 @@ export default function SubscriptionPlans() {
         </div>
 
         {/* Monthly/Premium Plan */}
-        <div className="bg-white rounded-2xl p-8 border-2 border-indigo-600 flex flex-col justify-between shadow-lg h-full">
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="bg-white rounded-2xl p-8 border-2 border-indigo-600 flex flex-col justify-between shadow-lg h-full relative">
+          <div className="flex justify-center mb-4">
             <span className="bg-indigo-600 text-white px-4 py-1 rounded-full text-sm">Most Popular</span>
           </div>
           <h3 className="text-2xl font-bold text-center text-gray-800">
