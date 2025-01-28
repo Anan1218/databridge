@@ -29,4 +29,33 @@ export async function POST(
       { status: 500 }
     );
   }
+}
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { uid: string } }
+) {
+  try {
+    const { uid } = params;
+    const { dataSource } = await req.json();
+
+    if (!uid || !dataSource) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    await adminDb.collection('users').doc(uid).update({
+      dataSources: FieldValue.arrayRemove(dataSource)
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Delete data source error:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete data source' },
+      { status: 500 }
+    );
+  }
 } 

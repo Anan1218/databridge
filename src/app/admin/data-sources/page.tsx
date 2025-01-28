@@ -11,6 +11,7 @@ export default function DataSourcesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDataSource, setSelectedDataSource] = useState<string | null>(null);
   const [dataSources, setDataSources] = useState<Array<{ id: string; name: string }>>([]);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
 
   useEffect(() => {
     const loadUserDataSources = async () => {
@@ -59,6 +60,34 @@ export default function DataSourcesPage() {
     }
   };
 
+  const handleDisconnect = async (sourceId: string) => {
+    if (!user?.uid) return;
+    
+    const sourceToRemove = dataSources.find(ds => ds.id === sourceId);
+    if (!sourceToRemove) return;
+
+    // Optimistically remove from UI
+    setDataSources(prev => prev.filter(ds => ds.id !== sourceId));
+    
+    try {
+      const response = await fetch(`/api/users/${user.uid}/data-sources`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          dataSource: sourceId
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to disconnect data source');
+      }
+    } catch (error) {
+      console.error('Failed to disconnect data source:', error);
+      // Restore the data source in UI if request failed
+      setDataSources(prev => [...prev, sourceToRemove]);
+    }
+  };
+
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
@@ -91,7 +120,11 @@ export default function DataSourcesPage() {
                     <span className="text-green-600">Connected</span>
                   </td>
                   <td className="py-4">
-                    <button className="text-red-600 hover:text-red-700">
+                    <button 
+                      onClick={() => handleDisconnect(source.id)}
+                      className="text-red-600 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={isDisconnecting}
+                    >
                       Disconnect
                     </button>
                   </td>
