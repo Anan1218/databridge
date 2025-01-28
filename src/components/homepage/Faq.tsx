@@ -37,15 +37,15 @@ export function Faq() {
         <div key={index} className="w-full">
           <button
             onClick={() => toggleFaq(index)}
-            className="w-full bg-white bg-opacity-5 p-4 rounded-lg text-left hover:bg-opacity-10 transition-all flex justify-between items-center"
+            className="w-full bg-gray-50 p-4 rounded-lg text-left hover:bg-gray-100 transition-all flex justify-between items-center text-gray-900"
           >
             <span>{item.question}</span>
-            <span className="text-xl">
+            <span className="text-xl text-[#8b5cf6]">
               {openIndex === index ? '−' : '+'}
             </span>
           </button>
           {openIndex === index && (
-            <div className="p-4 bg-white bg-opacity-5 mt-1 rounded-lg">
+            <div className="p-4 bg-white border border-gray-100 mt-1 rounded-lg text-gray-600">
               {item.answer}
             </div>
           )}

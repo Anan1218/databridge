@@ -48,11 +48,13 @@ const features: FeatureItem[] = [
 
 export function Features() {
   return (
-    <section className="relative py-20 bg-black">
-      <div className="container mx-auto px-4">
+    <section className="relative py-20 bg-gray-50">
+      <div className="absolute inset-0 bg-[radial-gradient(#8b5cf6_1px,transparent_1px)] [background-size:16px_16px] opacity-[0.15]"></div>
+      
+      <div className="container mx-auto px-4 relative">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white mb-4">Your Business Command Center</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Your Business Command Center</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
             Monitor, analyze, and act on real-time business intelligence with our comprehensive suite of tools.
           </p>
         </div>
@@ -60,16 +62,19 @@ export function Features() {
         <div className="flex justify-center">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl">
             {features.map((feature, index) => (
-              <div key={index} className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-gray-800 hover:border-indigo-500/50 transition-all duration-300">
+              <div 
+                key={index} 
+                className="bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200 hover:border-[#8b5cf6]/50 transition-all duration-300 shadow-sm hover:shadow-md"
+              >
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 bg-indigo-500/10 rounded-lg p-3">
+                  <div className="flex-shrink-0 bg-[#8b5cf6]/10 rounded-lg p-3">
                     {feature.icon}
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-400 leading-relaxed">
+                    <p className="text-gray-600 leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
