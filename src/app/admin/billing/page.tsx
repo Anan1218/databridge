@@ -9,12 +9,12 @@ import SubscriptionPlans from '@/components/SubscriptionPlans';
 //   yearly: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID!
 // } as const;
 
-export default function SubscribePage() {
+export default function BillingPage() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-6xl mx-auto px-2 py-4">
       
-      <div className="min-h-screen bg-black text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="bg-white text-black py-10">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
           <div className="text-center">
             <h2 className="text-4xl font-bold">Simple, Affordable Pricing</h2>
             <p className="mt-4 text-xl text-gray-400">Choose the plan that works best for you</p>

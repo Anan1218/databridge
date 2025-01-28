@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { MdWork, MdArrowDropDown, MdAdd } from 'react-icons/md';
+import { MdWork, MdArrowDropDown, MdAdd, MdSearch } from 'react-icons/md';
 
 type Workspace = {
   id: string;
@@ -60,11 +60,12 @@ export default function SecondaryNavbar() {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="w-64">
+            <div className="w-64 relative">
+              <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search dashboards..."
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/50"
+                className="w-full pl-10 pr-4 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/50"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />

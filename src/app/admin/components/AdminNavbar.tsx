@@ -15,19 +15,19 @@ export default function AdminNavbar() {
   
   const navItems = [
     {
-      icon: <MdHome className="w-5 h-5" />,
+      // icon: <MdHome className="w-5 h-5" />,
       label: "Dashboard",
       href: "/admin",
     },
     {
-      icon: <MdEvent className="w-5 h-5" />,
-      label: "Events",
-      href: "/admin/events",
+      // icon: <MdStorage className="w-5 h-5" />,
+      label: "Data Sources",
+      href: "/admin/data-sources",
     },
     {
-      icon: <MdStorage className="w-5 h-5" />,
-      label: "Data Sources",
-      href: "/admin/data-sources"
+      // icon: <MdSettings className="w-5 h-5" />,
+      label: "Billing",
+      href: "/admin/billing"
     },
   ];
 
@@ -52,6 +52,7 @@ export default function AdminNavbar() {
               height={32}
               className="mr-4"
             />
+            <span className="text-white text-lg font-semibold mr-8">DataBridge</span>
             <div className="flex space-x-4">
               {navItems.map((item, index) => (
                 <Link
@@ -59,7 +60,7 @@ export default function AdminNavbar() {
                   href={item.href}
                   className="flex items-center gap-2 px-3 py-2 text-gray-300 hover:bg-[#252d4a] rounded-md transition-colors"
                 >
-                  {item.icon}
+                  {/* {item.icon} */}
                   <span className="text-sm font-medium">{item.label}</span>
                 </Link>
               ))}
@@ -67,12 +68,6 @@ export default function AdminNavbar() {
           </div>
           
           <div className="flex items-center gap-4">
-            <Link 
-              href="/admin/settings" 
-              className="text-gray-300 hover:text-white p-2 rounded-lg transition-colors"
-            >
-              <MdSettings className="w-5 h-5" />
-            </Link>
             
             <div className="relative">
               <button 
@@ -97,11 +92,11 @@ export default function AdminNavbar() {
                     Account Settings
                   </Link>
                   <Link
-                    href="/admin/subscription"
+                    href="/help"
                     onClick={() => setShowAccountDropdown(false)}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    Subscription
+                    Need Help
                   </Link>
                   <button
                     onClick={handleLogout}
