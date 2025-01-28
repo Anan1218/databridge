@@ -36,7 +36,7 @@ export default function SubscriptionPlans() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/create-subscription', {
+      const response = await fetch('/api/subscriptions/create-subscription', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
