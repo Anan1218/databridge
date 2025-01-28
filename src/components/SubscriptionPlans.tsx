@@ -7,7 +7,6 @@ import { loadStripe } from '@stripe/stripe-js';
 
 // Stripe price IDs
 const PRICE_IDS = {
-  trial: process.env.NEXT_PUBLIC_STRIPE_TRIAL_PRICE_ID!,
   monthly: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID!,
   yearly: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID!
 } as const;
@@ -22,11 +21,11 @@ export default function SubscriptionPlans() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
-  const [currentPlan, setCurrentPlan] = useState<'trial' | 'monthly' | 'yearly' | null>(null);
+  const [currentPlan, setCurrentPlan] = useState<'monthly' | 'yearly' | null>(null);
   const { user } = useAuthContext();
   const router = useRouter();
 
-  const handlePlanSelect = async (planType: 'trial' | 'monthly' | 'yearly') => {
+  const handlePlanSelect = async (planType: 'monthly' | 'yearly') => {
     if (!user) {
       router.push('/signin?return_to=subscribe');
       return;
@@ -70,7 +69,7 @@ export default function SubscriptionPlans() {
   };
 
   return (
-    <>
+    <div>
       {error && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-600 rounded-lg">
           {error}
@@ -108,7 +107,7 @@ export default function SubscriptionPlans() {
               <span className="text-gray-500">/month</span>
             </div>
             <div className="mt-2 text-center">
-              <span className="text-green-600 text-sm">Try Premium Features!</span>
+              <span className="text-green-600 text-sm">Basic Features</span>
             </div>
             <ul className="mt-8 space-y-4 text-gray-600">
               <li className="flex items-center">
@@ -130,28 +129,21 @@ export default function SubscriptionPlans() {
             </ul>
           </div>
           <button
-            onClick={() => handlePlanSelect('trial')}
-            disabled={currentPlan === 'trial'}
-            className={`mt-8 w-full ${
-              currentPlan === 'trial'
-                ? 'bg-gray-100 text-gray-600 cursor-default'
-                : 'bg-transparent border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white'
-            } rounded-lg py-3 px-4 transition-all`}
+            className="mt-8 w-full bg-transparent border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg py-3 px-4 transition-all"
           >
-            {currentPlan === 'trial' ? 'Your current plan' : 'Start Free Trial'}
+            Current Plan
           </button>
         </div>
 
-        {/* Monthly/Premium Plan */}
+        {/* Premium Plan */}
         <div className="bg-white rounded-2xl p-8 border-2 border-indigo-600 flex flex-col justify-between shadow-lg h-full relative">
-          <div className="flex justify-center mb-4">
-            <span className="bg-indigo-600 text-white px-4 py-1 rounded-full text-sm">Most Popular</span>
+          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+            <span className="bg-indigo-600 text-white px-6 py-2 rounded-full text-sm">
+              Most Popular
+            </span>
           </div>
-          <h3 className="text-2xl font-bold text-center text-gray-800">
-              {isPremium ? 'Yearly' : 'Monthly'}
-            </h3>
           <div>
-            
+            <h3 className="text-2xl font-bold text-center text-gray-800 mt-4">Premium</h3>
             <div className="mt-4 text-center">
               <span className="text-4xl font-bold text-indigo-600">
                 {isPremium ? '$49.99' : '$4.99'}
@@ -203,7 +195,7 @@ export default function SubscriptionPlans() {
           >
             {currentPlan === (isPremium ? 'yearly' : 'monthly')
               ? 'Your current plan'
-              : `Get Started ${isPremium ? 'Yearly' : 'Monthly'}`}
+              : `Get Premium ${isPremium ? 'Yearly' : 'Monthly'}`}
           </button>
         </div>
       </div>
@@ -215,6 +207,6 @@ export default function SubscriptionPlans() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 } 
