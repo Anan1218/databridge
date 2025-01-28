@@ -24,16 +24,13 @@ export default function AdminDashboard() {
           <Link href="/admin/data-sources" className="group">
             <div className="bg-white rounded-xl p-8 border border-gray-200 hover:border-blue-500 transition-all duration-300 h-full flex flex-col">
               <div className="flex-1">
-                <div className="bg-blue-50 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
-                  <MdStorage className="w-6 h-6 text-blue-600" />
+                <div className="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
+                  <MdStorage className="w-6 h-6 text-purple-600" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Monitor Data Sources</h3>
+                <h3 className="text-2xl font-bold mb-4 text-black">Monitor Data Sources</h3>
                 <p className="text-black mb-6">
                   Connect and monitor your business data from various sources including social media, analytics, and review platforms.
                 </p>
-              </div>
-              <div className="text-blue-600 font-medium group-hover:translate-x-2 transition-transform">
-                Get Started →
               </div>
             </div>
           </Link>
@@ -45,13 +42,10 @@ export default function AdminDashboard() {
                 <div className="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
                   <MdIntegrationInstructions className="w-6 h-6 text-purple-600" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Integrate Custom Data</h3>
+                <h3 className="text-2xl font-bold mb-4 text-black">Integrate Custom Data</h3>
                 <p className="text-gray-600 mb-6">
                   Import your own data sources or connect custom APIs to create personalized monitoring dashboards.
                 </p>
-              </div>
-              <div className="text-purple-600 font-medium group-hover:translate-x-2 transition-transform">
-                Get Started →
               </div>
             </div>
           </Link>

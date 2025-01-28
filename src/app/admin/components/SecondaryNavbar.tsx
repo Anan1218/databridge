@@ -3,9 +3,20 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { MdWork, MdArrowDropDown, MdAdd } from 'react-icons/md';
 
+type Workspace = {
+  id: string;
+  name: string;
+  role: 'Owner' | 'User';
+};
+
 export default function SecondaryNavbar() {
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const workspaces: Workspace[] = [
+    { id: '1', name: 'Workspace 1', role: 'Owner' },
+    { id: '2', name: 'Workspace 2', role: 'User' },
+  ];
 
   return (
     <nav className="bg-white border-b">
@@ -23,12 +34,21 @@ export default function SecondaryNavbar() {
 
             {showWorkspaceDropdown && (
               <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Workspace 1
-                </button>
-                <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Workspace 2
-                </button>
+                {workspaces.map((workspace) => (
+                  <button
+                    key={workspace.id}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"
+                  >
+                    <span>{workspace.name}</span>
+                    <span className={`text-xs ${
+                      workspace.role === 'Owner' 
+                        ? 'bg-blue-100 text-blue-800' 
+                        : 'bg-gray-100 text-gray-800'
+                    } px-2 py-1 rounded`}>
+                      {workspace.role}
+                    </span>
+                  </button>
+                ))}
                 <div className="border-t mt-1 pt-1">
                   <button className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100">
                     <MdAdd className="mr-2 inline" />
