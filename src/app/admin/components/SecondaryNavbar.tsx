@@ -61,57 +61,57 @@ export default function SecondaryNavbar() {
     <nav className="bg-white border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-12 items-center">
-          <div className="relative">
-            <button 
-              className="flex items-center gap-2 text-gray-700 hover:text-blue-600"
-              onClick={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
-            >
-              <MdWork className="w-5 h-5" />
-              <span className="text-sm font-medium">
-                {workspaces.length > 0 ? workspaces[0].name : 'Select Workspace'}
-              </span>
-              <MdArrowDropDown className="w-5 h-5" />
-            </button>
-
-            {showWorkspaceDropdown && (
-              <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                {isLoading ? (
-                  <div className="px-4 py-2 text-sm text-gray-500">Loading...</div>
-                ) : workspaces.length > 0 ? (
-                  <>
-                    {workspaces.map((workspace) => (
-                      <button
-                        key={workspace.id}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"
-                      >
-                        <span>{workspace.name}</span>
-                        <span className={`text-xs ${
-                          workspace.role === 'Owner' 
-                            ? 'bg-blue-100 text-blue-800' 
-                            : 'bg-gray-100 text-gray-800'
-                        } px-2 py-1 rounded`}>
-                          {workspace.role}
-                        </span>
-                      </button>
-                    ))}
-                    <div className="border-t mt-1 pt-1">
-                      <button 
-                        onClick={handleNewWorkspace}
-                        className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
-                      >
-                        <MdAdd className="mr-2 inline" />
-                        New Workspace
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <div className="px-4 py-2 text-sm text-gray-500">No workspaces found</div>
-                )}
-              </div>
-            )}
-          </div>
-
           <div className="flex items-center gap-4">
+            <div className="relative">
+              <button 
+                className="flex items-center gap-2 text-gray-700 hover:text-blue-600"
+                onClick={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
+              >
+                <MdWork className="w-5 h-5" />
+                <span className="text-sm font-medium">
+                  {workspaces.length > 0 ? workspaces[0].name : 'Select Workspace'}
+                </span>
+                <MdArrowDropDown className="w-5 h-5" />
+              </button>
+
+              {showWorkspaceDropdown && (
+                <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                  {isLoading ? (
+                    <div className="px-4 py-2 text-sm text-gray-500">Loading...</div>
+                  ) : workspaces.length > 0 ? (
+                    <>
+                      {workspaces.map((workspace) => (
+                        <button
+                          key={workspace.id}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"
+                        >
+                          <span>{workspace.name}</span>
+                          <span className={`text-xs ${
+                            workspace.role === 'Owner' 
+                              ? 'bg-blue-100 text-blue-800' 
+                              : 'bg-gray-100 text-gray-800'
+                          } px-2 py-1 rounded`}>
+                            {workspace.role}
+                          </span>
+                        </button>
+                      ))}
+                      <div className="border-t mt-1 pt-1">
+                        <button 
+                          onClick={handleNewWorkspace}
+                          className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
+                        >
+                          <MdAdd className="mr-2 inline" />
+                          New Workspace
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="px-4 py-2 text-sm text-gray-500">No workspaces found</div>
+                  )}
+                </div>
+              )}
+            </div>
+
             <div className="w-64 relative">
               <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
@@ -122,6 +122,15 @@ export default function SecondaryNavbar() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <Link 
+              href="/admin/workspace/settings" 
+              className="text-sm font-medium text-gray-700 hover:text-blue-600"
+            >
+              Manage Workspace
+            </Link>
             
             <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700">
               <MdAdd className="w-5 h-5" />

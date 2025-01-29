@@ -12,12 +12,20 @@ export default function SubscriptionStatus() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user?.uid) return;
+      if (!user?.uid) {
+        console.log('No user ID available');
+        setLoading(false);
+        return;
+      }
       
       try {
         // Fetch subscription data
         const response = await fetch(`/api/users/${user.uid}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const userData = await response.json();
+        console.log('Subscription data:', userData);
         setSubscription(userData.subscription);
 
         // Fetch data source count
@@ -45,7 +53,25 @@ export default function SubscriptionStatus() {
   }
 
   if (!subscription) {
-    return null;
+    return (
+      <div className="bg-white rounded-lg p-6 mb-8 border border-gray-200">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Subscription Status</h2>
+        <div className="space-y-4">
+          <div>
+            <p className="text-sm text-gray-500">Status</p>
+            <p className="text-lg font-medium">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                Free
+              </span>
+            </p>
+          </div>
+          <div className="pt-4 border-t border-gray-200">
+            <p className="text-sm text-gray-500">Data Sources</p>
+            <p className="text-lg font-medium">{dataSourceCount}/3 Used</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const formatDate = (dateString?: Date) => {
