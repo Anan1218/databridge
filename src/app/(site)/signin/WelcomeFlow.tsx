@@ -2,7 +2,7 @@
 
 import { useAuthContext } from "@/contexts/AuthContext";
 import { UserData } from '@/types/user';
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface WelcomeFlowProps {
   onComplete: (completed: boolean) => void;
@@ -10,14 +10,17 @@ interface WelcomeFlowProps {
 
 export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
   const { user } = useAuthContext();
+  const isInitializing = useRef(false);
 
   useEffect(() => {
-    let mounted = true;
-
     const handleInitialize = async () => {
-      if (!user?.uid || !mounted) return;
+      // Prevent concurrent initialization attempts
+      if (!user?.uid || isInitializing.current) return;
+      
+      isInitializing.current = true;
 
       try {
+        // Prepare user data
         const userData: UserData = {
           email: user.email || '',
           location: 'default',
@@ -29,60 +32,45 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
           website: ''
         };
 
-        const response = await fetch('/api/users/init', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            uid: user.uid,
-            userData
+        // Initialize user
+        const [userResponse, workspaceResponse] = await Promise.all([
+          fetch('/api/users/init', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ uid: user.uid, userData })
+          }),
+          fetch('/api/workspaces', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              uid: user.uid,
+              workspace: {
+                name: 'My Workspace',
+                ownerEmail: user.email,
+                ownerName: 'User'
+              }
+            })
           })
-        });
+        ]);
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to initialize user');
+        // Check for errors
+        if (!userResponse.ok || !workspaceResponse.ok) {
+          const errorData = !userResponse.ok 
+            ? await userResponse.json() 
+            : await workspaceResponse.json();
+          throw new Error(errorData.error || 'Initialization failed');
         }
 
-        // Create default workspace
-        const workspacePayload = {
-          uid: user.uid,
-          workspace: {
-            name: 'My Workspace',
-            ownerEmail: user.email,
-            ownerName: 'User'
-          }
-        };
-
-        const workspaceResponse = await fetch('/api/workspaces', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(workspacePayload)
-        });
-
-        if (!workspaceResponse.ok) {
-          throw new Error('Failed to create workspace');
-        }
-
-        if (mounted) {
-          onComplete(true);
-        }
+        onComplete(true);
       } catch (error) {
         console.error("Error during initialization:", error);
-        if (mounted) {
-          onComplete(false);
-        }
+        onComplete(false);
+      } finally {
+        isInitializing.current = false;
       }
     };
 
     handleInitialize();
-
-    return () => {
-      mounted = false;
-    };
   }, [user?.uid, onComplete]);
 
   return null;
