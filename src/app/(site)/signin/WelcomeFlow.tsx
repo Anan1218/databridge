@@ -102,6 +102,27 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     }
 
     try {
+      // First create the user document
+      console.log('Creating user...', { uid: user.uid, userData });
+      
+      const initResponse = await fetch('/api/users/init', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          uid: user.uid,
+          userData: {
+            ...userData,
+            email: user.email
+          }
+        })
+      });
+
+      if (!initResponse.ok) {
+        throw new Error('Failed to initialize user');
+      }
+
       // Then create their default workspace
       const workspacePayload = {
         uid: user.uid,
@@ -122,11 +143,11 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
         body: JSON.stringify(workspacePayload)
       });
 
-      const workspaceData = await workspaceResponse.text();
+      const workspaceData = await workspaceResponse.json();
       console.log('Workspace response:', workspaceData);
 
       if (!workspaceResponse.ok) {
-        throw new Error(`Failed to create workspace: ${workspaceData}`);
+        throw new Error(workspaceData.error || 'Failed to create workspace');
       }
 
       onComplete(true);
