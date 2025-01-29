@@ -3,28 +3,9 @@
 import SubscriptionPlans from '@/components/SubscriptionPlans';
 import SubscriptionStatus from '@/components/SubscriptionStatus';
 import { useAuthContext } from '@/contexts/AuthContext';
-import { useState, useEffect } from 'react';
 
 export default function BillingPage() {
-  const { user } = useAuthContext();
-  const [userData, setUserData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user?.uid) return;
-      try {
-        const response = await fetch(`/api/users/${user.uid}`);
-        const data = await response.json();
-        setUserData(data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [user?.uid]);
+  const { userData, loading } = useAuthContext();
 
   return (
     <div className="max-w-6xl mx-auto px-2 py-4">
