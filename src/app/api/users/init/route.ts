@@ -5,7 +5,7 @@ import { FieldValue } from 'firebase-admin/firestore';
 
 export async function POST(req: Request) {
   try {
-    const { userData, uid } = await req.json();
+    const { userData, uid }: { userData: UserData; uid: string } = await req.json();
 
     if (!uid || !userData?.location) {
       return NextResponse.json(

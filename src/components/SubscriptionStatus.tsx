@@ -2,7 +2,7 @@ import { useAuthContext } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import { UserSubscription } from '@/types/user';
 import { db } from '@/utils/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 
 export default function SubscriptionStatus() {
   const { user } = useAuthContext();

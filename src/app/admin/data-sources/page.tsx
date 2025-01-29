@@ -17,15 +17,19 @@ export default function DataSourcesPage() {
     const loadUserDataSources = async () => {
       if (!user?.uid) return;
       
-      const response = await fetch(`/api/users/${user.uid}`);
-      const userData = await response.json();
-      
-      if (userData.dataSources) {
-        const formattedSources = userData.dataSources.map((id: string) => {
-          const source = dataSourceOptions.find(opt => opt.id === id);
-          return source || { id, name: id };
-        });
-        setDataSources(formattedSources);
+      try {
+        const response = await fetch(`/api/users/${user.uid}`);
+        const userData = await response.json();
+        
+        if (userData.dataSources) {
+          const formattedSources = userData.dataSources.map((id: string) => {
+            const source = dataSourceOptions.find(opt => opt.id === id);
+            return source || { id, name: id };
+          });
+          setDataSources(formattedSources);
+        }
+      } catch (error) {
+        console.error('Error loading data sources:', error);
       }
     };
 
@@ -39,10 +43,11 @@ export default function DataSourcesPage() {
         setDataSources(prev => [...prev, newSource]);
         
         try {
-          const response = await fetch(`/api/users/${user.uid}/data-sources`, {
+          const response = await fetch('/api/data-sources', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              uid: user.uid,
               dataSource: selectedDataSource
             })
           });
@@ -66,14 +71,15 @@ export default function DataSourcesPage() {
     const sourceToRemove = dataSources.find(ds => ds.id === sourceId);
     if (!sourceToRemove) return;
 
-    // Optimistically remove from UI
+    setIsDisconnecting(true);
     setDataSources(prev => prev.filter(ds => ds.id !== sourceId));
     
     try {
-      const response = await fetch(`/api/users/${user.uid}/data-sources`, {
+      const response = await fetch('/api/data-sources', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          uid: user.uid,
           dataSource: sourceId
         })
       });
@@ -83,8 +89,9 @@ export default function DataSourcesPage() {
       }
     } catch (error) {
       console.error('Failed to disconnect data source:', error);
-      // Restore the data source in UI if request failed
       setDataSources(prev => [...prev, sourceToRemove]);
+    } finally {
+      setIsDisconnecting(false);
     }
   };
 

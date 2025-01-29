@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useState } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { MdStorage, MdHome, MdEvent, MdSettings, MdAccountCircle, MdArrowDropDown } from "react-icons/md";
+import { MdArrowDropDown } from "react-icons/md";
 
 export default function AdminNavbar() {
   const { signOut, user } = useAuthContext();

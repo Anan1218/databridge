@@ -71,7 +71,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
     };
 
     handleInitialize();
-  }, [user?.uid, onComplete]);
+  }, [user?.uid, user?.email, onComplete]);
 
   return null;
 }
