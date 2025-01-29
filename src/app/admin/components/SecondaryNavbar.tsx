@@ -17,6 +17,7 @@ export default function SecondaryNavbar() {
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [workspaces, setWorkspaces] = useState<WorkspaceDisplay[]>([]);
+  const [selectedWorkspace, setSelectedWorkspace] = useState<WorkspaceDisplay | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuthContext();
 
@@ -51,6 +52,12 @@ export default function SecondaryNavbar() {
     fetchWorkspaces();
   }, [user?.uid]);
 
+  useEffect(() => {
+    if (workspaces.length > 0 && !selectedWorkspace) {
+      setSelectedWorkspace(workspaces[0]);
+    }
+  }, [workspaces, selectedWorkspace]);
+
   const handleNewWorkspace = async () => {
     // Implementation for creating new workspace
     // This would call the existing workspace creation API
@@ -69,7 +76,7 @@ export default function SecondaryNavbar() {
               >
                 <MdWork className="w-5 h-5" />
                 <span className="text-sm font-medium">
-                  {workspaces.length > 0 ? workspaces[0].name : 'Select Workspace'}
+                  {selectedWorkspace?.name || 'Select Workspace'}
                 </span>
                 <MdArrowDropDown className="w-5 h-5" />
               </button>
@@ -83,6 +90,10 @@ export default function SecondaryNavbar() {
                       {workspaces.map((workspace) => (
                         <button
                           key={workspace.id}
+                          onClick={() => {
+                            setSelectedWorkspace(workspace);
+                            setShowWorkspaceDropdown(false);
+                          }}
                           className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"
                         >
                           <span>{workspace.name}</span>
@@ -126,8 +137,12 @@ export default function SecondaryNavbar() {
 
           <div className="flex items-center gap-4">
             <Link 
-              href="/admin/workspace/settings" 
-              className="text-sm font-medium text-gray-700 hover:text-blue-600"
+              href={selectedWorkspace ? `/admin/workspace/${selectedWorkspace.id}/settings` : '#'} 
+              className={`text-sm font-medium ${
+                selectedWorkspace 
+                  ? 'text-gray-700 hover:text-blue-600' 
+                  : 'text-gray-400 cursor-not-allowed'
+              }`}
             >
               Manage Workspace
             </Link>
