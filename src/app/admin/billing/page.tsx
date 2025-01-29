@@ -4,7 +4,7 @@ import SubscriptionPlans from '@/components/SubscriptionPlans';
 import { useAuthContext } from '@/contexts/AuthContext';
 
 export default function BillingPage() {
-  const { userData, loading } = useAuthContext();
+  const { userData } = useAuthContext();
 
   return (
     <div className="max-w-6xl mx-auto px-2 py-4">
@@ -16,7 +16,7 @@ export default function BillingPage() {
             <p className="mt-4 text-xl text-gray-400">Choose the plan that works best for you</p>
           </div>
           <div className="mt-6">
-            <SubscriptionPlans userData={userData} loading={loading} />
+            <SubscriptionPlans userData={userData} />
           </div>
         </div>
       </div>

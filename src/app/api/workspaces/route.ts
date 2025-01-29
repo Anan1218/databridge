@@ -61,8 +61,15 @@ export async function POST(req: Request) {
     // Create workspace
     batch.set(workspaceRef, workspaceData);
     
+    // Get user document reference
+    const userRef = adminDb.collection('users').doc(uid);
+    const userDoc = await userRef.get();
+    if (!userDoc.exists) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
     // Update user with workspace reference
-    batch.update(userDoc.ref, {
+    batch.update(userRef, {
       workspaces: FieldValue.arrayUnion(workspaceRef.id),
       defaultWorkspace: workspaceRef.id,
       updatedAt: now

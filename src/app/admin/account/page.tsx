@@ -63,6 +63,11 @@ export default function AccountSettings() {
     setIsSubmitting(true);
     
     try {
+      if (!user) {
+        console.error("No user found");
+        return;
+      }
+
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
         firstName: formData.firstName,
@@ -244,7 +249,7 @@ export default function AccountSettings() {
               </div>
               <div>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                  {workspace.ownerEmail === user.email ? 'Owner' : 'Member'}
+                  {workspace.owner.email === (user?.email || '') ? 'Owner' : 'Member'}
                 </span>
               </div>
               <div className="text-sm text-gray-500">

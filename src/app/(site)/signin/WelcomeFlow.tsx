@@ -23,11 +23,15 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
           email: user.email || '',
           location: 'default',
           businessType: 'restaurant',
-          businessName: 'My Business',
+          businessName: '',
           createdAt: new Date(),
           dataSources: [],
           enabledDashboards: [],
-          website: ''
+          website: '',
+          firstName: '',
+          lastName: '',
+          updatedAt: new Date(),
+          receiveUpdates: false
         };
 
         // Initialize user

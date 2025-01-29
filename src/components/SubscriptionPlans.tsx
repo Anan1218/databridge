@@ -17,10 +17,11 @@ const CheckIcon = () => (
   </svg>
 );
 
-export default function SubscriptionPlans({ userData, loading }: { userData: any; loading: boolean }) {
+export default function SubscriptionPlans({ userData }: { userData: any }) {
   const [error, setError] = useState<string | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [currentPlan, setCurrentPlan] = useState<'monthly' | 'yearly' | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { user } = useAuthContext();
   const router = useRouter();
 
@@ -39,7 +40,7 @@ export default function SubscriptionPlans({ userData, loading }: { userData: any
     }
 
     setError(null);
-    setLoading(true);
+    setIsProcessing(true);
 
     try {
       const response = await fetch('/api/subscriptions/create-subscription', {
@@ -71,7 +72,7 @@ export default function SubscriptionPlans({ userData, loading }: { userData: any
       console.error('Subscription error:', error);
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');
     } finally {
-      setLoading(false);
+      setIsProcessing(false);
     }
   };
 
@@ -207,7 +208,7 @@ export default function SubscriptionPlans({ userData, loading }: { userData: any
         </div>
       </div>
       
-      {loading && (
+      {isProcessing && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
           <div className="bg-white p-4 rounded-lg">
             Processing...

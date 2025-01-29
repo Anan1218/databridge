@@ -26,7 +26,11 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        location: body.location
+        location: body.location,
+        firstName: body.firstName || '',
+        lastName: body.lastName || '',
+        updatedAt: new Date(),
+        receiveUpdates: body.receiveUpdates || false
       }),
     });
 

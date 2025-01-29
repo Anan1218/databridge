@@ -71,7 +71,7 @@ export default function EventCalendar() {
     // onDateChange(value); // Temporarily commented out
   };
 
-  const isPremium = subscription?.status === 'active';
+  const isPremium = subscription?.subscriptionStatus === 'active';
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 relative">
