@@ -14,13 +14,11 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
 
   useEffect(() => {
     const handleInitialize = async () => {
-      // Prevent concurrent initialization attempts
       if (!user?.uid || isInitializing.current) return;
       
       isInitializing.current = true;
 
       try {
-        // Prepare user data
         const userData: UserData = {
           email: user.email || '',
           location: 'default',
@@ -33,31 +31,14 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
         };
 
         // Initialize user
-        const [userResponse, workspaceResponse] = await Promise.all([
-          fetch('/api/users/init', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ uid: user.uid, userData })
-          }),
-          fetch('/api/workspaces', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              uid: user.uid,
-              workspace: {
-                name: 'My Workspace',
-                ownerEmail: user.email,
-                ownerName: 'User'
-              }
-            })
-          })
-        ]);
+        const response = await fetch('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uid: user.uid, userData })
+        });
 
-        // Check for errors
-        if (!userResponse.ok || !workspaceResponse.ok) {
-          const errorData = !userResponse.ok 
-            ? await userResponse.json() 
-            : await workspaceResponse.json();
+        if (!response.ok) {
+          const errorData = await response.json();
           throw new Error(errorData.error || 'Initialization failed');
         }
 

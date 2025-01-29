@@ -13,6 +13,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate user exists
+    const userResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/users?uid=${body.user_id}`);
+    if (!userResponse.ok) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
     const url = `${BACKEND_URL}/api/events/${body.user_id}`;
     const response = await fetch(url, {
       method: 'POST',
@@ -33,9 +39,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(data);
   } catch (err) {
     console.error('Error fetching events:', err);
-    return new Response(JSON.stringify({ error: 'Failed to fetch events' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return NextResponse.json(
+      { error: 'Failed to fetch events' },
+      { status: 500 }
+    );
   }
 } 

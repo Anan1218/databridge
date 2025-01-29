@@ -38,7 +38,7 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
 
   const fetchUserData = async (uid: string) => {
     try {
-      const response = await fetch(`/api/users/${uid}`);
+      const response = await fetch(`/api/users?uid=${uid}`);
       if (!response.ok) return null;
       const data = await response.json();
       setUserData(data);

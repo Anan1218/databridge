@@ -7,8 +7,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { uid, dataSource } = await request.json();
 
     // Validate user exists
-    const userDoc = await adminDb.collection('users').doc(uid).get();
-    if (!userDoc.exists) {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/users?uid=${uid}`);
+    if (!response.ok) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
@@ -32,8 +32,8 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     const { uid, dataSource } = await request.json();
 
     // Validate user exists
-    const userDoc = await adminDb.collection('users').doc(uid).get();
-    if (!userDoc.exists) {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/users?uid=${uid}`);
+    if (!response.ok) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 

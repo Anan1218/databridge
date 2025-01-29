@@ -25,11 +25,10 @@ export async function POST(req: Request) {
       }, { status: 400 });
     }
 
-    // First check if user exists
-    const userDoc = await adminDb.collection('users').doc(uid).get();
-    
-    if (!userDoc.exists) {
-      console.error('User document not found');
+    // Check if user exists
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/users?uid=${uid}`);
+    if (!response.ok) {
+      console.error('User not found');
       return NextResponse.json({
         success: false,
         error: 'User not found'

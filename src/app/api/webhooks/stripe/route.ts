@@ -57,6 +57,13 @@ export async function POST(req: Request) {
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription;
         const userRef = doc(db, 'users', subscription.metadata.userId);
+        
+        // Verify user exists
+        const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/users?uid=${subscription.metadata.userId}`);
+        if (!response.ok) {
+          return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
+        
         await setDoc(userRef, {
           subscription: {
             status: subscription.status,

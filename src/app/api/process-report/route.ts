@@ -6,7 +6,13 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
-    // Forward directly to FastAPI backend
+    // Validate user exists
+    const userResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/users?uid=${data.userId}`);
+    if (!userResponse.ok) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Forward to FastAPI backend
     const response = await fetch(`${BACKEND_URL}/api/generate-report`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
