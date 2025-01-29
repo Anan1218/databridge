@@ -5,6 +5,7 @@ import { db } from '@/utils/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { Workspace } from '@/types/workspace';
 import { useAuthContext } from '@/contexts/AuthContext';
+import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
 
 export default function WorkspaceSettings() {
   const { workspaceId } = useParams();
@@ -15,6 +16,7 @@ export default function WorkspaceSettings() {
   const [originalName, setOriginalName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [updateMessage, setUpdateMessage] = useState('');
+  const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
 
   const isPremium = userData?.subscription?.status === 'active';
 
@@ -77,7 +79,7 @@ export default function WorkspaceSettings() {
 
   const handleInviteClick = () => {
     if (!isPremium) {
-      router.push('/admin/billing');
+      setIsPremiumModalOpen(true);
       return;
     }
     // Future implementation: Handle invite functionality
@@ -192,6 +194,17 @@ export default function WorkspaceSettings() {
           )}
         </div>
       </div>
+
+      <PremiumUpgradeModal 
+        isOpen={isPremiumModalOpen}
+        onClose={() => setIsPremiumModalOpen(false)}
+        onUpgrade={() => {
+          setIsPremiumModalOpen(false);
+          router.push('/admin/billing');
+        }}
+        title="Premium Feature"
+        description="You need to upgrade to a premium plan to invite additional team members."
+      />
     </div>
   );
 } 

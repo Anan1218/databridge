@@ -7,6 +7,7 @@ import { db } from '@/utils/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { Workspace as FirebaseWorkspace } from '@/types/workspace';
 import { useRouter } from 'next/navigation';
+import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
 
 type WorkspaceDisplay = {
   id: string;
@@ -24,6 +25,7 @@ export default function SecondaryNavbar() {
   const router = useRouter();
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [selectedDashboardType, setSelectedDashboardType] = useState<string | null>(null);
+  const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
 
   const isPremium = userData?.subscription?.status === 'active';
 
@@ -70,14 +72,14 @@ export default function SecondaryNavbar() {
     }
   }, [workspaces, selectedWorkspace]);
 
-  const handleNewWorkspace = async () => {
+  const handleNewWorkspace = () => {
     if (!isPremium) {
-      router.push('/admin/billing');
+      setShowWorkspaceDropdown(false);
+      setIsPremiumModalOpen(true);
       return;
     }
     // Implementation for creating new workspace
     // This would call the existing workspace creation API
-    // Reference to WelcomeFlow.tsx lines 42-54
   };
 
   const handleCreateDashboard = async () => {
@@ -235,6 +237,17 @@ export default function SecondaryNavbar() {
           </div>
         </div>
       )}
+
+      <PremiumUpgradeModal 
+        isOpen={isPremiumModalOpen}
+        onClose={() => setIsPremiumModalOpen(false)}
+        onUpgrade={() => {
+          setIsPremiumModalOpen(false);
+          router.push('/admin/billing');
+        }}
+        title="Premium Feature"
+        description="You need to upgrade to a premium plan to create additional workspaces."
+      />
     </nav>
   );
 }
