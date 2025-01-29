@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { db } from '@/utils/firebase';
-import { doc, updateDoc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { User, UserData } from '@/types/user';
+import { doc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { Workspace } from '@/types/workspace';
 
 export default function AccountSettings() {

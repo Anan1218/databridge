@@ -1,17 +1,19 @@
-import { useAuthContext } from '@/contexts/AuthContext';
-import { useEffect, useState } from 'react';
+'use client';
+
+import { useState, useEffect } from 'react';
 import { UserSubscription } from '@/types/user';
-import { db } from '@/utils/firebase';
-import { collection, getDocs } from 'firebase/firestore';
 
 export default function SubscriptionStatus({ userData, loading }: { userData: any; loading: boolean }) {
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [dataSourceCount, setDataSourceCount] = useState(0);
 
   useEffect(() => {
-    if (!userData?.uid) return;
-    setSubscription(userData.subscription || null);
-    setDataSourceCount(userData.dataSources?.length || 0);
+    if (userData?.subscription) {
+      setSubscription(userData.subscription);
+    }
+    if (userData?.dataSources) {
+      setDataSourceCount(userData.dataSources.length);
+    }
   }, [userData]);
 
   if (loading) {

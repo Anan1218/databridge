@@ -1,7 +1,6 @@
 'use client';
 
 import SubscriptionPlans from '@/components/SubscriptionPlans';
-import SubscriptionStatus from '@/components/SubscriptionStatus';
 import { useAuthContext } from '@/contexts/AuthContext';
 
 export default function BillingPage() {

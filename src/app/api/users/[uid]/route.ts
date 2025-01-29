@@ -1,37 +1,22 @@
-import { NextResponse } from 'next/server';
-import { adminDb } from '@/utils/firebaseAdmin';
+import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/utils/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 export async function GET(
-  request: Request,
-  context: { params: { uid: string } }
+  request: NextRequest,
+  { params }: { params: { uid: string } }
 ) {
   try {
-    // Explicitly await the params
-    const params = await context.params;
-    const uid = params.uid;
+    const userDoc = await getDoc(doc(db, 'users', params.uid));
     
-    // Get user document from Firestore
-    const userDoc = await adminDb.collection('users').doc(uid).get();
-    
-    if (!userDoc.exists) {
-      // Return a default structure if user doesn't exist yet
-      return NextResponse.json({
-        subscription: null,
-        dataSources: []
-      });
+    if (!userDoc.exists()) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     const userData = userDoc.data();
-    
-    // Ensure we always return an object with expected properties
-    return NextResponse.json({
-      ...userData,
-      subscription: userData?.subscription || null,
-      dataSources: userData?.dataSources || []
-    });
-
+    return NextResponse.json(userData);
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    console.error('Error fetching user:', error);
     return NextResponse.json(
       { error: 'Failed to fetch user data' },
       { status: 500 }

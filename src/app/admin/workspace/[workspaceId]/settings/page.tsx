@@ -67,14 +67,13 @@ export default function WorkspaceSettings() {
 
   const getInitials = (firstName?: string, lastName?: string) => {
     if (!firstName) return '?';
-    return firstName[0].toUpperCase();
+    if (!lastName) return firstName[0].toUpperCase();
+    return `${firstName[0]}${lastName[0]}`.toUpperCase();
   };
 
-  const getDisplayName = (member: Workspace['members'][0]) => {
-    if (!member.firstName && !member.lastName) {
-      return member.email.split('@')[0];
-    }
-    return `${member.firstName || ''} ${member.lastName || ''}`.trim();
+  const getDisplayName = (member: { firstName?: string; lastName?: string; email: string }) => {
+    const fullName = [member.firstName, member.lastName].filter(Boolean).join(' ');
+    return fullName || member.email;
   };
 
   const handleInviteClick = () => {
