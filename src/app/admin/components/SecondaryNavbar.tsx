@@ -1,9 +1,13 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { MdWork, MdArrowDropDown, MdAdd, MdSearch } from 'react-icons/md';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { db } from '@/utils/firebase';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { Workspace as FirebaseWorkspace } from '@/types/workspace';
 
-type Workspace = {
+type WorkspaceDisplay = {
   id: string;
   name: string;
   role: 'Owner' | 'User';
@@ -12,11 +16,73 @@ type Workspace = {
 export default function SecondaryNavbar() {
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [workspaces, setWorkspaces] = useState<WorkspaceDisplay[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuthContext();
 
-  const workspaces: Workspace[] = [
-    { id: '1', name: 'Workspace 1', role: 'Owner' },
-    { id: '2', name: 'Workspace 2', role: 'User' },
-  ];
+  useEffect(() => {
+    const fetchWorkspaces = async () => {
+      if (!user?.uid) {
+        console.log('No user UID found', user);
+        return;
+      }
+
+      try {
+        console.log('Fetching workspaces for user:', user.uid);
+        const workspacesRef = collection(db, 'workspaces');
+        
+        // Get all workspaces first to debug
+        const allWorkspaces = await getDocs(workspacesRef);
+        allWorkspaces.forEach(doc => {
+          const data = doc.data();
+          console.log('Workspace document:', {
+            id: doc.id,
+            ownerId: data.ownerId,
+            name: data.name,
+            allFields: data
+          });
+        });
+
+        // Try both queries
+        const q1 = query(workspacesRef, where('ownerId', '==', user.uid));
+        const q2 = query(workspacesRef, where('owner_id', '==', user.uid));
+        
+        const [results1, results2] = await Promise.all([
+          getDocs(q1),
+          getDocs(q2)
+        ]);
+        
+        console.log('Query results (ownerId):', results1.size);
+        console.log('Query results (owner_id):', results2.size);
+        
+        // Use whichever query returned results
+        const querySnapshot = results1.size > 0 ? results1 : results2;
+        
+        const workspacesData: WorkspaceDisplay[] = querySnapshot.docs.map(doc => {
+          const data = doc.data() as FirebaseWorkspace;
+          return {
+            id: doc.id,
+            name: data.name,
+            role: 'Owner'
+          };
+        });
+
+        setWorkspaces(workspacesData);
+      } catch (error) {
+        console.error('Error fetching workspaces:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchWorkspaces();
+  }, [user?.uid]);
+
+  const handleNewWorkspace = async () => {
+    // Implementation for creating new workspace
+    // This would call the existing workspace creation API
+    // Reference to WelcomeFlow.tsx lines 42-54
+  };
 
   return (
     <nav className="bg-white border-b">
@@ -28,33 +94,46 @@ export default function SecondaryNavbar() {
               onClick={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
             >
               <MdWork className="w-5 h-5" />
-              <span className="text-sm font-medium">Workspace Name</span>
+              <span className="text-sm font-medium">
+                {workspaces.length > 0 ? workspaces[0].name : 'Select Workspace'}
+              </span>
               <MdArrowDropDown className="w-5 h-5" />
             </button>
 
             {showWorkspaceDropdown && (
               <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                {workspaces.map((workspace) => (
-                  <button
-                    key={workspace.id}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"
-                  >
-                    <span>{workspace.name}</span>
-                    <span className={`text-xs ${
-                      workspace.role === 'Owner' 
-                        ? 'bg-blue-100 text-blue-800' 
-                        : 'bg-gray-100 text-gray-800'
-                    } px-2 py-1 rounded`}>
-                      {workspace.role}
-                    </span>
-                  </button>
-                ))}
-                <div className="border-t mt-1 pt-1">
-                  <button className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100">
-                    <MdAdd className="mr-2 inline" />
-                    New Workspace
-                  </button>
-                </div>
+                {isLoading ? (
+                  <div className="px-4 py-2 text-sm text-gray-500">Loading...</div>
+                ) : workspaces.length > 0 ? (
+                  <>
+                    {workspaces.map((workspace) => (
+                      <button
+                        key={workspace.id}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"
+                      >
+                        <span>{workspace.name}</span>
+                        <span className={`text-xs ${
+                          workspace.role === 'Owner' 
+                            ? 'bg-blue-100 text-blue-800' 
+                            : 'bg-gray-100 text-gray-800'
+                        } px-2 py-1 rounded`}>
+                          {workspace.role}
+                        </span>
+                      </button>
+                    ))}
+                    <div className="border-t mt-1 pt-1">
+                      <button 
+                        onClick={handleNewWorkspace}
+                        className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
+                      >
+                        <MdAdd className="mr-2 inline" />
+                        New Workspace
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="px-4 py-2 text-sm text-gray-500">No workspaces found</div>
+                )}
               </div>
             )}
           </div>
