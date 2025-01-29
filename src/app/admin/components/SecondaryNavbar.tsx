@@ -23,40 +23,13 @@ export default function SecondaryNavbar() {
   useEffect(() => {
     const fetchWorkspaces = async () => {
       if (!user?.uid) {
-        console.log('No user UID found', user);
         return;
       }
 
       try {
-        console.log('Fetching workspaces for user:', user.uid);
         const workspacesRef = collection(db, 'workspaces');
-        
-        // Get all workspaces first to debug
-        const allWorkspaces = await getDocs(workspacesRef);
-        allWorkspaces.forEach(doc => {
-          const data = doc.data();
-          console.log('Workspace document:', {
-            id: doc.id,
-            ownerId: data.ownerId,
-            name: data.name,
-            allFields: data
-          });
-        });
-
-        // Try both queries
-        const q1 = query(workspacesRef, where('ownerId', '==', user.uid));
-        const q2 = query(workspacesRef, where('owner_id', '==', user.uid));
-        
-        const [results1, results2] = await Promise.all([
-          getDocs(q1),
-          getDocs(q2)
-        ]);
-        
-        console.log('Query results (ownerId):', results1.size);
-        console.log('Query results (owner_id):', results2.size);
-        
-        // Use whichever query returned results
-        const querySnapshot = results1.size > 0 ? results1 : results2;
+        const query1 = query(workspacesRef, where('ownerId', '==', user.uid));
+        const querySnapshot = await getDocs(query1);
         
         const workspacesData: WorkspaceDisplay[] = querySnapshot.docs.map(doc => {
           const data = doc.data() as FirebaseWorkspace;
