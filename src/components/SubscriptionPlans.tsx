@@ -17,33 +17,20 @@ const CheckIcon = () => (
   </svg>
 );
 
-export default function SubscriptionPlans() {
+export default function SubscriptionPlans({ userData, loading }: { userData: any; loading: boolean }) {
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [currentPlan, setCurrentPlan] = useState<'monthly' | 'yearly' | null>(null);
-  const { user, userData } = useAuthContext();
+  const { user } = useAuthContext();
   const router = useRouter();
 
   useEffect(() => {
-    const fetchCurrentPlan = async () => {
-      if (!user?.uid) return;
-      
-      try {
-        const response = await fetch(`/api/users/${user.uid}`);
-        if (!response.ok) return;
-        
-        const userData = await response.json();
-        if (userData.subscription?.subscriptionStatus === 'active') {
-          setCurrentPlan(userData.subscription.interval || null);
-        }
-      } catch (error) {
-        console.error('Error fetching current plan:', error);
-      }
-    };
-
-    fetchCurrentPlan();
-  }, [user?.uid]);
+    if (!userData?.subscription) return;
+    
+    if (userData.subscription?.subscriptionStatus === 'active') {
+      setCurrentPlan(userData.subscription.interval || null);
+    }
+  }, [userData]);
 
   const handlePlanSelect = async (planType: 'monthly' | 'yearly') => {
     if (!user) {

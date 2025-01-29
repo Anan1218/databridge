@@ -4,37 +4,15 @@ import { UserSubscription } from '@/types/user';
 import { db } from '@/utils/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
-export default function SubscriptionStatus() {
-  const { userData } = useAuthContext();
-  const [loading, setLoading] = useState(true);
+export default function SubscriptionStatus({ userData, loading }: { userData: any; loading: boolean }) {
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [dataSourceCount, setDataSourceCount] = useState(0);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!userData?.uid) {
-        setLoading(false);
-        return;
-      }
-      
-      try {
-        // Fetch subscription data
-        setSubscription(userData.subscription || null);
-
-        // Fetch data source count
-        const dataSourcesRef = collection(db, 'users', userData.uid, 'dataSources');
-        const dataSourcesSnap = await getDocs(dataSourcesRef);
-        setDataSourceCount(dataSourcesSnap.size);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setSubscription(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [userData?.uid]);
+    if (!userData?.uid) return;
+    setSubscription(userData.subscription || null);
+    setDataSourceCount(userData.dataSources?.length || 0);
+  }, [userData]);
 
   if (loading) {
     return (
