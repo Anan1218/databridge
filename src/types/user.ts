@@ -16,6 +16,8 @@ export interface User {
   website?: string;
   createdAt: Date;
   updatedAt: Date;
+  workspaces: string[];
+  defaultWorkspace?: string;
 } 
 
 export interface UserData {

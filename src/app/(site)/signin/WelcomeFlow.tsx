@@ -96,18 +96,35 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
 
   const handleFinish = async () => {
     try {
-      const response = await fetch('/api/users/init', {
+      // First create the user document
+      const initResponse = await fetch('/api/users/init', {
         method: 'POST',
         body: JSON.stringify({
           uid: user?.uid,
           userData: {
-        ...userData,
+            ...userData,
             email: user?.email
           }
         })
       });
 
-      if (!response.ok) throw new Error('Init failed');
+      if (!initResponse.ok) throw new Error('User init failed');
+
+      // Then create their default workspace
+      const workspaceResponse = await fetch('/api/workspaces', {
+        method: 'POST',
+        body: JSON.stringify({
+          uid: user?.uid,
+          workspace: {
+            name: `${userData.businessName || 'My'} Workspace`,
+            ownerEmail: user?.email,
+            ownerName: userData.businessName
+          }
+        })
+      });
+
+      if (!workspaceResponse.ok) throw new Error('Workspace creation failed');
+
       onComplete(true);
     } catch (error) {
       console.error("Error during finish:", error);
