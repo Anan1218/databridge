@@ -6,6 +6,7 @@ import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { Workspace as FirebaseWorkspace } from '@/types/workspace';
+import { useRouter } from 'next/navigation';
 
 type WorkspaceDisplay = {
   id: string;
@@ -19,7 +20,10 @@ export default function SecondaryNavbar() {
   const [workspaces, setWorkspaces] = useState<WorkspaceDisplay[]>([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState<WorkspaceDisplay | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuthContext();
+  const { user, userData } = useAuthContext();
+  const router = useRouter();
+
+  const isPremium = userData?.subscription?.status === 'active';
 
   useEffect(() => {
     const fetchWorkspaces = async () => {
@@ -59,6 +63,10 @@ export default function SecondaryNavbar() {
   }, [workspaces, selectedWorkspace]);
 
   const handleNewWorkspace = async () => {
+    if (!isPremium) {
+      router.push('/admin/billing');
+      return;
+    }
     // Implementation for creating new workspace
     // This would call the existing workspace creation API
     // Reference to WelcomeFlow.tsx lines 42-54
@@ -109,9 +117,9 @@ export default function SecondaryNavbar() {
                       <div className="border-t mt-1 pt-1">
                         <button 
                           onClick={handleNewWorkspace}
-                          className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
+                          className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 flex items-center"
                         >
-                          <MdAdd className="mr-2 inline" />
+                          <MdAdd className="mr-2" />
                           New Workspace
                         </button>
                       </div>

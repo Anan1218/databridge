@@ -9,24 +9,31 @@ export interface UserSubscription {
 export interface User {
   uid: string;
   email: string;
+  firstName: string;
+  lastName: string;
   subscription: UserSubscription;
   location: string;
-  businessName?: string;
+  businessName: string;
   businessType: string;
   website?: string;
   createdAt: Date;
   updatedAt: Date;
   workspaces: string[];
   defaultWorkspace?: string;
+  receiveUpdates: boolean;
 } 
 
 export interface UserData {
+  email: string;
+  firstName: string;
+  lastName: string;
   location: string;
-  businessName?: string;
+  businessName: string;
+  businessType: string;
   website?: string;
   createdAt: Date;
-  email: string;
-  businessType: string;
+  updatedAt: Date;
   dataSources: string[];
   enabledDashboards: string[];
+  receiveUpdates: boolean;
 }

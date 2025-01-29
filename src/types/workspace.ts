@@ -1,13 +1,21 @@
 export interface Workspace {
-  id: string;
+  id?: string;
   name: string;
+  owner: {
+    uid: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
+  members: Array<{
+    uid: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: 'owner' | 'member';
+  }>;
   createdAt: Date;
   updatedAt: Date;
-  ownerId: string;
-  logo?: string;
-  members: WorkspaceMember[];
-  enabledDashboards: string[];
-  dataSources: string[];
 }
 
 export type WorkspaceRole = 'owner' | 'admin' | 'editor' | 'viewer';

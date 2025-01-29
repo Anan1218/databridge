@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { User, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import { UserSubscription } from '@/types/user';
+import { getDoc, doc } from 'firebase/firestore';
+import { db } from '@/utils/firebase';
 
 interface AuthContextType {
   user: User | null;
@@ -48,8 +50,11 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
   };
 
   const refreshUserData = async () => {
-    if (user?.uid) {
-      await fetchUserData(user.uid);
+    if (user) {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        setUserData(userDoc.data());
+      }
     }
   };
 
