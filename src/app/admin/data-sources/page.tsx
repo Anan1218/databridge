@@ -22,7 +22,11 @@ export default function DataSourcesPage() {
       if (!user?.uid) return;
       
       try {
-        const response = await fetch(`/api/users/${user.uid}`);
+        const response = await fetch(`/api/users?uid=${user.uid}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        
         const userData = await response.json();
         
         if (userData.dataSources) {

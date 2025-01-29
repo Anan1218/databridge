@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/utils/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { adminDb } from '@/utils/firebaseAdmin';
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,9 +9,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
     }
 
-    const userDoc = await getDoc(doc(db, 'users', uid));
+    const userDoc = await adminDb.collection('users').doc(uid).get();
     
-    if (!userDoc.exists()) {
+    if (!userDoc.exists) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
