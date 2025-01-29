@@ -7,7 +7,7 @@ const dataSourceOptions = [
 ];
 
 export default function DataSourcesPage() {
-  const { user } = useAuthContext();
+  const { user, userData } = useAuthContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDataSource, setSelectedDataSource] = useState<string | null>(null);
   const [dataSources, setDataSources] = useState<Array<{ id: string; name: string }>>([]);

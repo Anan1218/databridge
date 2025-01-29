@@ -3,16 +3,19 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { User, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
+import { UserSubscription } from '@/types/user';
 
 interface AuthContextType {
   user: User | null;
+  userData: any | null;
+  refreshUserData: () => Promise<void>;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   isWelcomeFlow: boolean;
   setIsWelcomeFlow: (value: boolean) => void;
-  subscription: { status: string } | null;
+  subscription: UserSubscription | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,12 +30,37 @@ export function useAuthContext() {
 
 export function AuthContextProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [isWelcomeFlow, setIsWelcomeFlow] = useState(false);
 
+  const fetchUserData = async (uid: string) => {
+    try {
+      const response = await fetch(`/api/users/${uid}`);
+      if (!response.ok) return null;
+      const data = await response.json();
+      setUserData(data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      return null;
+    }
+  };
+
+  const refreshUserData = async () => {
+    if (user?.uid) {
+      await fetchUserData(user.uid);
+    }
+  };
+
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       setUser(user);
+      if (user?.uid) {
+        await fetchUserData(user.uid);
+      } else {
+        setUserData(null);
+      }
       setLoading(false);
     });
 
@@ -59,13 +87,15 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
     <AuthContext.Provider
       value={{
         user,
+        userData,
+        refreshUserData,
         loading,
         signIn: signInHandler,
         signUp: signUpHandler,
         signOut: signOutHandler,
         isWelcomeFlow,
         setIsWelcomeFlow,
-        subscription: null,
+        subscription: userData?.subscription || null,
       }}
     >
       {children}

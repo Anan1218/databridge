@@ -5,42 +5,36 @@ import { db } from '@/utils/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 
 export default function SubscriptionStatus() {
-  const { user } = useAuthContext();
-  const [subscription, setSubscription] = useState<UserSubscription | null>(null);
+  const { userData } = useAuthContext();
   const [loading, setLoading] = useState(true);
+  const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [dataSourceCount, setDataSourceCount] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user?.uid) {
-        console.log('No user ID available');
+      if (!userData?.uid) {
         setLoading(false);
         return;
       }
       
       try {
         // Fetch subscription data
-        const response = await fetch(`/api/users/${user.uid}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const userData = await response.json();
-        console.log('Subscription data:', userData);
-        setSubscription(userData.subscription);
+        setSubscription(userData.subscription || null);
 
         // Fetch data source count
-        const dataSourcesRef = collection(db, 'users', user.uid, 'dataSources');
+        const dataSourcesRef = collection(db, 'users', userData.uid, 'dataSources');
         const dataSourcesSnap = await getDocs(dataSourcesRef);
         setDataSourceCount(dataSourcesSnap.size);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setSubscription(null);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [user?.uid]);
+  }, [userData?.uid]);
 
   if (loading) {
     return (

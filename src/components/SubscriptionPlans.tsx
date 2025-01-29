@@ -22,7 +22,7 @@ export default function SubscriptionPlans() {
   const [loading, setLoading] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
   const [currentPlan, setCurrentPlan] = useState<'monthly' | 'yearly' | null>(null);
-  const { user } = useAuthContext();
+  const { user, userData } = useAuthContext();
   const router = useRouter();
 
   useEffect(() => {
