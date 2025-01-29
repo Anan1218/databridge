@@ -1,7 +1,8 @@
 // AdminLayout.tsx
 'use client';
 import { useAuthContext } from "@/contexts/AuthContext";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import AdminNavbar from "./AdminNavbar";
 import SecondaryNavbar from "./SecondaryNavbar";
 
@@ -12,9 +13,16 @@ interface AdminLayoutProps {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const { user } = useAuthContext();
   const pathname = usePathname();
+  const router = useRouter();
   
   // Only show SecondaryNavbar on the main dashboard page
   const showSecondaryNav = pathname === '/admin';
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/');
+    }
+  }, [user, router]);
 
   if (!user) return null;
 
