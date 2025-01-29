@@ -99,46 +99,72 @@ export default function DataSourcesPage() {
     <div className="p-6 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-black">Data Sources</h1>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
-        >
-          Connect Data Source
-        </button>
+        <div className="flex gap-4">
+          <button
+            onClick={() => {/* TODO: Add handler */}}
+            className="border border-purple-600 text-purple-600 px-4 py-2 rounded-lg hover:bg-purple-50 transition-colors flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Starter Sources
+          </button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Connect Data Source
+          </button>
+        </div>
       </div>
       
-      <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="grid grid-cols-3 gap-4 px-6 py-3 border-b border-gray-200 bg-gray-50">
+          <div className="text-sm font-medium text-gray-500">Name</div>
+          <div className="text-sm font-medium text-gray-500">Status</div>
+          <div className="text-sm font-medium text-gray-500">Action</div>
+        </div>
+
         {dataSources.length === 0 ? (
-          <p className="text-gray-600">No data sources connected yet.</p>
+          <div className="px-6 py-4 text-sm text-gray-500">
+            No data sources connected yet.
+          </div>
         ) : (
-        <table className="w-full">
-          <thead>
-            <tr className="text-left text-gray-600 border-b">
-              <th className="pb-3">Name</th>
-                <th className="pb-3">Status</th>
-                <th className="pb-3">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-              {dataSources.map((source) => (
-                <tr key={source.id} className="border-b">
-                  <td className="py-4 text-gray-600">{source.name}</td>
-                  <td className="py-4">
-                    <span className="text-green-600">Connected</span>
-                  </td>
-                  <td className="py-4">
-                    <button 
-                      onClick={() => handleDisconnect(source.id)}
-                      className="text-red-600 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={isDisconnecting}
-                    >
-                      Disconnect
-                    </button>
-                  </td>
-            </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="divide-y divide-gray-200">
+            {dataSources.map((source) => (
+              <div key={source.id} className="grid grid-cols-3 gap-4 px-6 py-4 items-center">
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center">
+                    <span className="text-sm font-medium text-purple-600">
+                      {source.name[0].toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">
+                      {source.name}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Connected
+                  </span>
+                </div>
+                <div>
+                  <button 
+                    onClick={() => handleDisconnect(source.id)}
+                    className="text-sm font-medium text-red-600 hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isDisconnecting}
+                  >
+                    Disconnect
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
@@ -157,7 +183,7 @@ export default function DataSourcesPage() {
               </svg>
               </button>
 
-            <h2 className="text-xl font-bold mb-6 text-black">Connect data source</h2>
+            <h2 className="text-xl font-bold mb-6 text-black">Connect custom data</h2>
             <div className="grid grid-cols-2 gap-3 mb-6">
               {dataSourceOptions.map((option) => (
               <button

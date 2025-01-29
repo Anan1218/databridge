@@ -10,7 +10,7 @@ export default function BillingPage() {
   return (
     <div className="max-w-6xl mx-auto px-2 py-4">
       {/* <SubscriptionStatus userData={userData} loading={loading} /> */}
-      <div className="bg-white text-black py-10 border border-gray-200">
+      <div className="text-black py-10">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
           <div className="text-center">
             <h2 className="text-4xl font-bold">Simple, Affordable Pricing</h2>
