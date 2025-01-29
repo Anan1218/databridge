@@ -22,8 +22,16 @@ export default function SecondaryNavbar() {
   const [isLoading, setIsLoading] = useState(true);
   const { user, userData } = useAuthContext();
   const router = useRouter();
+  const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
+  const [selectedDashboardType, setSelectedDashboardType] = useState<string | null>(null);
 
   const isPremium = userData?.subscription?.status === 'active';
+
+  const dashboardOptions = [
+    { id: 'analytics', name: 'Analytics Dashboard' },
+    { id: 'events', name: 'Events Dashboard' },
+    { id: 'custom', name: 'Custom Dashboard' },
+  ];
 
   useEffect(() => {
     const fetchWorkspaces = async () => {
@@ -70,6 +78,20 @@ export default function SecondaryNavbar() {
     // Implementation for creating new workspace
     // This would call the existing workspace creation API
     // Reference to WelcomeFlow.tsx lines 42-54
+  };
+
+  const handleCreateDashboard = async () => {
+    if (!selectedDashboardType || !selectedWorkspace) return;
+    
+    try {
+      // Here you would implement the dashboard creation logic
+      // Similar to handleAddDataSource in the data-sources page
+      
+      setIsDashboardModalOpen(false);
+      setSelectedDashboardType(null);
+    } catch (error) {
+      console.error('Failed to create dashboard:', error);
+    }
   };
 
   return (
@@ -155,13 +177,64 @@ export default function SecondaryNavbar() {
               Manage Workspace
             </Link>
             
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700">
+            <button 
+              onClick={() => setIsDashboardModalOpen(true)} 
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700"
+            >
               <MdAdd className="w-5 h-5" />
               New Dashboard
             </button>
           </div>
         </div>
       </div>
+
+      {isDashboardModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
+            <button
+              onClick={() => {
+                setIsDashboardModalOpen(false);
+                setSelectedDashboardType(null);
+              }}
+              className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <h2 className="text-xl font-bold mb-6 text-black">Create new dashboard</h2>
+            <div className="grid grid-cols-1 gap-3 mb-6">
+              {dashboardOptions.map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => setSelectedDashboardType(option.id)}
+                  className={`p-4 rounded border text-black ${
+                    selectedDashboardType === option.id
+                      ? 'border-purple-500 bg-blue-50'
+                      : 'border-purple-200 hover:border-purple-300'
+                  }`}
+                >
+                  {option.name}
+                </button>
+              ))}
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={handleCreateDashboard}
+                disabled={!selectedDashboardType}
+                className={`px-4 py-2 rounded-lg w-full ${
+                  selectedDashboardType
+                    ? 'bg-purple-600 text-white hover:bg-purple-700'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                Create Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
