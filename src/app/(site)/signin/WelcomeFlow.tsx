@@ -95,40 +95,44 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
   };
 
   const handleFinish = async () => {
+    if (!user?.uid) {
+      console.error('No user ID available');
+      alert('User not properly authenticated. Please try again.');
+      return;
+    }
+
     try {
-      // First create the user document
-      const initResponse = await fetch('/api/users/init', {
-        method: 'POST',
-        body: JSON.stringify({
-          uid: user?.uid,
-          userData: {
-            ...userData,
-            email: user?.email
-          }
-        })
-      });
-
-      if (!initResponse.ok) throw new Error('User init failed');
-
       // Then create their default workspace
+      const workspacePayload = {
+        uid: user.uid,
+        workspace: {
+          name: userData.businessName ? `${userData.businessName} Workspace` : 'My Workspace',
+          ownerEmail: user.email,
+          ownerName: userData.businessName || ''
+        }
+      };
+
+      console.log('Creating workspace with payload:', workspacePayload);
+
       const workspaceResponse = await fetch('/api/workspaces', {
         method: 'POST',
-        body: JSON.stringify({
-          uid: user?.uid,
-          workspace: {
-            name: `${userData.businessName || 'My'} Workspace`,
-            ownerEmail: user?.email,
-            ownerName: userData.businessName
-          }
-        })
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(workspacePayload)
       });
 
-      if (!workspaceResponse.ok) throw new Error('Workspace creation failed');
+      const workspaceData = await workspaceResponse.text();
+      console.log('Workspace response:', workspaceData);
+
+      if (!workspaceResponse.ok) {
+        throw new Error(`Failed to create workspace: ${workspaceData}`);
+      }
 
       onComplete(true);
     } catch (error) {
       console.error("Error during finish:", error);
-      alert('Setup failed. Please try again.');
+      alert(error instanceof Error ? error.message : 'Setup failed. Please try again.');
     }
   };
 

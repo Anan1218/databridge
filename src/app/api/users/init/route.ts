@@ -14,10 +14,14 @@ export async function POST(req: Request) {
       );
     }
 
-    // Use the imported FieldValue directly
+    // Initialize user with empty arrays for workspaces and other collections
     await adminDb.collection('users').doc(uid).set({
       ...userData,
+      workspaces: [],
+      dataSources: [],
+      enabledDashboards: [],
       createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp()
     });
 
     return NextResponse.json({ success: true });

@@ -1,58 +1,70 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/utils/firebaseAdmin';
-import { FieldValue } from 'firebase-admin/firestore';
-import { Workspace } from '@/types/workspace';
+import { Timestamp, FieldValue } from 'firebase-admin/firestore';
 
 export async function POST(req: Request) {
   try {
-    const { workspace, uid } = await req.json();
+    const { uid, workspace } = await req.json();
+    console.log('Creating workspace for:', uid);
 
-    if (!uid || !workspace?.name) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+    if (!uid || !workspace) {
+      return NextResponse.json({
+        success: false,
+        error: 'Missing required fields'
+      }, { status: 400 });
     }
 
-    // Create the workspace document
-    const workspaceRef = adminDb.collection('workspaces').doc();
-    const workspaceData: Workspace = {
-      id: workspaceRef.id,
-      name: workspace.name,
-      createdAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp(),
-      ownerId: uid,
-      members: [{
-        userId: uid,
-        role: 'owner',
-        joinedAt: FieldValue.serverTimestamp(),
-        email: workspace.ownerEmail,
-        name: workspace.ownerName || ''
-      }],
-      settings: {
-        defaultTheme: 'light',
-        isPublic: false,
-        allowGuestAccess: false
+    // Use a transaction to ensure user exists
+    const result = await adminDb.runTransaction(async (transaction) => {
+      const userDoc = await transaction.get(adminDb.collection('users').doc(uid));
+      
+      if (!userDoc.exists) {
+        throw new Error('User document not found');
       }
-    };
 
-    await workspaceRef.set(workspaceData);
+      const now = Timestamp.now();
+      const workspaceRef = adminDb.collection('workspaces').doc();
+      
+      const workspaceData = {
+        id: workspaceRef.id,
+        name: workspace.name,
+        createdAt: now,
+        updatedAt: now,
+        ownerId: uid,
+        members: [{
+          userId: uid,
+          role: 'owner',
+          joinedAt: now,
+          email: workspace.ownerEmail,
+          name: workspace.ownerName
+        }],
+        enabledDashboards: [],
+        dataSources: []
+      };
 
-    // Add workspace reference to user's document
-    await adminDb.collection('users').doc(uid).update({
-      workspaces: FieldValue.arrayUnion(workspaceRef.id),
-      defaultWorkspace: workspaceRef.id
+      // Create workspace
+      transaction.set(workspaceRef, workspaceData);
+      
+      // Update user with workspace reference
+      transaction.update(userDoc.ref, {
+        workspaces: FieldValue.arrayUnion(workspaceRef.id),
+        defaultWorkspace: workspaceRef.id,
+        updatedAt: now
+      });
+
+      return { workspaceId: workspaceRef.id, workspace: workspaceData };
     });
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
-      workspaceId: workspaceRef.id 
+      ...result
     });
+
   } catch (error) {
     console.error('Workspace creation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create workspace' },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    }, { status: 500 });
   }
 } 
