@@ -4,8 +4,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { User, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/utils/firebase';
 import { UserSubscription } from '@/types/user';
-import { getDoc, doc } from 'firebase/firestore';
-import { db } from '@/utils/firebase';
 
 interface AuthContextType {
   user: User | null;
