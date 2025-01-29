@@ -18,31 +18,14 @@ export default function DataSourcesPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const loadUserDataSources = async () => {
-      if (!user?.uid) return;
-      
-      try {
-        const response = await fetch(`/api/users?uid=${user.uid}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
-        
-        const userData = await response.json();
-        
-        if (userData.dataSources) {
-          const formattedSources = userData.dataSources.map((id: string) => {
-            const source = dataSourceOptions.find(opt => opt.id === id);
-            return source || { id, name: id };
-          });
-          setDataSources(formattedSources);
-        }
-      } catch (error) {
-        console.error('Error loading data sources:', error);
-      }
-    };
-
-    loadUserDataSources();
-  }, [user?.uid]);
+    if (userData?.dataSources) {
+      const formattedSources = userData.dataSources.map((id: string) => {
+        const source = dataSourceOptions.find(opt => opt.id === id);
+        return source || { id, name: id };
+      });
+      setDataSources(formattedSources);
+    }
+  }, [userData?.dataSources]);
 
   const handleAddDataSource = async () => {
     if (selectedDataSource && user?.uid) {

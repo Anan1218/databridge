@@ -22,15 +22,15 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function useAuthContext() {
+export const useAuthContext = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuthContext must be used within an AuthContextProvider');
   }
   return context;
-}
+};
 
-export function AuthContextProvider({ children }: { children: React.ReactNode }) {
+export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,12 +50,10 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
   };
 
   const refreshUserData = async () => {
-    if (user) {
-      const userDoc = await getDoc(doc(db, 'users', user.uid));
-      if (userDoc.exists()) {
-        setUserData(userDoc.data());
-      }
+    if (user?.uid) {
+      return await fetchUserData(user.uid);
     }
+    return null;
   };
 
   useEffect(() => {
@@ -106,4 +104,4 @@ export function AuthContextProvider({ children }: { children: React.ReactNode })
       {children}
     </AuthContext.Provider>
   );
-}
+};
