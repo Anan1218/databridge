@@ -1,113 +1,88 @@
-import Link from 'next/link';
-import { useAuthContext } from '@/contexts/AuthContext';
-import { db } from '@/utils/firebase';
-import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { Workspace } from '@/types/workspace';
+import { MdClose, MdCalendarToday, MdShowChart, MdTextFields } from "react-icons/md";
 
 interface DashboardModalProps {
   isOpen: boolean;
   onClose: () => void;
-  availableDataSources: string[];
-  selectedDashboardType: string | null;
-  onSelectDashboardType: (type: string) => void;
-  onCreateDashboard: () => void;
+  onCreateDashboard: (type: string) => void;
 }
+
+const dashboardTypes = [
+  {
+    id: 'calendar',
+    name: 'Calendar View',
+    description: 'Add an event calendar to track and display upcoming events',
+    icon: <MdCalendarToday className="w-6 h-6 text-purple-600" />,
+  },
+  {
+    id: 'graph',
+    name: 'Data Graph',
+    description: 'Visualize your data with customizable charts and graphs',
+    icon: <MdShowChart className="w-6 h-6 text-purple-600" />,
+  },
+  {
+    id: 'text',
+    name: 'Text Component',
+    description: 'Add formatted text, lists, or custom content',
+    icon: <MdTextFields className="w-6 h-6 text-purple-600" />,
+  }
+];
 
 export default function DashboardModal({
   isOpen,
   onClose,
-  availableDataSources,
-  selectedDashboardType,
-  onSelectDashboardType,
   onCreateDashboard,
-  workspace
-}: DashboardModalProps & { workspace: Workspace }) {
-  const { user, refreshUserData } = useAuthContext();
-  
+}: DashboardModalProps) {
   if (!isOpen) return null;
 
-  // Handle click outside modal
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
-  const handleCreateDashboard = async () => {
-    if (!selectedDashboardType || !workspace?.id) return;
-
-    try {
-      const workspaceRef = doc(db, 'workspaces', workspace.id);
-      await updateDoc(workspaceRef, {
-        enabledDashboards: arrayUnion(selectedDashboardType),
-        updatedAt: new Date()
-      });
-
-      await refreshUserData();
-      onCreateDashboard();
-    } catch (error) {
-      console.error('Error creating dashboard:', error);
-    }
-  };
-
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={handleBackdropClick}>
-      <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        <h2 className="text-xl font-bold mb-6 text-black">Create new dashboard</h2>
-        
-        {availableDataSources.length === 0 ? (
-          <div className="text-center py-4">
-            <p className="text-gray-600 mb-4">No data sources connected yet.</p>
-            <Link 
-              href="/admin/data-sources"
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
-              Connect a data source
-            </Link>
+    <div className="fixed inset-0 z-50">
+      <div className="fixed inset-0 bg-black/30" onClick={onClose} />
+      
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <div className="relative mx-auto max-w-md rounded-xl bg-white p-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-black">
+              Add New Dashboard Component
+            </h2>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
+              <MdClose className="w-6 h-6" />
+            </button>
           </div>
-        ) : (
-          <>
-            <p className="text-gray-600 mb-4">Select a data source for your dashboard:</p>
-            <div className="grid grid-cols-1 gap-3 mb-6">
-              {availableDataSources.map((source) => (
-                <button
-                  key={source}
-                  onClick={() => onSelectDashboardType(source)}
-                  className={`p-4 rounded border text-black ${
-                    selectedDashboardType === source
-                      ? 'border-purple-500 bg-blue-50'
-                      : 'border-purple-200 hover:border-purple-300'
-                  }`}
-                >
-                  {source.charAt(0).toUpperCase() + source.slice(1)}
-                </button>
-              ))}
-            </div>
-            <div className="flex justify-end">
+
+          <p className="text-gray-600 mb-6">
+            Select the type of component you want to add to your dashboard:
+          </p>
+
+          <div className="space-y-4">
+            {dashboardTypes.map((type) => (
               <button
-                onClick={handleCreateDashboard}
-                disabled={!selectedDashboardType}
-                className={`px-4 py-2 rounded-lg w-full ${
-                  selectedDashboardType
-                    ? 'bg-purple-600 text-white hover:bg-purple-700'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                }`}
+                key={type.id}
+                onClick={() => {
+                  onCreateDashboard(type.id);
+                  onClose();
+                }}
+                className="w-full p-4 rounded-lg border border-gray-200 hover:border-purple-500 
+                          hover:bg-purple-50 transition-all duration-200 group"
               >
-                Create Dashboard
+                <div className="flex items-center gap-4">
+                  <div className="flex-shrink-0 bg-purple-50 group-hover:bg-white 
+                                w-12 h-12 rounded-lg flex items-center justify-center">
+                    {type.icon}
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-semibold text-gray-900">
+                      {type.name}
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      {type.description}
+                    </p>
+                  </div>
+                </div>
               </button>
-            </div>
-          </>
-        )}
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
-} 
+}

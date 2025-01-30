@@ -9,6 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { doc, updateDoc, arrayRemove, getDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { Workspace } from "@/types/workspace";
+import EventCalendar from "./components/EventCalendar";
 
 export default function AdminDashboard() {
   const { user, userData, refreshUserData } = useAuthContext();
@@ -17,14 +18,6 @@ export default function AdminDashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isEditing = searchParams.get('edit') === 'true';
-  const [gridLayout, setGridLayout] = useState<{ [key: string]: string }>({});
-  
-  // Grid size options
-  const sizeOptions = [
-    { value: 'col-span-1', label: 'Small' },
-    { value: 'col-span-2', label: 'Medium' },
-    { value: 'col-span-3', label: 'Large' }
-  ];
 
   useEffect(() => {
     const fetchWorkspace = async () => {
@@ -55,24 +48,6 @@ export default function AdminDashboard() {
     fetchWorkspace();
   }, [user?.uid]);
 
-  useEffect(() => {
-    // Initialize grid layout with default sizes
-    if (selectedWorkspace?.enabledDashboards) {
-      const initialLayout: { [key: string]: string } = {};
-      selectedWorkspace.enabledDashboards.forEach((dashboard: string) => {
-        initialLayout[dashboard] = gridLayout[dashboard] || 'col-span-1';
-      });
-      setGridLayout(initialLayout);
-    }
-  }, [selectedWorkspace?.enabledDashboards]);
-
-  const handleSizeChange = (dashboard: string, size: string) => {
-    setGridLayout(prev => ({
-      ...prev,
-      [dashboard]: size
-    }));
-  };
-
   const handleDelete = async (dashboard: string) => {
     if (!user?.uid || !selectedWorkspace?.id) return;
 
@@ -91,11 +66,6 @@ export default function AdminDashboard() {
       await refreshUserData();
     } catch (error) {
       console.error('Error deleting dashboard:', error);
-      // Revert local state if operation fails
-      setGridLayout(prev => ({
-        ...prev,
-        [dashboard]: prev[dashboard] || 'col-span-1'
-      }));
     }
   };
 
@@ -115,11 +85,34 @@ export default function AdminDashboard() {
     if (!selectedWorkspace?.enabledDashboards) return null;
 
     return (
-      <div className="grid grid-cols-3 gap-8">
+      <div className="flex flex-col gap-6">
+        {/* Event Calendar Dashboard */}
+        <div className="w-full">
+          <div className="bg-white rounded-xl p-8 border border-gray-200">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center">
+                  <MdDashboard className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-black">
+                    Events Calendar
+                  </h3>
+                  <p className="text-gray-600">
+                    View and manage your upcoming events
+                  </p>
+                </div>
+              </div>
+            </div>
+            <EventCalendar />
+          </div>
+        </div>
+
+        {/* Existing Dashboards */}
         {selectedWorkspace.enabledDashboards.map((dashboard: string) => (
           <div 
             key={dashboard}
-            className={`${gridLayout[dashboard] || 'col-span-1'} relative group`}
+            className="w-full relative group"
           >
             {isEditing ? (
               <div className="bg-white rounded-xl p-8 border-2 border-dashed border-purple-300 h-full flex flex-col">
@@ -137,37 +130,24 @@ export default function AdminDashboard() {
                     <MdDelete className="w-5 h-5" />
                   </button>
                 </div>
-                
-                <div className="mt-auto">
-                  <label className="block text-sm font-medium text-black mb-2">
-                    Dashboard Size
-                  </label>
-                  <select
-                    value={gridLayout[dashboard] || 'col-span-1'}
-                    onChange={(e) => handleSizeChange(dashboard, e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md text-black"
-                  >
-                    {sizeOptions.map(option => (
-                      <option key={option.value} value={option.value} className="text-black">
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
               </div>
             ) : (
               <Link href={`/admin/dashboard/${dashboard}`} className="group">
                 <div className="bg-white rounded-xl p-8 border border-gray-200 hover:border-blue-500 transition-all duration-300 h-full flex flex-col">
-                  <div className="flex-1">
-                    <div className="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
-                      <MdDashboard className="w-6 h-6 text-purple-600" />
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center">
+                        <MdDashboard className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-black">
+                          {dashboard.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                        </h3>
+                        <p className="text-gray-600">
+                          View and analyze your {dashboard} data
+                        </p>
+                      </div>
                     </div>
-                    <h3 className="text-2xl font-bold mb-4 text-black">
-                      {dashboard.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                      View and analyze your {dashboard} data
-                    </p>
                   </div>
                 </div>
               </Link>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { Workspace as FirebaseWorkspace } from '@/types/workspace';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
@@ -87,14 +87,38 @@ export default function SecondaryNavbar() {
     // This would call the existing workspace creation API
   };
 
-  const handleCreateDashboard = async () => {
-    if (!selectedDashboardType || !selectedWorkspace) return;
+  const handleCreateDashboard = async (type: string) => {
+    if (!selectedWorkspace) return;
     
     try {
-      // Here you would implement the dashboard creation logic with the selected data source
-      // For now, we'll just close the modal
+      const workspaceRef = doc(db, 'workspaces', selectedWorkspace.id);
+      
+      let newDashboard;
+      switch (type) {
+        case 'calendar':
+          newDashboard = 'event-calendar';
+          break;
+        case 'graph':
+          newDashboard = 'data-graph';
+          break;
+        case 'text':
+          newDashboard = 'text-component';
+          break;
+        default:
+          return;
+      }
+
+      // Add the new dashboard to the workspace's enabledDashboards array
+      await updateDoc(workspaceRef, {
+        enabledDashboards: arrayUnion(newDashboard),
+        updatedAt: new Date()
+      });
+
+      // Refresh user data to update the UI
+      await refreshUserData();
+      
+      // Close the modal
       setIsDashboardModalOpen(false);
-      setSelectedDashboardType(null);
     } catch (error) {
       console.error('Failed to create dashboard:', error);
     }
@@ -172,13 +196,7 @@ export default function SecondaryNavbar() {
 
       <DashboardModal 
         isOpen={isDashboardModalOpen}
-        onClose={() => {
-          setIsDashboardModalOpen(false);
-          setSelectedDashboardType(null);
-        }}
-        availableDataSources={availableDataSources}
-        selectedDashboardType={selectedDashboardType}
-        onSelectDashboardType={setSelectedDashboardType}
+        onClose={() => setIsDashboardModalOpen(false)}
         onCreateDashboard={handleCreateDashboard}
       />
 

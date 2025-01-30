@@ -1,12 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
+import { useState } from 'react';
 import 'react-calendar/dist/Calendar.css';
-import { useAuthContext } from '@/contexts/AuthContext';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/utils/firebase';
-import PremiumFeatureOverlay from '@/components/PremiumFeatureOverlay';
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -17,100 +13,14 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function EventCalendar() {
   const [dateRange, setDateRange] = useState<Value>(new Date());
-  const [isLoading, setIsLoading] = useState(false);
-  const [userLocation, setUserLocation] = useState<string | null>(null);
-  const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
-  const { user, subscription } = useAuthContext();
-
-  useEffect(() => {
-    const fetchUserLocation = async () => {
-      if (!user?.uid) return;
-      
-      try {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (userDoc.exists()) {
-          setUserLocation(userDoc.data().location);
-        }
-      } catch (error) {
-        console.error('Error fetching user location:', error);
-      }
-    };
-
-    fetchUserLocation();
-  }, [user]);
-
-  const fetchEvents = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: user?.uid,
-          location: userLocation
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch events');
-      }
-
-      await response.json();
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      setMessage({ text: 'Failed to fetch events', type: 'error' });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleDateChange = (value: Value) => {
     setDateRange(value);
-    // onDateChange(value); // Temporarily commented out
+    // Handle date change logic here
   };
 
-  const isPremium = subscription?.subscriptionStatus === 'active';
-
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 relative">
-      {/* Premium overlay */}
-      {!isPremium && (
-        <PremiumFeatureOverlay 
-          title="Premium Feature"
-          description="Upgrade to Premium to access local events tracking and get real-time updates about what's happening in your area."
-        />
-      )}
-
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900">
-            {new Date().toLocaleDateString('en-US', { 
-              weekday: 'short', 
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric'
-            })}
-          </h2>
-          <p className="text-sm text-gray-500 mt-1">Today you have 0 upcoming events</p>
-        </div>
-        <div className="flex items-center gap-4">
-          {message && (
-            <div className={`text-sm ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
-              {message.text}
-            </div>
-          )}
-          <button
-            onClick={fetchEvents}
-            disabled={isLoading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-          >
-            {isLoading ? 'Fetching...' : 'Fetch Events'}
-          </button>
-        </div>
-      </div>
-
+    <div className="w-full">
       <Calendar
         onChange={handleDateChange}
         value={dateRange}
