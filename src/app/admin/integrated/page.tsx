@@ -93,9 +93,9 @@ export default function PreIntegratedPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-black mb-4">Pre-Integrated Data Sources</h1>
+        <h1 className="text-3xl font-bold text-black mb-4">Integrated Data Sources</h1>
         <p className="text-gray-600">
-          Select from our collection of pre-integrated data sources to start monitoring your business performance.
+          Select from our collection of integrated data sources to start monitoring your business performance.
         </p>
       </div>
 
