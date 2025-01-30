@@ -43,15 +43,20 @@ export async function POST(req: Request) {
       name: workspace.name || 'My Workspace',
       createdAt: now,
       updatedAt: now,
-      ownerId: uid,
-      members: [{
-        userId: uid,
-        role: 'owner' as const,
-        joinedAt: now,
+      owner: {
+        uid: uid,
         email: workspace.ownerEmail || '',
-        name: workspace.ownerName || ''
+        firstName: workspace.ownerFirstName || '',
+        lastName: workspace.ownerLastName || ''
+      },
+      members: [{
+        uid: uid,
+        email: workspace.ownerEmail || '',
+        firstName: workspace.ownerFirstName || '',
+        lastName: workspace.ownerLastName || '',
+        role: 'owner' as const
       }],
-      enabledDashboards: [],
+      dashboards: [],
       dataSources: []
     };
 

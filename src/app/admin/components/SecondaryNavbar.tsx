@@ -4,13 +4,14 @@ import Link from 'next/link';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
-import { collection, getDocs, query, where, doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { Workspace as FirebaseWorkspace } from '@/types/workspace';
+import { collection, getDocs, query, where, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { Workspace, Dashboard, DashboardType } from '@/types/workspace';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
 import WorkspaceDropdown from './navbar/WorkspaceDropdown';
 import SearchBar from './navbar/SearchBar';
 import DashboardModal from './navbar/DashboardModal';
+import { nanoid } from 'nanoid';
 
 type WorkspaceDisplay = {
   id: string;
@@ -24,7 +25,7 @@ export default function SecondaryNavbar() {
   const [workspaces, setWorkspaces] = useState<WorkspaceDisplay[]>([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState<WorkspaceDisplay | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { user, userData } = useAuthContext();
+  const { user, userData, refreshUserData } = useAuthContext();
   const router = useRouter();
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [selectedDashboardType, setSelectedDashboardType] = useState<string | null>(null);
@@ -46,7 +47,7 @@ export default function SecondaryNavbar() {
         const querySnapshot = await getDocs(query1);
         
         const workspacesData: WorkspaceDisplay[] = querySnapshot.docs.map(doc => {
-          const data = doc.data() as FirebaseWorkspace;
+          const data = doc.data() as Workspace;
           return {
             id: doc.id,
             name: data.name,
@@ -87,35 +88,39 @@ export default function SecondaryNavbar() {
     // This would call the existing workspace creation API
   };
 
-  const handleCreateDashboard = async (type: string) => {
+  const handleCreateDashboard = async (type: DashboardType) => {
     if (!selectedWorkspace) return;
     
     try {
       const workspaceRef = doc(db, 'workspaces', selectedWorkspace.id);
       
-      let newDashboard;
-      switch (type) {
-        case 'calendar':
-          newDashboard = 'event-calendar';
-          break;
-        case 'graph':
-          newDashboard = 'data-graph';
-          break;
-        case 'text':
-          newDashboard = 'text-component';
-          break;
-        default:
-          return;
-      }
+      // Get current dashboards to calculate new position
+      const workspaceDoc = await getDoc(workspaceRef);
+      const currentDashboards = workspaceDoc.data()?.dashboards || [];
+      const maxPosition = Math.max(...currentDashboards.map((d: Dashboard) => d.position || 0), -1);
+      
+      const newDashboard: Dashboard = {
+        id: nanoid(),
+        type: type,
+        title: `New ${type} Dashboard`,
+        dataSources: [],
+        settings: {},
+        position: maxPosition + 1,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
 
-      // Add the new dashboard to the workspace's enabledDashboards array
+      // Add the new dashboard to the workspace's dashboards array
       await updateDoc(workspaceRef, {
-        enabledDashboards: arrayUnion(newDashboard),
+        dashboards: arrayUnion(newDashboard),
         updatedAt: new Date()
       });
 
       // Refresh user data to update the UI
       await refreshUserData();
+      
+      // Force a page reload to refresh the grid
+      window.location.reload();
       
       // Close the modal
       setIsDashboardModalOpen(false);

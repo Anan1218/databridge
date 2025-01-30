@@ -1,26 +1,28 @@
 import { MdClose, MdCalendarToday, MdShowChart, MdTextFields } from "react-icons/md";
+import { DashboardType } from '@/types/workspace';
+import { nanoid } from 'nanoid';
 
 interface DashboardModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreateDashboard: (type: string) => void;
+  onCreateDashboard: (type: DashboardType) => void;
 }
 
 const dashboardTypes = [
   {
-    id: 'calendar',
+    id: 'calendar' as DashboardType,
     name: 'Calendar View',
     description: 'Add an event calendar to track and display upcoming events',
     icon: <MdCalendarToday className="w-6 h-6 text-purple-600" />,
   },
   {
-    id: 'graph',
+    id: 'graph' as DashboardType,
     name: 'Data Graph',
     description: 'Visualize your data with customizable charts and graphs',
     icon: <MdShowChart className="w-6 h-6 text-purple-600" />,
   },
   {
-    id: 'text',
+    id: 'text' as DashboardType,
     name: 'Text Component',
     description: 'Add formatted text, lists, or custom content',
     icon: <MdTextFields className="w-6 h-6 text-purple-600" />,

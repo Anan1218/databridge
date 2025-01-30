@@ -14,7 +14,22 @@ export interface Workspace {
     lastName: string;
     role: 'owner' | 'member';
   }>;
-  enabledDashboards: string[];
+  dashboards: Array<Dashboard>;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type DashboardType = 'calendar' | 'graph' | 'text';
+
+export interface Dashboard {
+  id: string;
+  type: DashboardType;
+  title: string;
+  dataSources?: string[];  // IDs of connected data sources
+  settings?: {
+    [key: string]: any;  // Custom settings specific to each dashboard type
+  };
+  position?: number;  // Optional position for ordering
   createdAt: Date;
   updatedAt: Date;
 }

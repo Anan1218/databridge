@@ -43,8 +43,14 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
             firstName: '',
             lastName: ''
           },
-          members: [],
-          enabledDashboards: [],
+          members: [{
+            uid: user.uid,
+            email: user.email || '',
+            firstName: '',
+            lastName: '',
+            role: 'owner'
+          }],
+          dashboards: [],
           createdAt: new Date(),
           updatedAt: new Date()
         };

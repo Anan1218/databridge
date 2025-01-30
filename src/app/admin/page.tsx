@@ -10,6 +10,7 @@ import { doc, updateDoc, arrayRemove, getDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { Workspace } from "@/types/workspace";
 import EventCalendar from "./components/EventCalendar";
+import DashboardCard from "./components/DashboardCard";
 
 export default function AdminDashboard() {
   const { user, userData, refreshUserData } = useAuthContext();
@@ -48,17 +49,17 @@ export default function AdminDashboard() {
     fetchWorkspace();
   }, [user?.uid]);
 
-  const handleDelete = async (dashboard: string) => {
+  const handleDelete = async (dashboardId: string) => {
     if (!user?.uid || !selectedWorkspace?.id) return;
 
     try {
       // Remove from local state first for optimistic update
-      const updatedDashboards = selectedWorkspace.enabledDashboards.filter(d => d !== dashboard) || [];
+      const updatedDashboards = selectedWorkspace.dashboards.filter(d => d.id !== dashboardId);
       
       // Update workspace document in Firebase
       const workspaceRef = doc(db, 'workspaces', selectedWorkspace.id);
       await updateDoc(workspaceRef, {
-        enabledDashboards: arrayRemove(dashboard),
+        dashboards: updatedDashboards,
         updatedAt: new Date()
       });
 
@@ -82,78 +83,19 @@ export default function AdminDashboard() {
   };
 
   const renderDashboards = () => {
-    if (!selectedWorkspace?.enabledDashboards) return null;
-
+    if (!selectedWorkspace?.dashboards) return null;
+    
     return (
-      <div className="flex flex-col gap-6">
-        {/* Event Calendar Dashboard */}
-        <div className="w-full">
-          <div className="bg-white rounded-xl p-8 border border-gray-200">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-4">
-                <div className="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center">
-                  <MdDashboard className="w-6 h-6 text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-black">
-                    Events Calendar
-                  </h3>
-                  <p className="text-gray-600">
-                    View and manage your upcoming events
-                  </p>
-                </div>
-              </div>
-            </div>
-            <EventCalendar />
-          </div>
-        </div>
-
-        {/* Existing Dashboards */}
-        {selectedWorkspace.enabledDashboards.map((dashboard: string) => (
-          <div 
-            key={dashboard}
-            className="w-full relative group"
-          >
-            {isEditing ? (
-              <div className="bg-white rounded-xl p-8 border-2 border-dashed border-purple-300 h-full flex flex-col">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-2">
-                    <MdDragIndicator className="w-6 h-6 text-gray-400" />
-                    <h3 className="text-2xl font-bold text-black">
-                      {dashboard.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-                    </h3>
-                  </div>
-                  <button
-                    onClick={() => handleDelete(dashboard)}
-                    className="text-red-500 hover:text-red-700 p-2"
-                  >
-                    <MdDelete className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <Link href={`/admin/dashboard/${dashboard}`} className="group">
-                <div className="bg-white rounded-xl p-8 border border-gray-200 hover:border-blue-500 transition-all duration-300 h-full flex flex-col">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center">
-                        <MdDashboard className="w-6 h-6 text-purple-600" />
-                      </div>
-                      <div>
-                        <h3 className="text-2xl font-bold text-black">
-                          {dashboard.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-                        </h3>
-                        <p className="text-gray-600">
-                          View and analyze your {dashboard} data
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            )}
-          </div>
-        ))}
+      <div className="grid grid-cols-1 gap-6">
+        {selectedWorkspace.dashboards
+          .sort((a, b) => (a.position || 0) - (b.position || 0))
+          .map((dashboard) => (
+            <DashboardCard
+              key={dashboard.id}
+              dashboard={dashboard}
+              onDelete={() => handleDelete(dashboard.id)}
+            />
+          ))}
       </div>
     );
   };
@@ -197,7 +139,7 @@ export default function AdminDashboard() {
   return (
     <div className="flex-1">
       <div className="max-w-6xl mx-auto px-4 py-12 text-center">
-        {!selectedWorkspace?.enabledDashboards?.length && (
+        {!selectedWorkspace?.dashboards?.length && (
           <>
             <h1 className="text-3xl font-bold mb-8 text-black">Build Your Dashboard</h1>
             <p className="text-black mb-12 text-lg">
@@ -206,7 +148,7 @@ export default function AdminDashboard() {
           </>
         )}
 
-        {selectedWorkspace?.enabledDashboards?.length ? renderDashboards() : renderInitialSetup()}
+        {selectedWorkspace?.dashboards?.length ? renderDashboards() : renderInitialSetup()}
       </div>
 
       <PremiumUpgradeModal 
