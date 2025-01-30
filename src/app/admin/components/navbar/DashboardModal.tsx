@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { Workspace } from '@/types/workspace';
 
 interface DashboardModalProps {
   isOpen: boolean;
@@ -18,8 +19,9 @@ export default function DashboardModal({
   availableDataSources,
   selectedDashboardType,
   onSelectDashboardType,
-  onCreateDashboard
-}: DashboardModalProps) {
+  onCreateDashboard,
+  workspace
+}: DashboardModalProps & { workspace: Workspace }) {
   const { user, refreshUserData } = useAuthContext();
   
   if (!isOpen) return null;
@@ -32,20 +34,16 @@ export default function DashboardModal({
   };
 
   const handleCreateDashboard = async () => {
-    if (!selectedDashboardType || !user?.uid) return;
+    if (!selectedDashboardType || !workspace?.id) return;
 
     try {
-      // Update user document in Firebase
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, {
+      const workspaceRef = doc(db, 'workspaces', workspace.id);
+      await updateDoc(workspaceRef, {
         enabledDashboards: arrayUnion(selectedDashboardType),
         updatedAt: new Date()
       });
 
-      // Refresh user data in context
       await refreshUserData();
-
-      // Call the original onCreateDashboard function
       onCreateDashboard();
     } catch (error) {
       console.error('Error creating dashboard:', error);

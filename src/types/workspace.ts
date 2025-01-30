@@ -14,6 +14,7 @@ export interface Workspace {
     lastName: string;
     role: 'owner' | 'member';
   }>;
+  enabledDashboards: string[];
   createdAt: Date;
   updatedAt: Date;
 }

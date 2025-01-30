@@ -6,7 +6,7 @@ import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { Workspace as FirebaseWorkspace } from '@/types/workspace';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
 import WorkspaceDropdown from './navbar/WorkspaceDropdown';
 import SearchBar from './navbar/SearchBar';
@@ -30,6 +30,7 @@ export default function SecondaryNavbar() {
   const [selectedDashboardType, setSelectedDashboardType] = useState<string | null>(null);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
   const [availableDataSources, setAvailableDataSources] = useState<string[]>([]);
+  const searchParams = useSearchParams();
 
   const isPremium = userData?.subscription?.status === 'active';
 
@@ -99,6 +100,17 @@ export default function SecondaryNavbar() {
     }
   };
 
+  const handleEditLayout = () => {
+    const currentUrl = new URL(window.location.href);
+    const isEditing = currentUrl.searchParams.get('edit') === 'true';
+    
+    if (isEditing) {
+      router.push('/admin');
+    } else {
+      router.push('/admin?edit=true');
+    }
+  };
+
   return (
     <nav className="bg-white border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -136,11 +148,15 @@ export default function SecondaryNavbar() {
             </Link>
             
             <button 
-              onClick={() => router.push('/admin/layout')} 
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-purple-600 border border-purple-600 rounded-lg hover:bg-purple-50"
+              onClick={handleEditLayout}
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${
+                searchParams.get('edit') === 'true'
+                  ? 'text-white bg-purple-600 hover:bg-purple-700'
+                  : 'text-purple-600 border border-purple-600 hover:bg-purple-50'
+              } rounded-lg`}
             >
               <MdEdit className="w-5 h-5" />
-              Edit Layout
+              {searchParams.get('edit') === 'true' ? 'Done Editing' : 'Edit Layout'}
             </button>
             
             <button 

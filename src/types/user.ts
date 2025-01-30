@@ -34,6 +34,5 @@ export interface UserData {
   createdAt: Date;
   updatedAt: Date;
   dataSources: string[];
-  enabledDashboards: string[];
   receiveUpdates: boolean;
 }

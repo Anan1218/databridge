@@ -3,6 +3,7 @@
 import { useAuthContext } from "@/contexts/AuthContext";
 import { UserData } from '@/types/user';
 import { useEffect, useRef } from "react";
+import { Workspace } from '@/types/workspace';
 
 interface WelcomeFlowProps {
   onComplete: (completed: boolean) => void;
@@ -26,7 +27,6 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
           businessName: '',
           createdAt: new Date(),
           dataSources: [],
-          enabledDashboards: [],
           website: '',
           firstName: '',
           lastName: '',
@@ -34,11 +34,30 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
           receiveUpdates: false
         };
 
-        // Initialize user
-        const response = await fetch('/api/users', {
+        // Initialize workspace
+        const workspaceData: Workspace = {
+          name: 'My Workspace',
+          owner: {
+            uid: user.uid,
+            email: user.email || '',
+            firstName: '',
+            lastName: ''
+          },
+          members: [],
+          enabledDashboards: [],
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+
+        // Initialize user and workspace
+        const response = await fetch('/api/users/init', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ uid: user.uid, userData })
+          body: JSON.stringify({ 
+            uid: user.uid, 
+            userData,
+            workspaceData 
+          })
         });
 
         if (!response.ok) {
