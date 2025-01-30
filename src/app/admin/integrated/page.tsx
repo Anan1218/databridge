@@ -9,7 +9,8 @@ import {
   FaInstagram, 
   FaYelp, 
   FaTripadvisor,
-  FaTwitter
+  FaTwitter,
+  FaTicketAlt
 } from "react-icons/fa";
 import { SiGoogleanalytics } from "react-icons/si";
 
@@ -21,8 +22,8 @@ interface DataSource {
   status: 'available' | 'coming_soon';
 }
 
-export default function PreIntegratedPage() {
-  const { user } = useAuthContext();
+export default function IntegratedPage() {
+  const { user, userData, refreshUserData } = useAuthContext();
   const router = useRouter();
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
 
@@ -32,25 +33,32 @@ export default function PreIntegratedPage() {
 
   const dataSources: DataSource[] = [
     {
+      id: 'ticketmaster',
+      name: 'Ticketmaster',
+      description: 'Monitor ticket sales, event performance, and audience demographics.',
+      icon: <FaTicketAlt className="w-8 h-8 text-blue-700" />,
+      status: 'available'
+    },
+    {
       id: 'google-business',
       name: 'Google Business Profile',
       description: 'Connect your Google Business Profile to monitor reviews, ratings, and customer interactions.',
       icon: <FaGoogle className="w-8 h-8 text-blue-500" />,
-      status: 'available'
+      status: 'coming_soon'
     },
     {
       id: 'facebook',
       name: 'Facebook',
       description: 'Track your Facebook page engagement, reviews, and social metrics.',
       icon: <FaFacebookSquare className="w-8 h-8 text-blue-600" />,
-      status: 'available'
+      status: 'coming_soon'
     },
     {
       id: 'instagram',
       name: 'Instagram',
       description: 'Monitor your Instagram engagement, follower growth, and content performance.',
       icon: <FaInstagram className="w-8 h-8 text-pink-500" />,
-      status: 'available'
+      status: 'coming_soon'
     },
     {
       id: 'yelp',
@@ -82,11 +90,34 @@ export default function PreIntegratedPage() {
     },
   ];
 
-  const handleSourceSelect = (sourceId: string) => {
+  const handleSourceSelect = async (sourceId: string) => {
+    if (!user) return;
+    
     const source = dataSources.find(s => s.id === sourceId);
-    if (source?.status === 'available') {
-      setSelectedSource(sourceId);
-      router.push(`/admin/integration/${sourceId}`);
+    if (source?.status !== 'available') return;
+
+    // Check if user already has this data source
+    if (userData?.dataSources?.includes(sourceId)) {
+      return; // Source already connected
+    }
+
+    try {
+      const response = await fetch('/api/data-sources', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          uid: user.uid,
+          dataSource: sourceId
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to connect data source');
+      }
+
+      await refreshUserData();
+    } catch (error) {
+      console.error('Error connecting data source:', error);
     }
   };
 
@@ -100,40 +131,50 @@ export default function PreIntegratedPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dataSources.map((source) => (
-          <div
-            key={source.id}
-            onClick={() => handleSourceSelect(source.id)}
-            className={`
-              bg-white rounded-lg p-6 border border-gray-200 
-              ${source.status === 'available' 
-                ? 'cursor-pointer hover:border-blue-500 hover:shadow-md transition-all duration-200' 
-                : 'opacity-75 cursor-not-allowed'
-              }
-            `}
-          >
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0">
-                {source.icon}
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {source.name}
-                  </h3>
-                  {source.status === 'coming_soon' && (
-                    <span className="px-2 py-1 text-xs font-medium text-gray-500 bg-gray-100 rounded-full">
-                      Coming Soon
-                    </span>
-                  )}
+        {dataSources.map((source) => {
+          const isConnected = userData?.dataSources?.includes(source.id);
+          
+          return (
+            <div
+              key={source.id}
+              onClick={() => !isConnected && handleSourceSelect(source.id)}
+              className={`
+                bg-white rounded-lg p-6 border border-gray-200 
+                ${source.status === 'available' 
+                  ? isConnected
+                    ? 'opacity-75 cursor-not-allowed border-green-500'
+                    : 'cursor-pointer hover:border-blue-500 hover:shadow-md transition-all duration-200'
+                  : 'opacity-75 cursor-not-allowed'
+                }
+              `}
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  {source.icon}
                 </div>
-                <p className="mt-1 text-gray-600">
-                  {source.description}
-                </p>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {source.name}
+                    </h3>
+                    {source.status === 'coming_soon' ? (
+                      <span className="px-2 py-1 text-xs font-medium text-gray-500 bg-gray-100 rounded-full">
+                        Coming Soon
+                      </span>
+                    ) : isConnected && (
+                      <span className="px-2 py-1 text-xs font-medium text-green-500 bg-green-100 rounded-full">
+                        Connected
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-gray-600">
+                    {source.description}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

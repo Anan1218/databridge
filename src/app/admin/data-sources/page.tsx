@@ -13,7 +13,7 @@ export default function DataSourcesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
   const [selectedDataSource, setSelectedDataSource] = useState<string | null>(null);
-  const [dataSources, setDataSources] = useState<Array<{ id: string; name: string }>>([]);
+  const [dataSources, setDataSources] = useState<Array<{ id: string; name: string; status?: string }>>([]);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const router = useRouter();
 
@@ -100,19 +100,56 @@ export default function DataSourcesPage() {
     setIsModalOpen(true);
   };
 
+  const handleSourceSelect = async (sourceId: string) => {
+    if (!user) return;
+    
+    const source = dataSources.find(s => s.id === sourceId);
+    if (source?.status !== 'available') return;
+
+    // Check if user already has this data source
+    if (userData?.dataSources?.includes(sourceId)) {
+      return; // Source already connected
+    }
+
+    try {
+      const response = await fetch('/api/data-sources', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          uid: user.uid,
+          dataSource: sourceId
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to connect data source');
+      }
+
+      // Refresh user data to get updated data sources
+      await refreshUserData();
+    } catch (error) {
+      console.error('Error connecting data source:', error);
+    }
+  };
+
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-black">Data Sources</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold text-black">Data Sources</h1>
+          <span className="bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-600">
+            {dataSources.length} / {userData?.subscription?.status === 'active' ? '10' : '3'} sources
+          </span>
+        </div>
         <div className="flex gap-4">
           <button
-            onClick={() => {/* TODO: Add handler */}}
+            onClick={() => router.push('/admin/integrated')}
             className="border border-purple-600 text-purple-600 px-4 py-2 rounded-lg hover:bg-purple-50 transition-colors flex items-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Starter Sources
+            Integrated Sources
           </button>
           <button
             onClick={handleConnectSource}
@@ -121,7 +158,7 @@ export default function DataSourcesPage() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Connect Custom Source
+            Custom Sources
           </button>
         </div>
       </div>
