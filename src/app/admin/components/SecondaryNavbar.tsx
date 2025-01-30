@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdEdit } from 'react-icons/md';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
@@ -134,6 +134,14 @@ export default function SecondaryNavbar() {
             >
               Manage Workspace
             </Link>
+            
+            <button 
+              onClick={() => router.push('/admin/layout')} 
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-purple-600 border border-purple-600 rounded-lg hover:bg-purple-50"
+            >
+              <MdEdit className="w-5 h-5" />
+              Edit Layout
+            </button>
             
             <button 
               onClick={() => setIsDashboardModalOpen(true)} 

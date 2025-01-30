@@ -48,16 +48,6 @@ export default function AdminDashboard() {
             </div>
           </Link>
         ))}
-        
-        {/* Add New Dashboard Button */}
-        <Link href="/admin/integrated" className="group">
-          <div className="bg-white rounded-xl p-8 border border-dashed border-gray-300 hover:border-blue-500 transition-all duration-300 h-full flex flex-col items-center justify-center">
-            <div className="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
-              <MdStorage className="w-6 h-6 text-purple-600" />
-            </div>
-            <h3 className="text-xl font-medium text-gray-600">Add New Dashboard</h3>
-          </div>
-        </Link>
       </div>
     );
   };
@@ -101,14 +91,14 @@ export default function AdminDashboard() {
   return (
     <div className="flex-1">
       <div className="max-w-6xl mx-auto px-4 py-12 text-center">
-        <h1 className="text-3xl font-bold mb-8 text-black">
-          {userData?.enabledDashboards?.length ? 'Your Dashboards' : 'Build Your Dashboard'}
-        </h1>
-        <p className="text-black mb-12 text-lg">
-          {userData?.enabledDashboards?.length 
-            ? 'View and manage your connected data sources'
-            : 'Select a category below to get started with your data monitoring setup.'}
-        </p>
+        {!userData?.enabledDashboards?.length && (
+          <>
+            <h1 className="text-3xl font-bold mb-8 text-black">Build Your Dashboard</h1>
+            <p className="text-black mb-12 text-lg">
+              Select a category below to get started with your data monitoring setup.
+            </p>
+          </>
+        )}
 
         {userData?.enabledDashboards?.length ? renderDashboards() : renderInitialSetup()}
       </div>
