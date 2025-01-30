@@ -20,6 +20,7 @@ interface DataSource {
   description: string;
   icon: JSX.Element;
   status: 'available' | 'coming_soon';
+  tags: string[];
 }
 
 export default function IntegratedPage() {
@@ -35,58 +36,26 @@ export default function IntegratedPage() {
     {
       id: 'ticketmaster',
       name: 'Ticketmaster',
-      description: 'Monitor ticket sales, event performance, and audience demographics.',
+      description: 'Monitor events near your area',
       icon: <FaTicketAlt className="w-8 h-8 text-blue-700" />,
-      status: 'available'
+      status: 'available',
+      tags: ['calendar']
     },
     {
       id: 'google-business',
-      name: 'Google Business Profile',
+      name: 'Google Business',
       description: 'Connect your Google Business Profile to monitor reviews, ratings, and customer interactions.',
       icon: <FaGoogle className="w-8 h-8 text-blue-500" />,
-      status: 'coming_soon'
-    },
-    {
-      id: 'facebook',
-      name: 'Facebook',
-      description: 'Track your Facebook page engagement, reviews, and social metrics.',
-      icon: <FaFacebookSquare className="w-8 h-8 text-blue-600" />,
-      status: 'coming_soon'
-    },
-    {
-      id: 'instagram',
-      name: 'Instagram',
-      description: 'Monitor your Instagram engagement, follower growth, and content performance.',
-      icon: <FaInstagram className="w-8 h-8 text-pink-500" />,
-      status: 'coming_soon'
+      status: 'coming_soon',
+      tags: ['analytics']
     },
     {
       id: 'yelp',
       name: 'Yelp',
       description: 'Track your Yelp reviews, ratings, and customer feedback.',
       icon: <FaYelp className="w-8 h-8 text-red-500" />,
-      status: 'coming_soon'
-    },
-    {
-      id: 'tripadvisor',
-      name: 'TripAdvisor',
-      description: 'Monitor your TripAdvisor reviews, ratings, and rankings.',
-      icon: <FaTripadvisor className="w-8 h-8 text-green-500" />,
-      status: 'coming_soon'
-    },
-    {
-      id: 'twitter',
-      name: 'Twitter',
-      description: 'Track mentions, engagement, and social sentiment on Twitter.',
-      icon: <FaTwitter className="w-8 h-8 text-blue-400" />,
-      status: 'coming_soon'
-    },
-    {
-      id: 'google-analytics',
-      name: 'Google Analytics',
-      description: 'Connect your Google Analytics to track website traffic and user behavior.',
-      icon: <SiGoogleanalytics className="w-8 h-8 text-yellow-500" />,
-      status: 'coming_soon'
+      status: 'coming_soon',
+      tags: ['reviews']
     },
   ];
 
@@ -152,11 +121,23 @@ export default function IntegratedPage() {
                 <div className="flex-shrink-0">
                   {source.icon}
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {source.name}
-                    </h3>
+                <div className="flex-grow">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {source.name}
+                      </h3>
+                      <div className="flex flex-wrap gap-2 mt-1 mb-2">
+                        {source.tags.map((tag) => (
+                          <span 
+                            key={tag}
+                            className="px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                     {source.status === 'coming_soon' ? (
                       <span className="px-2 py-1 text-xs font-medium text-gray-500 bg-gray-100 rounded-full">
                         Coming Soon
@@ -167,7 +148,7 @@ export default function IntegratedPage() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-gray-600">
+                  <p className="text-gray-600">
                     {source.description}
                   </p>
                 </div>

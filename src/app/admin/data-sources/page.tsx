@@ -4,33 +4,29 @@ import { useAuthContext } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
 
-const dataSourceOptions = [
-  { id: 'ticketmaster', name: 'Ticketmaster' },
-];
-
 export default function DataSourcesPage() {
   const { user, userData, refreshUserData } = useAuthContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
-  const [selectedDataSource, setSelectedDataSource] = useState<string | null>(null);
+  const [customSourceName, setCustomSourceName] = useState('');
   const [dataSources, setDataSources] = useState<Array<{ id: string; name: string; status?: string }>>([]);
   const [isDisconnecting, setIsDisconnecting] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     if (userData?.dataSources) {
-      const formattedSources = userData.dataSources.map((id: string) => {
-        const source = dataSourceOptions.find(opt => opt.id === id);
-        return source || { id, name: id };
-      });
+      const formattedSources = userData.dataSources.map((id: string) => ({
+        id,
+        name: id
+      }));
       setDataSources(formattedSources);
     }
   }, [userData?.dataSources]);
 
   const handleAddDataSource = async () => {
-    if (selectedDataSource && user?.uid) {
-      const newSource = dataSourceOptions.find(opt => opt.id === selectedDataSource);
-      if (newSource && !dataSources.find(ds => ds.id === newSource.id)) {
+    if (customSourceName && user?.uid) {
+      const newSource = { id: customSourceName, name: customSourceName };
+      if (!dataSources.find(ds => ds.id === newSource.id)) {
         setDataSources(prev => [...prev, newSource]);
         
         try {
@@ -39,7 +35,7 @@ export default function DataSourcesPage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               uid: user.uid,
-              dataSource: selectedDataSource
+              dataSource: customSourceName
             })
           });
           
@@ -52,7 +48,7 @@ export default function DataSourcesPage() {
         }
       }
       setIsModalOpen(false);
-      setSelectedDataSource(null);
+      setCustomSourceName('');
     }
   };
 
@@ -216,7 +212,7 @@ export default function DataSourcesPage() {
                 <button
                 onClick={() => {
                   setIsModalOpen(false);
-                  setSelectedDataSource(null);
+                  setCustomSourceName('');
                 }}
               className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full"
               >
@@ -225,28 +221,22 @@ export default function DataSourcesPage() {
               </svg>
               </button>
 
-            <h2 className="text-xl font-bold mb-6 text-black">Connect custom data</h2>
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              {dataSourceOptions.map((option) => (
-              <button
-                  key={option.id}
-                  onClick={() => setSelectedDataSource(option.id)}
-                  className={`p-4 rounded border text-black ${
-                    selectedDataSource === option.id
-                      ? 'border-purple-500 bg-blue-50'
-                      : 'border-purple-200 hover:border-purple-300'
-                }`}
-              >
-                  {option.name}
-              </button>
-              ))}
-          </div>
+            <h2 className="text-xl font-bold mb-6 text-black">Add Custom Data Source</h2>
+            <div className="mb-6">
+              <input
+                type="text"
+                value={customSourceName}
+                onChange={(e) => setCustomSourceName(e.target.value)}
+                placeholder="Enter data source name"
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
             <div className="flex justify-end">
               <button
                 onClick={handleAddDataSource}
-                disabled={!selectedDataSource}
+                disabled={!customSourceName}
                 className={`px-4 py-2 rounded-lg w-full ${
-                  selectedDataSource
+                  customSourceName
                     ? 'bg-purple-600 text-white hover:bg-purple-700'
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
