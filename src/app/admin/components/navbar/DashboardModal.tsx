@@ -1,4 +1,7 @@
 import Link from 'next/link';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { db } from '@/utils/firebase';
+import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 interface DashboardModalProps {
   isOpen: boolean;
@@ -17,12 +20,35 @@ export default function DashboardModal({
   onSelectDashboardType,
   onCreateDashboard
 }: DashboardModalProps) {
+  const { user, refreshUserData } = useAuthContext();
+  
   if (!isOpen) return null;
 
   // Handle click outside modal
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
+    }
+  };
+
+  const handleCreateDashboard = async () => {
+    if (!selectedDashboardType || !user?.uid) return;
+
+    try {
+      // Update user document in Firebase
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        enabledDashboards: arrayUnion(selectedDashboardType),
+        updatedAt: new Date()
+      });
+
+      // Refresh user data in context
+      await refreshUserData();
+
+      // Call the original onCreateDashboard function
+      onCreateDashboard();
+    } catch (error) {
+      console.error('Error creating dashboard:', error);
     }
   };
 
@@ -70,7 +96,7 @@ export default function DashboardModal({
             </div>
             <div className="flex justify-end">
               <button
-                onClick={onCreateDashboard}
+                onClick={handleCreateDashboard}
                 disabled={!selectedDashboardType}
                 className={`px-4 py-2 rounded-lg w-full ${
                   selectedDashboardType
