@@ -1,8 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { MdEmail, MdHelp, MdArticle, MdChat } from 'react-icons/md';
+import { MdOutlineHelp } from 'react-icons/md';
+import { MdEmail, MdArticle } from 'react-icons/md';
 
 interface HelpCategory {
   id: string;
@@ -16,14 +15,12 @@ interface HelpCategory {
 }
 
 export default function HelpPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
   const helpCategories: HelpCategory[] = [
     {
       id: 'getting-started',
       title: 'Getting Started',
       description: 'Learn the basics of setting up and using DataBridge',
-      icon: <MdHelp className="w-6 h-6 text-purple-600" />,
+      icon: <MdOutlineHelp className="w-6 h-6 text-purple-600" />,
       articles: [
         {
           title: 'Setting up your first workspace',
@@ -60,8 +57,6 @@ export default function HelpPage() {
       ]
     }
   ];
-
-  const selectedCategoryData = helpCategories.find(cat => cat.id === selectedCategory);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -103,60 +98,29 @@ export default function HelpPage() {
       </div>
 
       {/* Help Categories */}
-      {/* <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {helpCategories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => setSelectedCategory(category.id)}
-            className={`text-left p-6 rounded-lg border transition-all ${
-              selectedCategory === category.id
-                ? 'border-purple-500 bg-purple-50'
-                : 'border-gray-200 hover:border-purple-300 bg-white'
-            }`}
-          >
-            <div className="flex items-start gap-4">
+          <div key={category.id} className="bg-white rounded-lg p-6 border border-gray-200">
+            <div className="flex items-start gap-4 mb-4">
               <div className="bg-purple-100 p-3 rounded-lg">
                 {category.icon}
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-black mb-1">
-                  {category.title}
-                </h3>
-                <p className="text-gray-600">
-                  {category.description}
-                </p>
+                <h2 className="text-xl font-semibold text-black">{category.title}</h2>
+                <p className="text-gray-600">{category.description}</p>
               </div>
             </div>
-          </button>
-        ))}
-      </div> */}
-
-      {/* Selected Category Articles */}
-      {/* {selectedCategoryData && (
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold text-black mb-6">
-            {selectedCategoryData.title} Articles
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {selectedCategoryData.articles.map((article, index) => (
-              <div 
-                key={index}
-                className="bg-white p-6 rounded-lg border border-gray-200 hover:border-purple-300 transition-all"
-              >
-                <h3 className="text-lg font-semibold text-black mb-2">
-                  {article.title}
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  {article.description}
-                </p>
-                <button className="text-purple-600 font-medium hover:text-purple-700">
-                  Read more →
-                </button>
-              </div>
-            ))}
+            <div className="space-y-4">
+              {category.articles.map((article, index) => (
+                <div key={index} className="border-t pt-4">
+                  <h3 className="font-medium text-black mb-1">{article.title}</h3>
+                  <p className="text-gray-600 text-sm">{article.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )} */}
+        ))}
+      </div>
     </div>
   );
 }

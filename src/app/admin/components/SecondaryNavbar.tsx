@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { MdWork, MdArrowDropDown, MdAdd, MdSearch } from 'react-icons/md';
+import { MdAdd } from 'react-icons/md';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
@@ -32,12 +32,6 @@ export default function SecondaryNavbar() {
   const [availableDataSources, setAvailableDataSources] = useState<string[]>([]);
 
   const isPremium = userData?.subscription?.status === 'active';
-
-  const dashboardOptions = [
-    { id: 'analytics', name: 'Analytics Dashboard' },
-    { id: 'events', name: 'Events Dashboard' },
-    { id: 'custom', name: 'Custom Dashboard' },
-  ];
 
   useEffect(() => {
     const fetchWorkspaces = async () => {

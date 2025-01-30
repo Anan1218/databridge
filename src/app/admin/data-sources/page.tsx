@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
 
 export default function DataSourcesPage() {
-  const { user, userData, refreshUserData } = useAuthContext();
+  const { user, userData } = useAuthContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
   const [customSourceName, setCustomSourceName] = useState('');
@@ -94,38 +94,6 @@ export default function DataSourcesPage() {
     
     // If premium, open the modal
     setIsModalOpen(true);
-  };
-
-  const handleSourceSelect = async (sourceId: string) => {
-    if (!user) return;
-    
-    const source = dataSources.find(s => s.id === sourceId);
-    if (source?.status !== 'available') return;
-
-    // Check if user already has this data source
-    if (userData?.dataSources?.includes(sourceId)) {
-      return; // Source already connected
-    }
-
-    try {
-      const response = await fetch('/api/data-sources', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          uid: user.uid,
-          dataSource: sourceId
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to connect data source');
-      }
-
-      // Refresh user data to get updated data sources
-      await refreshUserData();
-    } catch (error) {
-      console.error('Error connecting data source:', error);
-    }
   };
 
   return (

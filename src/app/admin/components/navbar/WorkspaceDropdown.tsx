@@ -1,5 +1,10 @@
 import { MdWork, MdArrowDropDown, MdAdd } from 'react-icons/md';
-import { WorkspaceDisplay } from '../types/workspace';
+
+interface WorkspaceDisplay {
+  id: string;
+  name: string;
+  role: 'Owner' | 'User';
+}
 
 interface WorkspaceDropdownProps {
   showDropdown: boolean;
