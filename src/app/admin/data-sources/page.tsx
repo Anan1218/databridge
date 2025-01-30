@@ -9,7 +9,7 @@ const dataSourceOptions = [
 ];
 
 export default function DataSourcesPage() {
-  const { user, userData } = useAuthContext();
+  const { user, userData, refreshUserData } = useAuthContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
   const [selectedDataSource, setSelectedDataSource] = useState<string | null>(null);
