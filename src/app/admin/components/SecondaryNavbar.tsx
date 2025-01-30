@@ -8,6 +8,9 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { Workspace as FirebaseWorkspace } from '@/types/workspace';
 import { useRouter } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
+import WorkspaceDropdown from './navbar/WorkspaceDropdown';
+import SearchBar from './navbar/SearchBar';
+import DashboardModal from './navbar/DashboardModal';
 
 type WorkspaceDisplay = {
   id: string;
@@ -107,70 +110,23 @@ export default function SecondaryNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-12 items-center">
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <button 
-                className="flex items-center gap-2 text-gray-700 hover:text-blue-600"
-                onClick={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
-              >
-                <MdWork className="w-5 h-5" />
-                <span className="text-sm font-medium">
-                  {selectedWorkspace?.name || 'Select Workspace'}
-                </span>
-                <MdArrowDropDown className="w-5 h-5" />
-              </button>
+            <WorkspaceDropdown 
+              showDropdown={showWorkspaceDropdown}
+              selectedWorkspace={selectedWorkspace}
+              workspaces={workspaces}
+              isLoading={isLoading}
+              onToggleDropdown={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
+              onSelectWorkspace={(workspace) => {
+                setSelectedWorkspace(workspace);
+                setShowWorkspaceDropdown(false);
+              }}
+              onNewWorkspace={handleNewWorkspace}
+            />
 
-              {showWorkspaceDropdown && (
-                <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                  {isLoading ? (
-                    <div className="px-4 py-2 text-sm text-gray-500">Loading...</div>
-                  ) : workspaces.length > 0 ? (
-                    <>
-                      {workspaces.map((workspace) => (
-                        <button
-                          key={workspace.id}
-                          onClick={() => {
-                            setSelectedWorkspace(workspace);
-                            setShowWorkspaceDropdown(false);
-                          }}
-                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"
-                        >
-                          <span>{workspace.name}</span>
-                          <span className={`text-xs ${
-                            workspace.role === 'Owner' 
-                              ? 'bg-blue-100 text-blue-800' 
-                              : 'bg-gray-100 text-gray-800'
-                          } px-2 py-1 rounded`}>
-                            {workspace.role}
-                          </span>
-                        </button>
-                      ))}
-                      <div className="border-t mt-1 pt-1">
-                        <button 
-                          onClick={handleNewWorkspace}
-                          className="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 flex items-center"
-                        >
-                          <MdAdd className="mr-2" />
-                          New Workspace
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="px-4 py-2 text-sm text-gray-500">No workspaces found</div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            <div className="w-64 relative">
-              <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search dashboards..."
-                className="w-full pl-10 pr-4 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/50"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
+            <SearchBar 
+              value={searchQuery}
+              onChange={setSearchQuery}
+            />
           </div>
 
           <div className="flex items-center gap-4">
@@ -196,69 +152,17 @@ export default function SecondaryNavbar() {
         </div>
       </div>
 
-      {isDashboardModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
-            <button
-              onClick={() => {
-                setIsDashboardModalOpen(false);
-                setSelectedDashboardType(null);
-              }}
-              className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            <h2 className="text-xl font-bold mb-6 text-black">Create new dashboard</h2>
-            
-            {availableDataSources.length === 0 ? (
-              <div className="text-center py-4">
-                <p className="text-gray-600 mb-4">No data sources connected yet.</p>
-                <Link 
-                  href="/admin/data-sources"
-                  className="text-blue-600 hover:text-blue-700 font-medium"
-                >
-                  Connect a data source
-                </Link>
-              </div>
-            ) : (
-              <>
-                <p className="text-gray-600 mb-4">Select a data source for your dashboard:</p>
-                <div className="grid grid-cols-1 gap-3 mb-6">
-                  {availableDataSources.map((source) => (
-                    <button
-                      key={source}
-                      onClick={() => setSelectedDashboardType(source)}
-                      className={`p-4 rounded border text-black ${
-                        selectedDashboardType === source
-                          ? 'border-purple-500 bg-blue-50'
-                          : 'border-purple-200 hover:border-purple-300'
-                      }`}
-                    >
-                      {source.charAt(0).toUpperCase() + source.slice(1)}
-                    </button>
-                  ))}
-                </div>
-                <div className="flex justify-end">
-                  <button
-                    onClick={handleCreateDashboard}
-                    disabled={!selectedDashboardType}
-                    className={`px-4 py-2 rounded-lg w-full ${
-                      selectedDashboardType
-                        ? 'bg-purple-600 text-white hover:bg-purple-700'
-                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    }`}
-                  >
-                    Create Dashboard
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      )}
+      <DashboardModal 
+        isOpen={isDashboardModalOpen}
+        onClose={() => {
+          setIsDashboardModalOpen(false);
+          setSelectedDashboardType(null);
+        }}
+        availableDataSources={availableDataSources}
+        selectedDashboardType={selectedDashboardType}
+        onSelectDashboardType={setSelectedDashboardType}
+        onCreateDashboard={handleCreateDashboard}
+      />
 
       <PremiumUpgradeModal 
         isOpen={isPremiumModalOpen}
