@@ -26,6 +26,7 @@ export default function SecondaryNavbar() {
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [selectedDashboardType, setSelectedDashboardType] = useState<string | null>(null);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
+  const [availableDataSources, setAvailableDataSources] = useState<string[]>([]);
 
   const isPremium = userData?.subscription?.status === 'active';
 
@@ -72,6 +73,12 @@ export default function SecondaryNavbar() {
     }
   }, [workspaces, selectedWorkspace]);
 
+  useEffect(() => {
+    if (userData?.dataSources) {
+      setAvailableDataSources(userData.dataSources);
+    }
+  }, [userData?.dataSources]);
+
   const handleNewWorkspace = () => {
     if (!isPremium) {
       setShowWorkspaceDropdown(false);
@@ -86,9 +93,8 @@ export default function SecondaryNavbar() {
     if (!selectedDashboardType || !selectedWorkspace) return;
     
     try {
-      // Here you would implement the dashboard creation logic
-      // Similar to handleAddDataSource in the data-sources page
-      
+      // Here you would implement the dashboard creation logic with the selected data source
+      // For now, we'll just close the modal
       setIsDashboardModalOpen(false);
       setSelectedDashboardType(null);
     } catch (error) {
@@ -206,34 +212,50 @@ export default function SecondaryNavbar() {
             </button>
 
             <h2 className="text-xl font-bold mb-6 text-black">Create new dashboard</h2>
-            <div className="grid grid-cols-1 gap-3 mb-6">
-              {dashboardOptions.map((option) => (
-                <button
-                  key={option.id}
-                  onClick={() => setSelectedDashboardType(option.id)}
-                  className={`p-4 rounded border text-black ${
-                    selectedDashboardType === option.id
-                      ? 'border-purple-500 bg-blue-50'
-                      : 'border-purple-200 hover:border-purple-300'
-                  }`}
+            
+            {availableDataSources.length === 0 ? (
+              <div className="text-center py-4">
+                <p className="text-gray-600 mb-4">No data sources connected yet.</p>
+                <Link 
+                  href="/admin/data-sources"
+                  className="text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  {option.name}
-                </button>
-              ))}
-            </div>
-            <div className="flex justify-end">
-              <button
-                onClick={handleCreateDashboard}
-                disabled={!selectedDashboardType}
-                className={`px-4 py-2 rounded-lg w-full ${
-                  selectedDashboardType
-                    ? 'bg-purple-600 text-white hover:bg-purple-700'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                }`}
-              >
-                Create Dashboard
-              </button>
-            </div>
+                  Connect a data source
+                </Link>
+              </div>
+            ) : (
+              <>
+                <p className="text-gray-600 mb-4">Select a data source for your dashboard:</p>
+                <div className="grid grid-cols-1 gap-3 mb-6">
+                  {availableDataSources.map((source) => (
+                    <button
+                      key={source}
+                      onClick={() => setSelectedDashboardType(source)}
+                      className={`p-4 rounded border text-black ${
+                        selectedDashboardType === source
+                          ? 'border-purple-500 bg-blue-50'
+                          : 'border-purple-200 hover:border-purple-300'
+                      }`}
+                    >
+                      {source.charAt(0).toUpperCase() + source.slice(1)}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    onClick={handleCreateDashboard}
+                    disabled={!selectedDashboardType}
+                    className={`px-4 py-2 rounded-lg w-full ${
+                      selectedDashboardType
+                        ? 'bg-purple-600 text-white hover:bg-purple-700'
+                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    Create Dashboard
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
