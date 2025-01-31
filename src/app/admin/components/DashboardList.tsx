@@ -4,14 +4,18 @@ import { Dashboard } from '@/types/workspace';
 import { MdSettings, MdDelete } from 'react-icons/md';
 import DataSourceModal from './DataSourceModal';
 import DashboardCard from './DashboardCard';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/utils/firebase';
 
 interface DashboardListProps {
   dashboards: Dashboard[];
   isEditing: boolean;
   onDeleteClick: (dashboardId: string) => void;
+  selectedWorkspace: Workspace;
+  setDashboards: React.Dispatch<React.SetStateAction<Dashboard[]>>;
 }
 
-export default function DashboardList({ dashboards, isEditing, onDeleteClick }: DashboardListProps) {
+export default function DashboardList({ dashboards, isEditing, onDeleteClick, selectedWorkspace, setDashboards }: DashboardListProps) {
   const [selectedDashboard, setSelectedDashboard] = useState<Dashboard | null>(null);
   const [isDataSourceModalOpen, setIsDataSourceModalOpen] = useState(false);
 
@@ -22,6 +26,33 @@ export default function DashboardList({ dashboards, isEditing, onDeleteClick }: 
     // You'll need to implement the actual update logic
     console.log('Updating dashboard with sources:', sources);
     setIsDataSourceModalOpen(false);
+  };
+
+  const handleRenameDashboard = async (dashboardId: string, newTitle: string) => {
+    if (!selectedWorkspace) {
+      console.error('No workspace selected');
+      return;
+    }
+
+    try {
+      const workspaceRef = doc(db, 'workspaces', selectedWorkspace.id);
+      
+      // Update the specific dashboard in the array
+      const updatedDashboards = dashboards.map(d => 
+        d.id === dashboardId ? { ...d, title: newTitle } : d
+      );
+      
+      await updateDoc(workspaceRef, {
+        dashboards: updatedDashboards,
+        updatedAt: new Date()
+      });
+      
+      // Update local state to trigger re-render of just that card
+      setDashboards(updatedDashboards);
+      
+    } catch (error) {
+      console.error('Error renaming dashboard:', error);
+    }
   };
 
   return (
@@ -36,6 +67,7 @@ export default function DashboardList({ dashboards, isEditing, onDeleteClick }: 
             setIsDataSourceModalOpen(true);
           }}
           onDeleteClick={() => onDeleteClick(dashboard.id)}
+          onRename={(newTitle) => handleRenameDashboard(dashboard.id, newTitle)}
         />
       ))}
 

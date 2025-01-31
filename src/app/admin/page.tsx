@@ -21,6 +21,7 @@ export default function AdminDashboard() {
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
   const [dashboardToDelete, setDashboardToDelete] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [dashboards, setDashboards] = useState(selectedWorkspace?.dashboards || []);
 
   const fetchWorkspaceData = async () => {
     if (!user?.uid) return;
@@ -35,6 +36,7 @@ export default function AdminDashboard() {
       const workspaceSnap = await getDoc(workspaceRef);
       if (workspaceSnap.exists()) {
         setSelectedWorkspace({ id: workspaceSnap.id, ...workspaceSnap.data() } as Workspace);
+        setDashboards(workspaceSnap.data().dashboards);
       }
     } catch (error) {
       console.error("Error fetching workspace:", error);
@@ -57,6 +59,7 @@ export default function AdminDashboard() {
         updatedAt: new Date()
       });
       setSelectedWorkspace(prev => (prev ? { ...prev, dashboards: updatedDashboards } : null));
+      setDashboards(updatedDashboards);
       await refreshUserData();
       await fetchWorkspaceData();
     } catch (error) {
@@ -98,9 +101,11 @@ export default function AdminDashboard() {
         {/* Render dashboards list or initial setup based on workspace data */}
         {selectedWorkspace?.dashboards?.length ? (
           <DashboardList
-            dashboards={selectedWorkspace.dashboards}
+            dashboards={dashboards}
             isEditing={isEditing}
             onDeleteClick={setDashboardToDelete}
+            selectedWorkspace={selectedWorkspace}
+            setDashboards={setDashboards}
           />
         ) : (
           <DashboardInitialSetup handleCustomIntegration={handleCustomIntegration} />

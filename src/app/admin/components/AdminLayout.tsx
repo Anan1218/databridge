@@ -1,5 +1,6 @@
 // AdminLayout.tsx
 'use client';
+import React from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -62,7 +63,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <AdminNavbar />
       {showSecondaryNav && <SecondaryNavbar refreshDashboards={refreshDashboards} />}
       <main className="flex-1 p-6">
-        {children}
+        {React.cloneElement(children as React.ReactElement, {
+          selectedWorkspace
+        })}
       </main>
     </div>
   );

@@ -25,6 +25,7 @@ export interface Dashboard {
   id: string;
   type: DashboardType;
   title: string;
+  workspaceId: string;
   dataSources?: string[];  // IDs of connected data sources
   settings?: {
     [key: string]: any;  // Custom settings specific to each dashboard type
