@@ -11,6 +11,9 @@ import { db } from "@/utils/firebase";
 import { Workspace } from "@/types/workspace";
 import EventCalendar from "./components/EventCalendar";
 import DashboardCard from "./components/DashboardCard";
+import DashboardList from "./components/DashboardList";
+import DashboardInitialSetup from "./components/DashboardInitialSetup";
+import DeleteModal from "./components/DeleteModal";
 
 export default function AdminDashboard() {
   const { user, userData, refreshUserData } = useAuthContext();
@@ -20,6 +23,7 @@ export default function AdminDashboard() {
   const searchParams = useSearchParams();
   const isEditing = searchParams.get('edit') === 'true';
   const [dashboardToDelete, setDashboardToDelete] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchWorkspaceData = async () => {
     if (!user?.uid) return;
@@ -43,6 +47,8 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error('Error fetching workspace:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -209,6 +215,14 @@ export default function AdminDashboard() {
     );
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1">
       <div className="max-w-6xl mx-auto px-4 py-12 text-center">
@@ -221,33 +235,24 @@ export default function AdminDashboard() {
           </>
         )}
 
-        {selectedWorkspace?.dashboards?.length ? renderDashboards() : renderInitialSetup()}
+        {selectedWorkspace?.dashboards?.length ? (
+          <DashboardList
+            dashboards={selectedWorkspace.dashboards}
+            isEditing={isEditing}
+            onDeleteClick={setDashboardToDelete}
+          />
+        ) : (
+          <DashboardInitialSetup handleCustomIntegration={handleCustomIntegration} />
+        )}
 
         {dashboardToDelete && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-sm mx-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Delete Dashboard
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Are you sure you want to delete this dashboard? This action cannot be undone.
-              </p>
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={handleCancelDelete}
-                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleConfirmDelete}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
+          <DeleteModal
+            onCancel={() => setDashboardToDelete(null)}
+            onConfirm={() => {
+              handleDelete(dashboardToDelete);
+              setDashboardToDelete(null);
+            }}
+          />
         )}
       </div>
 
