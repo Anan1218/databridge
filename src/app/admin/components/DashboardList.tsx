@@ -1,34 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import EventCalendar from './EventCalendar';
-import { Dashboard } from '@/types/workspace';
+import { Dashboard, Workspace } from '@/types/workspace';
 import { MdSettings, MdDelete } from 'react-icons/md';
 import DataSourceModal from './DataSourceModal';
 import DashboardCard from './DashboardCard';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
+import { useWorkspace } from './AdminLayout';
 
 interface DashboardListProps {
   dashboards: Dashboard[];
   isEditing: boolean;
   onDeleteClick: (dashboardId: string) => void;
-  selectedWorkspace: Workspace;
   setDashboards: React.Dispatch<React.SetStateAction<Dashboard[]>>;
 }
 
-export default function DashboardList({ dashboards, isEditing, onDeleteClick, selectedWorkspace, setDashboards }: DashboardListProps) {
+export default React.memo(function DashboardList({ 
+  dashboards, 
+  isEditing, 
+  onDeleteClick,
+  setDashboards 
+}: DashboardListProps) {
+  const { selectedWorkspace } = useWorkspace();
   const [selectedDashboard, setSelectedDashboard] = useState<Dashboard | null>(null);
   const [isDataSourceModalOpen, setIsDataSourceModalOpen] = useState(false);
 
-  const handleSaveDataSources = async (sources: string[]) => {
+  // Memoize handlers
+  const handleSaveDataSources = useCallback(async (sources: string[]) => {
     if (!selectedDashboard) return;
     
     // Update the dashboard with new data sources
     // You'll need to implement the actual update logic
     console.log('Updating dashboard with sources:', sources);
     setIsDataSourceModalOpen(false);
-  };
+  }, [selectedDashboard]);
 
-  const handleRenameDashboard = async (dashboardId: string, newTitle: string) => {
+  const handleRenameDashboard = useCallback(async (dashboardId: string, newTitle: string) => {
     if (!selectedWorkspace) {
       console.error('No workspace selected');
       return;
@@ -53,7 +60,7 @@ export default function DashboardList({ dashboards, isEditing, onDeleteClick, se
     } catch (error) {
       console.error('Error renaming dashboard:', error);
     }
-  };
+  }, [selectedWorkspace, dashboards, setDashboards]);
 
   return (
     <div className="grid grid-cols-1 gap-6">
@@ -82,4 +89,4 @@ export default function DashboardList({ dashboards, isEditing, onDeleteClick, se
       )}
     </div>
   );
-}
+});

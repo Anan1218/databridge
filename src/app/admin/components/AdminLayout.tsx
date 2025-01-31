@@ -1,9 +1,8 @@
 // AdminLayout.tsx
 'use client';
-import React from 'react';
+import React, { useCallback, useEffect, useState, createContext, useContext } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import AdminNavbar from "./AdminNavbar";
@@ -12,6 +11,18 @@ import { Workspace } from "@/types/workspace";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
+}
+
+const WorkspaceContext = createContext<{
+  selectedWorkspace: Workspace | null;
+  refreshDashboards: () => Promise<void>;
+}>({
+  selectedWorkspace: null,
+  refreshDashboards: async () => {}
+});
+
+export function useWorkspace() {
+  return useContext(WorkspaceContext);
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
@@ -23,11 +34,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   // Only show SecondaryNavbar on the main dashboard page
   const showSecondaryNav = pathname === '/admin';
 
-  const refreshDashboards = async () => {
+  const refreshDashboards = useCallback(async () => {
     if (!user?.uid) return;
     
     try {
-      // First get user's default workspace
       const userRef = doc(db, 'users', user.uid);
       const userSnap = await getDoc(userRef);
       
@@ -36,7 +46,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         return;
       }
 
-      // Then fetch the workspace
       const workspaceRef = doc(db, 'workspaces', userSnap.data().defaultWorkspace);
       const workspaceSnap = await getDoc(workspaceRef);
       
@@ -46,7 +55,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     } catch (error) {
       console.error('Error fetching workspace:', error);
     }
-  };
+  }, [user?.uid]);
 
   useEffect(() => {
     if (!user) {
@@ -54,18 +63,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     } else {
       refreshDashboards();
     }
-  }, [user, router]);
+  }, [user, router, refreshDashboards]);
 
   if (!user) return null;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <AdminNavbar />
-      {showSecondaryNav && <SecondaryNavbar refreshDashboards={refreshDashboards} />}
+      {showSecondaryNav && <SecondaryNavbar />}
       <main className="flex-1 p-6">
-        {React.cloneElement(children as React.ReactElement, {
-          selectedWorkspace
-        })}
+        <WorkspaceContext.Provider value={{ selectedWorkspace, refreshDashboards }}>
+          {children}
+        </WorkspaceContext.Provider>
       </main>
     </div>
   );

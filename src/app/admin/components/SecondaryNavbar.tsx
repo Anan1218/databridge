@@ -12,6 +12,7 @@ import WorkspaceDropdown from './navbar/WorkspaceDropdown';
 import SearchBar from './navbar/SearchBar';
 import DashboardModal from './navbar/DashboardModal';
 import { nanoid } from 'nanoid';
+import { useWorkspace } from './AdminLayout';
 
 type WorkspaceDisplay = {
   id: string;
@@ -23,7 +24,8 @@ interface SecondaryNavbarProps {
   refreshDashboards: () => void;
 }
 
-export default function SecondaryNavbar({ refreshDashboards }: SecondaryNavbarProps) {
+export default function SecondaryNavbar() {
+  const { refreshDashboards } = useWorkspace();
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [workspaces, setWorkspaces] = useState<WorkspaceDisplay[]>([]);
