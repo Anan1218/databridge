@@ -8,7 +8,7 @@ interface DashboardCardProps {
 
 export default function DashboardCard({ dashboard, onDelete }: DashboardCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-full">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       <div className="flex justify-between items-start mb-4">
         <div>
           <h3 className="text-lg font-semibold text-gray-900">{dashboard.title}</h3>
