@@ -19,7 +19,11 @@ type WorkspaceDisplay = {
   role: 'Owner' | 'User';
 };
 
-export default function SecondaryNavbar() {
+interface SecondaryNavbarProps {
+  refreshDashboards: () => void;
+}
+
+export default function SecondaryNavbar({ refreshDashboards }: SecondaryNavbarProps) {
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [workspaces, setWorkspaces] = useState<WorkspaceDisplay[]>([]);
@@ -119,8 +123,8 @@ export default function SecondaryNavbar() {
       // Refresh user data to update the UI
       await refreshUserData();
       
-      // Force a page reload to refresh the grid
-      window.location.reload();
+      // Call the refresh function instead of reloading the window
+      refreshDashboards();
       
       // Close the modal
       setIsDashboardModalOpen(false);

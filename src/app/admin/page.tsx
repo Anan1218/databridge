@@ -2,7 +2,7 @@
 
 import { useAuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
-import { MdStorage, MdIntegrationInstructions, MdDashboard, MdDelete, MdDragIndicator } from "react-icons/md";
+import { MdStorage, MdIntegrationInstructions, MdDashboard, MdDelete, MdDragIndicator, MdSettings } from "react-icons/md";
 import { useState, useEffect } from "react";
 import PremiumUpgradeModal from "@/components/PremiumUpgradeModal";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -19,34 +19,41 @@ export default function AdminDashboard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isEditing = searchParams.get('edit') === 'true';
+  const [dashboardToDelete, setDashboardToDelete] = useState<string | null>(null);
+
+  const fetchWorkspaceData = async () => {
+    if (!user?.uid) return;
+    
+    try {
+      // First get user's default workspace
+      const userRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userRef);
+      
+      if (!userSnap.exists() || !userSnap.data().defaultWorkspace) {
+        console.error('No default workspace found');
+        return;
+      }
+
+      // Then fetch the workspace
+      const workspaceRef = doc(db, 'workspaces', userSnap.data().defaultWorkspace);
+      const workspaceSnap = await getDoc(workspaceRef);
+      
+      if (workspaceSnap.exists()) {
+        setSelectedWorkspace({ id: workspaceSnap.id, ...workspaceSnap.data() } as Workspace);
+      }
+    } catch (error) {
+      console.error('Error fetching workspace:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchWorkspace = async () => {
-      if (!user?.uid) return;
-      
-      try {
-        // First get user's default workspace
-        const userRef = doc(db, 'users', user.uid);
-        const userSnap = await getDoc(userRef);
-        
-        if (!userSnap.exists() || !userSnap.data().defaultWorkspace) {
-          console.error('No default workspace found');
-          return;
-        }
+    fetchWorkspaceData();
+  }, [user?.uid]);
 
-        // Then fetch the workspace
-        const workspaceRef = doc(db, 'workspaces', userSnap.data().defaultWorkspace);
-        const workspaceSnap = await getDoc(workspaceRef);
-        
-        if (workspaceSnap.exists()) {
-          setSelectedWorkspace({ id: workspaceSnap.id, ...workspaceSnap.data() } as Workspace);
-        }
-      } catch (error) {
-        console.error('Error fetching workspace:', error);
-      }
-    };
-
-    fetchWorkspace();
+  // Add effect to refresh when workspace changes
+  useEffect(() => {
+    const refreshInterval = setInterval(fetchWorkspaceData, 2000); // Poll every 2 seconds
+    return () => clearInterval(refreshInterval);
   }, [user?.uid]);
 
   const handleDelete = async (dashboardId: string) => {
@@ -63,8 +70,15 @@ export default function AdminDashboard() {
         updatedAt: new Date()
       });
 
+      // Update local state
+      setSelectedWorkspace(prev => prev ? {
+        ...prev,
+        dashboards: updatedDashboards
+      } : null);
+
       // Refresh user data
       await refreshUserData();
+      await fetchWorkspaceData();
     } catch (error) {
       console.error('Error deleting dashboard:', error);
     }
@@ -82,6 +96,21 @@ export default function AdminDashboard() {
     router.push('/admin/custom-data');
   };
 
+  const handleDeleteClick = (dashboardId: string) => {
+    setDashboardToDelete(dashboardId);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!dashboardToDelete) return;
+    
+    await handleDelete(dashboardToDelete);
+    setDashboardToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setDashboardToDelete(null);
+  };
+
   const renderDashboards = () => {
     if (!selectedWorkspace?.dashboards) return null;
     
@@ -90,11 +119,55 @@ export default function AdminDashboard() {
         {selectedWorkspace.dashboards
           .sort((a, b) => (a.position || 0) - (b.position || 0))
           .map((dashboard) => (
-            <DashboardCard
-              key={dashboard.id}
-              dashboard={dashboard}
-              onDelete={() => handleDelete(dashboard.id)}
-            />
+            <div key={dashboard.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-full">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">{dashboard.title}</h3>
+                  <p className="text-sm text-gray-500 capitalize">{dashboard.type}</p>
+                </div>
+                {isEditing && (
+                  <div className="flex space-x-2">
+                    <button
+                      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                      onClick={() => {/* Add settings handler */}}
+                    >
+                      <MdSettings className="w-5 h-5 text-gray-600" />
+                    </button>
+                    <button
+                      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                      onClick={() => handleDeleteClick(dashboard.id)}
+                    >
+                      <MdDelete className="w-5 h-5 text-gray-600" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Dashboard type specific content */}
+              <div className="mt-4">
+                {dashboard.type === 'calendar' ? (
+                  <EventCalendar />
+                ) : dashboard.type === 'graph' ? (
+                  <div className="text-gray-500 text-center py-4">
+                    Graph visualization coming soon
+                  </div>
+                ) : dashboard.type === 'text' ? (
+                  <div className="text-gray-500 text-center py-4">
+                    Text component coming soon
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="mt-4 pt-4 border-t">
+                {dashboard.dataSources?.length ? (
+                  <p className="text-sm text-gray-600">
+                    {dashboard.dataSources.length} connected data source(s)
+                  </p>
+                ) : (
+                  <p className="text-sm text-gray-400">No data sources connected</p>
+                )}
+              </div>
+            </div>
           ))}
       </div>
     );
@@ -149,6 +222,33 @@ export default function AdminDashboard() {
         )}
 
         {selectedWorkspace?.dashboards?.length ? renderDashboards() : renderInitialSetup()}
+
+        {dashboardToDelete && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-sm mx-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Delete Dashboard
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to delete this dashboard? This action cannot be undone.
+              </p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={handleCancelDelete}
+                  className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleConfirmDelete}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <PremiumUpgradeModal 

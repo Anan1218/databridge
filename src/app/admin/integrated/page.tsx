@@ -2,6 +2,8 @@
 
 import { useAuthContext } from "@/contexts/AuthContext";
 import { FaYelp, FaTicketAlt } from "react-icons/fa";
+import { MdArrowBack } from "react-icons/md";
+import Link from "next/link";
 
 interface DataSource {
   id: string;
@@ -72,6 +74,15 @@ export default function IntegratedPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
       <div className="mb-8">
+        <div className="flex items-center gap-4 mb-6">
+          <Link
+            href="/admin/data-sources"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <MdArrowBack className="w-5 h-5" />
+            <span>Back to Data Sources</span>
+          </Link>
+        </div>
         <h1 className="text-3xl font-bold text-black mb-4">Integrated Data Sources</h1>
         <p className="text-gray-600">
           Select from our collection of integrated data sources to start monitoring your business performance.
