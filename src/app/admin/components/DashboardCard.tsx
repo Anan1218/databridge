@@ -90,16 +90,6 @@ export default function DashboardCard({
           </div>
         ) : null}
       </div>
-
-      <div className="mt-4 pt-4 border-t">
-        {dashboard.dataSources?.length ? (
-          <p className="text-sm text-gray-600">
-            {dashboard.dataSources.length} connected data source(s)
-          </p>
-        ) : (
-          <p className="text-sm text-gray-400">No data sources connected</p>
-        )}
-      </div>
     </div>
   );
 } 

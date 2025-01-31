@@ -27,13 +27,31 @@ export default React.memo(function DashboardList({
 
   // Memoize handlers
   const handleSaveDataSources = useCallback(async (sources: string[]) => {
-    if (!selectedDashboard) return;
+    if (!selectedDashboard || !selectedWorkspace) return;
     
-    // Update the dashboard with new data sources
-    // You'll need to implement the actual update logic
-    console.log('Updating dashboard with sources:', sources);
-    setIsDataSourceModalOpen(false);
-  }, [selectedDashboard]);
+    try {
+      if (!selectedWorkspace?.id) throw new Error('Workspace ID is undefined');
+      const workspaceRef = doc(db, 'workspaces', selectedWorkspace.id);
+      
+      // Update the specific dashboard in the array
+      const updatedDashboards = dashboards.map(d => 
+        d.id === selectedDashboard.id 
+          ? { ...d, dataSources: sources } 
+          : d
+      );
+      
+      await updateDoc(workspaceRef, {
+        dashboards: updatedDashboards,
+        updatedAt: new Date()
+      });
+      
+      // Update local state
+      setDashboards(updatedDashboards);
+      setIsDataSourceModalOpen(false);
+    } catch (error) {
+      console.error('Error updating data sources:', error);
+    }
+  }, [selectedDashboard, selectedWorkspace, dashboards, setDashboards]);
 
   const handleRenameDashboard = useCallback(async (dashboardId: string, newTitle: string) => {
     if (!selectedWorkspace) {
@@ -42,6 +60,7 @@ export default React.memo(function DashboardList({
     }
 
     try {
+      if (!selectedWorkspace?.id) throw new Error('Workspace ID is undefined');
       const workspaceRef = doc(db, 'workspaces', selectedWorkspace.id);
       
       // Update the specific dashboard in the array
