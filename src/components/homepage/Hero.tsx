@@ -155,12 +155,12 @@ export function Hero() {
 
           <div className="flex items-center gap-2 justify-center mb-1">
             <div className="flex items-center gap-2 mt-3">
-              <img src="/laurel-left.svg" alt="" className="h-4" />
+              <Image src="/laurel-left.svg" alt="" width={16} height={16} className="h-4" />
               <div className="text-center">
                 <div className="text-[#5b5f7d] font-medium">Product of the day</div>
                 <div className="text-[#5b5f7d] text-xl font-semibold">1st</div>
               </div>
-              <img src="/laurel-right.svg" alt="" className="h-6" />
+              <Image src="/laurel-right.svg" alt="" width={24} height={24} className="h-6" />
             </div>
           </div>
         </div>

@@ -1,12 +1,10 @@
 'use client';
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuthContext } from '@/contexts/AuthContext';
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuthContext();
 
   const handleLogout = async () => {
@@ -17,11 +15,6 @@ export default function Navbar() {
       console.error("Error signing out: ", error);
     }
   };
-
-  const navigation = [
-    { name: "Home", href: "/" },
-    { name: "Pricing", href: "#pricing" },
-  ];
 
   const scrollToPricing = (e: React.MouseEvent) => {
     e.preventDefault();

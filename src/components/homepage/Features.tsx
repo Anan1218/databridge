@@ -1,54 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { 
-  HiNewspaper, 
-  HiStar, 
-  HiMegaphone,
-  HiChatBubbleBottomCenterText,
-  HiEnvelope,
-  HiCalendar
-} from "react-icons/hi2"
-import Link from 'next/link';
-
-interface FeatureItem {
-  icon: React.ReactNode
-  title: string
-  description: string
-}
-
-const features: FeatureItem[] = [
-  {
-    icon: <HiNewspaper className="w-8 h-8 text-indigo-400" />,
-    title: 'Local News & Social Media Monitoring',
-    description: 'Automatically collect and analyze mentions of your business from local news sources and social media platforms.',
-  },
-  {
-    icon: <HiStar className="w-8 h-8 text-indigo-400" />,
-    title: 'Reputation Monitoring',
-    description: 'Track and analyze your business reputation across review sites and social platforms to maintain a positive brand image.',
-  },
-  {
-    icon: <HiMegaphone className="w-8 h-8 text-indigo-400" />,
-    title: 'Brand Mention Tracking',
-    description: 'Stay informed about every mention of your brand online with our comprehensive web scraping technology.',
-  },
-  {
-    icon: <HiChatBubbleBottomCenterText className="w-8 h-8 text-indigo-400" />,
-    title: 'AI-Powered Insights',
-    description: 'Get concise, GPT-powered summaries of trends and insights displayed directly on your dashboard.',
-  },
-  {
-    icon: <HiEnvelope className="w-8 h-8 text-indigo-400" />,
-    title: 'Weekly Email Reports',
-    description: 'Receive detailed weekly email reports summarizing key metrics and insights about your business.',
-  },
-  {
-    icon: <HiCalendar className="w-8 h-8 text-indigo-400" />,
-    title: 'Google Calendar Integration',
-    description: 'Seamlessly integrate business insights with your Google Calendar for better operational planning.',
-  },
-]
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 const testimonials = [
   {
@@ -147,30 +100,7 @@ export function Features() {
     };
 
     updateTestimonial();
-  }, [currentIndex]);
-
-  const TestimonialCard = ({ testimonial }: { testimonial: typeof testimonials[0] }) => (
-    <div className="inline-block px-2">
-      <div className="w-[265px] bg-white p-4 rounded-xl border border-purple-100 shadow-[0_0_10px_rgba(0,0,0,0.02)]">
-        <p className="text-sm text-gray-700 mb-4 leading-relaxed whitespace-normal min-h-[45px]">{testimonial.content}</p>
-        <div className="flex items-center gap-3">
-          <div className="w-7 h-7 rounded-full overflow-hidden bg-gray-100">
-            {testimonial.image && (
-              <img 
-                src={testimonial.image} 
-                alt={testimonial.name}
-                className="w-full h-full object-cover"
-              />
-            )}
-          </div>
-          <div>
-            <p className="font-medium text-gray-900 text-sm">{testimonial.name}</p>
-            <p className="text-xs text-gray-500">{testimonial.role}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  }, [currentIndex, visibleTestimonials]);
 
   return (
     <>
@@ -238,9 +168,11 @@ export function Features() {
               {/* Unified Business Dashboard */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
-                  <img 
-                    src="/features/unified-dashboard.jpg" //change
+                  <Image 
+                    src="/features/unified-dashboard.jpg"
                     alt="Unified Business Dashboard"
+                    width={600}
+                    height={400}
                     className="w-full h-full object-contain"
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
@@ -256,9 +188,11 @@ export function Features() {
               {/* AI-Powered Insights */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
-                  <img 
-                    src="/features/unified-dashboard.jpg" //change
+                  <Image 
+                    src="/features/unified-dashboard.jpg"
                     alt="AI-Powered Insights"
+                    width={600}
+                    height={400}
                     className="w-full h-full object-contain"
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
@@ -274,9 +208,11 @@ export function Features() {
               {/* Event Monitoring */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
-                  <img 
-                    src="/features/unified-dashboard.jpg" //change
+                  <Image 
+                    src="/features/unified-dashboard.jpg"
                     alt="Smart Event Monitoring"
+                    width={600}
+                    height={400}
                     className="w-full h-full object-contain"
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
@@ -292,9 +228,11 @@ export function Features() {
               {/* Review Analytics */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
-                  <img 
-                    src="/features/unified-dashboard.jpg" //change
+                  <Image 
+                    src="/features/unified-dashboard.jpg"
                     alt="Review Analytics"
+                    width={600}
+                    height={400}
                     className="w-full h-full object-contain"
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
@@ -312,9 +250,11 @@ export function Features() {
             <div className="mt-6 grid md:grid-cols-3 gap-7">
               <div className="bg-white rounded-2xl p-5 pb-14 shadow-sm border border-purple-100 relative group overflow-hidden hover:border-blue-600">
               <div className="h-44 relative">
-                  <img 
-                    src="/features/unified-dashboard.jpg" //change
+                  <Image 
+                    src="/features/unified-dashboard.jpg"
                     alt="Review Analytics"
+                    width={600}
+                    height={400}
                     className="w-full h-full object-contain"
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
@@ -328,9 +268,11 @@ export function Features() {
 
               <div className="bg-white rounded-2xl p-5 pb-14 shadow-sm border border-purple-100 relative group overflow-hidden hover:border-purple-600">
               <div className="h-44 relative">
-                  <img 
-                    src="/features/unified-dashboard.jpg" //change
+                  <Image 
+                    src="/features/unified-dashboard.jpg"
                     alt="Review Analytics"
+                    width={600}
+                    height={400}
                     className="w-full h-full object-contain"
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
@@ -344,9 +286,11 @@ export function Features() {
 
               <div className="bg-white rounded-2xl p-5 pb-14 shadow-sm border border-purple-100 relative group overflow-hidden hover:border-green-600">
               <div className="h-44 relative">
-                  <img 
-                    src="/features/unified-dashboard.jpg" //change
+                  <Image 
+                    src="/features/unified-dashboard.jpg"
                     alt="Review Analytics"
+                    width={600}
+                    height={400}
                     className="w-full h-full object-contain"
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
