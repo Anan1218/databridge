@@ -37,25 +37,54 @@ export default function SecondaryNavbar() {
 
   useEffect(() => {
     const fetchWorkspaces = async () => {
-      if (!user?.uid) {
-        return;
-      }
+      if (!user?.uid) return;
 
       try {
+        // Query workspaces where the user is either the owner or a member
         const workspacesRef = collection(db, 'workspaces');
-        const query1 = query(workspacesRef, where('ownerId', '==', user.uid));
-        const querySnapshot = await getDocs(query1);
+        const ownerQuery = query(workspacesRef, where('owner.uid', '==', user.uid));
+        const memberQuery = query(workspacesRef, where('members', 'array-contains', { uid: user.uid }));
         
-        const workspacesData: WorkspaceDisplay[] = querySnapshot.docs.map(doc => {
+        // Execute both queries
+        const [ownerSnapshot, memberSnapshot] = await Promise.all([
+          getDocs(ownerQuery),
+          getDocs(memberQuery)
+        ]);
+
+        // Combine results, removing duplicates
+        const workspacesData: WorkspaceDisplay[] = [];
+        const addedIds = new Set<string>();
+
+        ownerSnapshot.docs.forEach(doc => {
           const data = doc.data() as Workspace;
-          return {
+          workspacesData.push({
             id: doc.id,
             name: data.name,
             role: 'Owner'
-          };
+          });
+          addedIds.add(doc.id);
+        });
+
+        memberSnapshot.docs.forEach(doc => {
+          if (!addedIds.has(doc.id)) {
+            const data = doc.data() as Workspace;
+            workspacesData.push({
+              id: doc.id,
+              name: data.name,
+              role: data.owner.uid === user.uid ? 'Owner' : 'User'
+            });
+          }
         });
 
         setWorkspaces(workspacesData);
+        
+        // Set default workspace if available
+        if (userData?.defaultWorkspace) {
+          const defaultWorkspace = workspacesData.find(w => w.id === userData.defaultWorkspace);
+          if (defaultWorkspace) {
+            setSelectedWorkspace(defaultWorkspace);
+          }
+        }
       } catch (error) {
         console.error('Error fetching workspaces:', error);
       } finally {
@@ -64,7 +93,7 @@ export default function SecondaryNavbar() {
     };
 
     fetchWorkspaces();
-  }, [user?.uid]);
+  }, [user?.uid, userData?.defaultWorkspace]);
 
   useEffect(() => {
     if (workspaces.length > 0 && !selectedWorkspace) {

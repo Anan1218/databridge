@@ -34,35 +34,12 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
           receiveUpdates: false
         };
 
-        // Initialize workspace
-        const workspaceData: Workspace = {
-          name: 'My Workspace',
-          owner: {
-            uid: user.uid,
-            email: user.email || '',
-            firstName: '',
-            lastName: ''
-          },
-          members: [{
-            uid: user.uid,
-            email: user.email || '',
-            firstName: '',
-            lastName: '',
-            role: 'owner'
-          }],
-          dashboards: [],
-          createdAt: new Date(),
-          updatedAt: new Date()
-        };
-
-        // Initialize user and workspace
         const response = await fetch('/api/users/init', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             uid: user.uid, 
-            userData,
-            workspaceData 
+            userData
           })
         });
 
@@ -73,8 +50,7 @@ export default function WelcomeFlow({ onComplete }: WelcomeFlowProps) {
 
         onComplete(true);
       } catch (error) {
-        console.error("Error during initialization:", error);
-        onComplete(false);
+        console.error('Initialization error:', error);
       } finally {
         isInitializing.current = false;
       }

@@ -17,7 +17,7 @@ const CheckIcon = () => (
   </svg>
 );
 
-export default function SubscriptionPlans({ userData }: { userData: any }) {
+export default function SubscriptionPlans({ userData, loading = false }: { userData: any, loading?: boolean }) {
   const [error, setError] = useState<string | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [currentPlan, setCurrentPlan] = useState<'monthly' | 'yearly' | null>(null);
@@ -26,12 +26,33 @@ export default function SubscriptionPlans({ userData }: { userData: any }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!userData?.subscription) return;
-    
-    if (userData.subscription?.subscriptionStatus === 'active') {
-      setCurrentPlan(userData.subscription.interval || null);
+    const verifySubscription = async () => {
+      if (userData?.uid) {
+        try {
+          const response = await fetch('/api/subscriptions/update-status', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ uid: userData.uid }),
+          });
+          
+          const result = await response.json();
+          if (result.success && result.updated) {
+            // Subscription status was updated
+            setIsPremium(result.newStatus === 'active');
+            setCurrentPlan(userData.subscription?.interval || null);
+          }
+        } catch (error) {
+          console.error('Error verifying subscription:', error);
+        }
+      }
+    };
+
+    if (!loading) {
+      verifySubscription();
     }
-  }, [userData]);
+  }, [userData, loading]);
 
   const handlePlanSelect = async (planType: 'monthly' | 'yearly') => {
     if (!user) {
@@ -68,6 +89,20 @@ export default function SubscriptionPlans({ userData }: { userData: any }) {
       });
 
       if (stripeError) throw stripeError;
+
+      // After successful redirect to checkout, call update-status
+      const updateResponse = await fetch('/api/subscriptions/update-status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ uid: user.uid }),
+      });
+
+      if (!updateResponse.ok) {
+        throw new Error('Failed to update subscription status');
+      }
+
     } catch (error) {
       console.error('Subscription error:', error);
       setError(error instanceof Error ? error.message : 'An unexpected error occurred');

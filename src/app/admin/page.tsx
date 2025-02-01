@@ -29,12 +29,22 @@ export default function AdminDashboard() {
     try {
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
-      if (!userSnap.exists() || !userSnap.data().defaultWorkspace) {
+      
+      if (!userSnap.exists()) {
+        console.error("User document not found");
+        return;
+      }
+
+      const userData = userSnap.data();
+      
+      if (!userData?.defaultWorkspace) {
         console.error("No default workspace found");
         return;
       }
-      const workspaceRef = doc(db, "workspaces", userSnap.data().defaultWorkspace);
+
+      const workspaceRef = doc(db, "workspaces", userData.defaultWorkspace);
       const workspaceSnap = await getDoc(workspaceRef);
+      
       if (workspaceSnap.exists()) {
         const workspaceData = { id: workspaceSnap.id, ...workspaceSnap.data() } as Workspace;
         setSelectedWorkspace(workspaceData);
