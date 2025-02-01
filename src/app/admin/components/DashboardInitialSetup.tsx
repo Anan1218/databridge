@@ -25,7 +25,7 @@ export default function DashboardInitialSetup({ handleCustomIntegration }: Dashb
       </Link>
 
       {/* Custom Data Integration Card */}
-      <Link href="/admin/help" className="group">
+      <div onClick={handleCustomIntegration} className="cursor-pointer group">
         <div className="bg-white rounded-xl p-8 border border-gray-200 hover:border-blue-500 transition-all duration-300 h-full flex flex-col">
           <div className="flex-1">
             <div className="bg-purple-50 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
@@ -37,7 +37,7 @@ export default function DashboardInitialSetup({ handleCustomIntegration }: Dashb
             </p>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 }

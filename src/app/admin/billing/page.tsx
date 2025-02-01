@@ -2,23 +2,9 @@
 
 import SubscriptionPlans from '@/components/SubscriptionPlans';
 import { useAuthContext } from '@/contexts/AuthContext';
-import { useState, useEffect } from 'react';
 
 export default function BillingPage() {
   const { userData } = useAuthContext();
-  const [loading, setLoading] = useState(false);
-  const [isPremium, setIsPremium] = useState(false);
-  const [currentPlan, setCurrentPlan] = useState('');
-  const [error, setError] = useState('');
-
-  // Initialize state directly from userData
-  useEffect(() => {
-    if (userData?.subscription) {
-      setIsPremium(userData.subscription.status === 'active');
-      setCurrentPlan(userData.subscription.plan || '');
-      setLoading(false);
-    }
-  }, [userData]);
 
   return (
     <div className="max-w-6xl mx-auto px-2 py-4">
@@ -29,7 +15,7 @@ export default function BillingPage() {
             <p className="mt-4 text-xl text-gray-400">Choose the plan that works best for you</p>
           </div>
           <div className="mt-6">
-            <SubscriptionPlans userData={userData} loading={loading} />
+            <SubscriptionPlans userData={userData} />
           </div>
         </div>
       </div>

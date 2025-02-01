@@ -3,7 +3,6 @@
 import { useAuthContext } from "@/contexts/AuthContext";
 import { UserData } from '@/types/user';
 import { useEffect, useRef } from "react";
-import { Workspace } from '@/types/workspace';
 
 interface WelcomeFlowProps {
   onComplete: (completed: boolean) => void;

@@ -1,15 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { loadStripe } from '@stripe/stripe-js';
-
-// Stripe price IDs
-const PRICE_IDS = {
-  monthly: process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID!,
-  yearly: process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID!
-} as const;
 
 const CheckIcon = () => (
   <svg className="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -17,13 +10,12 @@ const CheckIcon = () => (
   </svg>
 );
 
-export default function SubscriptionPlans({ userData, loading = false }: { userData: any, loading?: boolean }) {
+export default function SubscriptionPlans({ userData }: { userData: any }) {
   const [error, setError] = useState<string | null>(null);
   const [isPremium, setIsPremium] = useState(userData?.subscription?.status === 'active');
   const [currentPlan, setCurrentPlan] = useState<'monthly' | 'yearly' | null>(userData?.subscription?.plan || null);
   const [isProcessing, setIsProcessing] = useState(false);
   const { user } = useAuthContext();
-  const router = useRouter();
 
   useEffect(() => {
     setIsPremium(userData?.subscription?.status === 'active');

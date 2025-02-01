@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';

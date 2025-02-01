@@ -6,8 +6,14 @@ import Image from "next/image";
 import { useState } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { MdArrowDropDown, MdNotifications, MdPerson, MdHelpOutline, MdLogout } from "react-icons/md";
+import { MdArrowDropDown, MdPerson, MdHelpOutline, MdLogout } from "react-icons/md";
 import NotificationBell from './NotificationBell';
+
+interface Notification {
+  id: string;
+  message: string;
+  timestamp: Date;
+}
 
 export default function AdminNavbar() {
   const { signOut, user } = useAuthContext();
@@ -42,13 +48,7 @@ export default function AdminNavbar() {
   };
 
   // Example notifications - replace with your actual data
-  const notifications = [
-    // {
-    //   id: '1',
-    //   message: 'New data source connected',
-    //   timestamp: new Date()
-    // }
-  ];
+  const notifications: Notification[] = [];
 
   return (
     <nav className="bg-[#1a1f37] border-b border-gray-700">
