@@ -134,7 +134,7 @@ export default function SubscriptionPlans({ userData, loading = false }: { userD
               </li>
               <li className="flex items-center">
                 <CheckIcon />
-                2 team members
+                Limit 1 user per workspace
               </li>
             </ul>
           </div>
@@ -180,6 +180,10 @@ export default function SubscriptionPlans({ userData, loading = false }: { userD
               <li className="flex items-center">
                 <CheckIcon />
                 Create up to 3 spaces
+              </li>
+              <li className="flex items-center">
+                <CheckIcon />
+                Invite up to 5 team members
               </li>
               <li className="flex items-center">
                 <CheckIcon />

@@ -129,7 +129,7 @@ export default function WorkspaceSettings() {
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-medium text-gray-900">Workspace Members</h2>
             <span className="bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-600">
-              {workspace?.members?.length || 0} / {isPremium ? '10' : '1'} users
+              {workspace?.members?.length || 0} / {isPremium ? '5' : '1'} users
             </span>
           </div>
           <button 
