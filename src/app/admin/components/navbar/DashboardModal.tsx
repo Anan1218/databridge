@@ -1,5 +1,6 @@
 import { MdClose, MdCalendarToday, MdShowChart, MdTextFields } from "react-icons/md";
 import { DashboardType } from '@/types/workspace';
+import Link from 'next/link';
 
 interface DashboardModalProps {
   isOpen: boolean;
@@ -18,13 +19,15 @@ const dashboardTypes = [
     id: 'graph' as DashboardType,
     name: 'Data Graph',
     description: 'Visualize your data with customizable charts and graphs',
-    icon: <MdShowChart className="w-6 h-6 text-purple-600" />,
+    icon: <MdShowChart className="w-6 h-6 text-gray-400" />,
+    disabled: true,
   },
   {
     id: 'text' as DashboardType,
-    name: 'Text Component',
-    description: 'Add formatted text, lists, or custom content',
-    icon: <MdTextFields className="w-6 h-6 text-purple-600" />,
+    name: 'Summary Widget',
+    description: 'Add custom content to your dashboard',
+    icon: <MdTextFields className="w-6 h-6 text-gray-400" />,
+    disabled: true,
   }
 ];
 
@@ -59,22 +62,38 @@ export default function DashboardModal({
               <button
                 key={type.id}
                 onClick={() => {
-                  onCreateDashboard(type.id);
-                  onClose();
+                  if (!type.disabled) {
+                    onCreateDashboard(type.id);
+                    onClose();
+                  }
                 }}
-                className="w-full p-4 rounded-lg border border-gray-200 hover:border-purple-500 
-                          hover:bg-purple-50 transition-all duration-200 group"
+                className={`w-full p-4 rounded-lg border transition-all duration-200 group relative
+                  ${type.disabled 
+                    ? 'border-gray-200 bg-gray-50 cursor-not-allowed' 
+                    : 'border-gray-200 hover:border-purple-500 hover:bg-purple-50'}`}
+                disabled={type.disabled}
               >
+                {type.disabled && (
+                  <Link href="/admin/help" className="absolute top-2 right-2 inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full bg-purple-50 text-purple-700 border border-purple-100 hover:bg-purple-100 transition-colors">
+                    Contact Us
+                  </Link>
+                )}
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 bg-purple-50 group-hover:bg-white 
-                                w-12 h-12 rounded-lg flex items-center justify-center">
+                  <div className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center
+                    ${type.disabled 
+                      ? 'bg-gray-100' 
+                      : 'bg-purple-50 group-hover:bg-white'}`}>
                     {type.icon}
                   </div>
                   <div className="text-left">
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className={`font-semibold ${
+                      type.disabled ? 'text-gray-400' : 'text-gray-900'
+                    }`}>
                       {type.name}
                     </h3>
-                    <p className="text-sm text-gray-500">
+                    <p className={`text-sm ${
+                      type.disabled ? 'text-gray-400' : 'text-gray-500'
+                    }`}>
                       {type.description}
                     </p>
                   </div>
