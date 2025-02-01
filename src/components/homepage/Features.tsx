@@ -141,9 +141,9 @@ export function Features() {
           // Wait for visibility duration (2s)
           setTimeout(() => {
             setCurrentIndex((currentIndex + 1) % 6);
-          }, 1800);
-        }, 560);
-      }, 560);
+          }, 1500);
+        }, 400);
+      }, 400);
     };
 
     updateTestimonial();
@@ -224,17 +224,19 @@ export function Features() {
 
       {/* Features Section */}
       <div className="bg-white">
-        <section className="pt-4 pb-14">
+        <section className="pt-0 md:pt-4 pb-10 md:pb-14">
           <div className="max-w-5xl mx-auto px-4">
-            <div className="text-center mb-7">
+            <div className="text-center mb-5 md:mb-7">
               <div className="space-y-0.5">
-                <h2 className="text-xl font-medium text-gray-900">Everything you need</h2>
-                <h3 className="text-[2.75rem] font-semibold bg-gradient-to-r from-[#6366F1] to-pink-500 text-transparent bg-clip-text">All-in-one platform</h3>
+                <h2 className="text-lg md:text-xl font-medium text-gray-900">Everything you need</h2>
+                <h3 className="text-[2rem] md:text-[2.75rem] font-semibold bg-gradient-to-r from-[#6366F1] to-pink-500 text-transparent bg-clip-text leading-tight">
+                  All-in-one platform
+                </h3>
               </div>
             </div>
 
             {/* Main Feature Cards */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {/* Unified Business Dashboard */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
@@ -309,7 +311,7 @@ export function Features() {
             </div>
 
             {/* Integration Section */}
-            <div className="mt-6 grid md:grid-cols-3 gap-7">
+            <div className="mt-4 md:mt-6 grid md:grid-cols-3 gap-4 md:gap-7">
               <div className="bg-white rounded-2xl p-5 pb-14 shadow-sm border border-purple-100 relative group overflow-hidden hover:border-blue-600">
               <div className="h-44 relative">
                   <img 
@@ -363,14 +365,14 @@ export function Features() {
       </div>
 
       {/* Pricing Section */}
-      <div id="pricing" className="bg-white py-10">
+      <div id="pricing" className="bg-white py-1 md:py-2">
         <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-12 -mt-10">
-            <h2 className="text-3xl font-medium text-gray-900">Simple, Affordable Pricing</h2>
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-[1.6rem] md:text-3xl font-medium text-gray-900 leading-tight">Simple, Affordable Pricing</h2>
             <p className="text-neutral-700 mt-2 font-normal">Choose the plan that works best for you</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-4 md:gap-6 max-w-3xl mx-auto">
             {/* Free Plan */}
             <div className="bg-white rounded-2xl p-6 border border-gray-200 transform transition-all duration-300 hover:scale-105 hover:shadow-lg">
               <h3 className="text-xl font-semibold mb-2">Free</h3>

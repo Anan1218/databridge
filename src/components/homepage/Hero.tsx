@@ -82,21 +82,19 @@ export function Hero() {
   };
 
   return (
-    <div className="relative px-4" ref={containerRef}>
-      <div className="flex flex-col items-center max-w-[1200px] mx-auto mt-9">
-        <div className="w-full text-center mb-8">
-          <h1 className="text-[3.2rem] font-bold text-gray-900 leading-tight mb-2">
-            <div>The best way to build</div>
-            <div className="flex flex-col items-center">
-              <div className="flex items-center gap-3">
-                <div
-                  key={currentWord}
-                  className={`${colors[currentWord]} overflow-hidden`}
-                >
-                  {renderStaggeredWord(words[currentWord])}
-                </div>
-                <div>in one page</div>
+    <div className="relative w-full" ref={containerRef}>
+      <div className="flex flex-col items-center max-w-[1200px] mx-auto mt-1 md:mt-6">
+        <div className="w-full text-center">
+          <h1 className="text-[1.8rem] md:text-[3.2rem] font-bold text-gray-900 leading-tight">
+            <div className="mb-1 md:mb-0">The best way to build</div>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-0.5 md:gap-3">
+              <div
+                key={currentWord}
+                className={`${colors[currentWord]} overflow-hidden whitespace-nowrap mb-0 md:mb-0`}
+              >
+                {renderStaggeredWord(words[currentWord])}
               </div>
+              <div className="md:inline-block">in one page</div>
             </div>
           </h1>
           
@@ -133,40 +131,40 @@ export function Hero() {
             }
           `}</style>
           
-          <p className="text-base text-gray-600 leading-relaxed animate-fade-in max-w-[660px] mx-auto mb-4">
+          <p className="text-sm md:text-base text-gray-800 leading-relaxed animate-fade-in max-w-[660px] mx-auto mt-2 md:mt-1.7 mb-4 md:mb-4 px-4 md:px-0">
             Simplify SEO analytics with <span className="font-semibold">Google Analytics</span>, <span className="font-semibold">Search Console</span> & <span className="font-semibold">Indexing</span> in one intuitive dashboard. 
             Effortlessly track key insights for all your websites in one place.
           </p>
 
-          <div className="flex gap-3 justify-center mb-4">
+          <div className="flex items-center justify-center gap-2 md:gap-3 mb-3 md:mb-6">
             <Link 
               href="/contact" 
-              className="inline-block bg-[#974eea] text-white px-5 py-2.5 rounded-lg font-normal transition-all hover:bg-[#8b5cf6] hover:shadow-[0_0_45px_12px_rgba(167,139,250,0.35)]"
+              className="inline-block bg-[#974eea] text-white px-3 md:px-4 py-1.5 md:py-2.5 rounded-lg font-normal transition-all hover:bg-[#8b5cf6] hover:shadow-[0_0_45px_12px_rgba(167,139,250,0.35)] text-sm md:text-base"
             >
               Get Started - It's Free
             </Link>
             <Link 
               href="/demo" 
-              className="inline-block border border-[#d5d4d4] text-[#000000] hover:bg-[#8b5cf6]/5 px-4 py-2.5 rounded-lg font-normal transition-all hover:scale-105"
+              className="inline-block border border-[#d5d4d4] text-[#000000] hover:bg-[#8b5cf6]/5 px-3 md:px-4 py-1.5 md:py-2.5 rounded-lg font-normal transition-all hover:scale-105 text-sm md:text-base"
             >
               Live Demo
             </Link>
           </div>
 
-          <div className="flex items-center gap-2 justify-center mb-1">
-            <div className="flex items-center gap-2 mt-3">
-              <img src="/laurel-left.svg" alt="" className="h-4" />
+          <div className="flex items-center justify-center gap-2 mb-8 md:mb-4">
+            <div className="flex items-center gap-1.5 md:gap-2">
+              <img src="/laurel-left.svg" alt="" className="h-3 md:h-4" />
               <div className="text-center">
-                <div className="text-[#5b5f7d] font-medium">Product of the day</div>
-                <div className="text-[#5b5f7d] text-xl font-semibold">1st</div>
+                <div className="text-[#5b5f7d] text-xs md:text-base font-medium whitespace-nowrap">Product of the day</div>
+                <div className="text-[#5b5f7d] text-sm md:text-xl font-semibold">1st</div>
               </div>
-              <img src="/laurel-right.svg" alt="" className="h-6" />
+              <img src="/laurel-right.svg" alt="" className="h-4 md:h-6" />
             </div>
           </div>
         </div>
         
         {/* iPad Dashboard Container */}
-        <div className="w-full [perspective:1500px] relative flex justify-center -mt-4">
+        <div className="w-full [perspective:1500px] relative flex justify-center">
           <div 
             className="absolute left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent pointer-events-none" 
             style={{ 
@@ -177,7 +175,7 @@ export function Hero() {
           />
           
           <div 
-            className="relative w-[80%] transition-all duration-500 ease-out will-change-transform"
+            className="relative w-[90%] md:w-[80%] transition-all duration-500 ease-out will-change-transform"
             style={{
               transform: `
                 rotateX(${Math.max(0, 12 * (1 - scrollY))}deg)

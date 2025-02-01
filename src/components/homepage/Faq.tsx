@@ -33,7 +33,7 @@ export function Faq() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto pb-16 mt-4">
+    <div className="max-w-2xl mx-auto pb-16 mt-7 md:mt-10">
       <div className="text-center mb-8">
         <span className="text-[#8b5cf6] text-sm font-medium">FAQ</span>
         <h2 className="text-3xl font-medium text-gray-900 mt-1">Got Questions?</h2>
@@ -61,7 +61,7 @@ export function Faq() {
       </div>
 
       {/* Start Building Section */}
-      <div className="mt-[3.2rem] -mb-4 text-center relative bg-[#ffffff] rounded-2xl">
+      <div className="mt-[2.2rem] md:mt-[3.2rem] -mb-4 text-center relative bg-[#ffffff] rounded-2xl">
         <h2 className="text-[2rem] font-medium text-gray-900 mb-1">Start building today</h2>
         <p className="text-[1.05rem] leading-relaxed text-[#4b5563] mb-4 max-w-2xl mx-auto">
           Create and customize your perfect dashboard with ease, tailored to your needs.
