@@ -1,4 +1,4 @@
-import { MdWork, MdArrowDropDown, MdAdd } from 'react-icons/md';
+import { MdWork, MdArrowDropDown, MdAdd, MdSettings } from 'react-icons/md';
 
 interface WorkspaceDisplay {
   id: string;
@@ -14,6 +14,7 @@ interface WorkspaceDropdownProps {
   onToggleDropdown: () => void;
   onSelectWorkspace: (workspace: WorkspaceDisplay) => void;
   onNewWorkspace: () => void;
+  onSettingsClick: () => void;
 }
 
 export default function WorkspaceDropdown({
@@ -23,7 +24,8 @@ export default function WorkspaceDropdown({
   isLoading,
   onToggleDropdown,
   onSelectWorkspace,
-  onNewWorkspace
+  onNewWorkspace,
+  onSettingsClick
 }: WorkspaceDropdownProps) {
   return (
     <div className="relative">
@@ -39,26 +41,39 @@ export default function WorkspaceDropdown({
       </button>
 
       {showDropdown && (
-        <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+        <div className="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
           {isLoading ? (
             <div className="px-4 py-2 text-sm text-gray-500">Loading...</div>
           ) : workspaces.length > 0 ? (
             <>
               {workspaces.map((workspace) => (
-                <button
+                <div
                   key={workspace.id}
                   onClick={() => onSelectWorkspace(workspace)}
-                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between"
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between cursor-pointer"
                 >
                   <span>{workspace.name}</span>
-                  <span className={`text-xs ${
-                    workspace.role === 'Owner' 
-                      ? 'bg-blue-100 text-blue-800' 
-                      : 'bg-gray-100 text-gray-800'
-                  } px-2 py-1 rounded`}>
-                    {workspace.role}
-                  </span>
-                </button>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs ${
+                      workspace.role === 'Owner' 
+                        ? 'bg-blue-100 text-blue-800' 
+                        : 'bg-gray-100 text-gray-800'
+                    } px-2 py-1 rounded`}>
+                      {workspace.role}
+                    </span>
+                    {workspace.role === 'Owner' && (
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSettingsClick();
+                        }}
+                        className="p-1 hover:bg-gray-100 rounded-full"
+                      >
+                        <MdSettings className="w-4 h-4 text-gray-600" />
+                      </button>
+                    )}
+                  </div>
+                </div>
               ))}
               <div className="border-t mt-1 pt-1">
                 <button 

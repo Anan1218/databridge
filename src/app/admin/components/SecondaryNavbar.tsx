@@ -180,6 +180,11 @@ export default function SecondaryNavbar() {
                 setShowWorkspaceDropdown(false);
               }}
               onNewWorkspace={handleNewWorkspace}
+              onSettingsClick={() => {
+                if (selectedWorkspace) {
+                  router.push(`/admin/workspace/${selectedWorkspace.id}/settings`);
+                }
+              }}
             />
 
             <SearchBar 
@@ -189,17 +194,6 @@ export default function SecondaryNavbar() {
           </div>
 
           <div className="flex items-center gap-4">
-            <Link 
-              href={selectedWorkspace ? `/admin/workspace/${selectedWorkspace.id}/settings` : '#'} 
-              className={`text-sm font-medium ${
-                selectedWorkspace 
-                  ? 'text-gray-700 hover:text-blue-600' 
-                  : 'text-gray-400 cursor-not-allowed'
-              }`}
-            >
-              Manage Workspace
-            </Link>
-            
             <button 
               onClick={handleEditLayout}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${
