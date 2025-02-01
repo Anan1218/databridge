@@ -55,53 +55,44 @@ export default function SubscriptionPlans({ userData, loading = false }: { userD
   }, [userData, loading]);
 
   const handlePlanSelect = async (planType: 'monthly' | 'yearly') => {
-    if (!user) {
-      router.push('/signin?return_to=subscribe');
-      return;
-    }
+    if (!user) return;
 
-    setError(null);
     setIsProcessing(true);
+    setError(null);
 
     try {
+      // Get the price ID based on the plan type
+      const priceId = planType === 'monthly' 
+        ? process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID
+        : process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID;
+
+      if (!priceId) {
+        throw new Error('Price ID not configured');
+      }
+
+      // Call the create-subscription API route
       const response = await fetch('/api/subscriptions/create-subscription', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          priceId: PRICE_IDS[planType],
+          priceId,
           userId: user.uid,
-          email: user.email,
+          email: user.email
         }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.error || 'Failed to create subscription');
-      if (!data.sessionId) throw new Error('No session ID returned from server');
-
-      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-      if (!stripe) throw new Error('Failed to load Stripe');
-
-      const { error: stripeError } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId,
-      });
-
-      if (stripeError) throw stripeError;
-
-      // After successful redirect to checkout, call update-status
-      const updateResponse = await fetch('/api/subscriptions/update-status', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ uid: user.uid }),
-      });
-
-      if (!updateResponse.ok) {
-        throw new Error('Failed to update subscription status');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create subscription');
       }
+
+      const { sessionId } = await response.json();
+
+      // Redirect to Stripe Checkout
+      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+      await stripe?.redirectToCheckout({ sessionId });
 
     } catch (error) {
       console.error('Subscription error:', error);

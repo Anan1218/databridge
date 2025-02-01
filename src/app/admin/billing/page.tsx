@@ -6,33 +6,22 @@ import { useState, useEffect } from 'react';
 
 export default function BillingPage() {
   const { userData } = useAuthContext();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+  const [currentPlan, setCurrentPlan] = useState('');
+  const [error, setError] = useState('');
 
+  // Initialize state directly from userData
   useEffect(() => {
-    const updateSubscriptionStatus = async () => {
-      if (userData?.uid) {
-        try {
-          await fetch('/api/subscriptions/update-status', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ uid: userData.uid }),
-          });
-        } catch (error) {
-          console.error('Error updating subscription status:', error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
-    updateSubscriptionStatus();
+    if (userData?.subscription) {
+      setIsPremium(userData.subscription.status === 'active');
+      setCurrentPlan(userData.subscription.interval || '');
+      setLoading(false);
+    }
   }, [userData]);
 
   return (
     <div className="max-w-6xl mx-auto px-2 py-4">
-      {/* <SubscriptionStatus userData={userData} loading={loading} /> */}
       <div className="text-black py-10">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
           <div className="text-center">

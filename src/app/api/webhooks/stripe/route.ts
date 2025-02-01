@@ -21,23 +21,32 @@ export async function POST(req: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err) {
-    return NextResponse.json(
-      { error: err },
-      { status: 400 }
-    );
+    console.error('Webhook signature verification failed:', err);
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
-        const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+        console.log('Checkout session completed:', session.id);
         
-        if (!session.metadata?.userId) {
-          throw new Error('Missing user ID in session metadata');
+        if (!session.subscription) {
+          console.error('No subscription ID in session');
+          return NextResponse.json({ error: 'Missing subscription ID' }, { status: 400 });
         }
-        // Update user's subscription status in Firebase
+
+        const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+        console.log('Retrieved subscription:', subscription.id);
+
+        if (!session.metadata?.userId) {
+          console.error('Missing user ID in session metadata');
+          return NextResponse.json({ error: 'Missing user ID' }, { status: 400 });
+        }
+
         const userRef = doc(db, 'users', session.metadata.userId);
+        console.log('Updating user:', session.metadata.userId);
+
         await setDoc(userRef, {
           subscription: {
             status: 'active',
@@ -51,6 +60,8 @@ export async function POST(req: Request) {
           },
           updatedAt: new Date().toISOString()
         }, { merge: true });
+
+        console.log('User subscription updated successfully');
         break;
       }
 
