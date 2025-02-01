@@ -57,7 +57,7 @@ const testimonials = [
 export function Features() {
   const [visibleTestimonials, setVisibleTestimonials] = useState(testimonials.slice(0, 6));
   const [currentIndex, setCurrentIndex] = useState(-1);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  // const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     // Start the cycle after initial render
@@ -72,7 +72,7 @@ export function Features() {
     if (currentIndex === -1) return;
 
     const updateTestimonial = () => {
-      setIsTransitioning(true);
+      // setIsTransitioning(true);
       
       // Wait for fade out (0.75s)
       setTimeout(() => {
@@ -89,7 +89,7 @@ export function Features() {
         
         // Start fade in (0.75s)
         setTimeout(() => {
-          setIsTransitioning(false);
+          // setIsTransitioning(false);
           
           // Wait for visibility duration (2s)
           setTimeout(() => {
