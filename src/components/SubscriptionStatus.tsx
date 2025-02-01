@@ -66,11 +66,11 @@ export default function SubscriptionStatus({ userData, loading }: { userData: an
           <p className="text-sm text-gray-500">Status</p>
           <p className="text-lg font-medium">
             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${
-              subscription.subscriptionStatus === 'active' 
+              subscription.status === 'active' 
                 ? 'bg-green-100 text-green-800'
                 : 'bg-gray-100 text-gray-800'
             }`}>
-              {subscription.subscriptionStatus === 'active' ? 'Premium' : 'Free'}
+              {subscription.status === 'active' ? 'Premium' : 'Free'}
             </span>
           </p>
         </div>
@@ -86,7 +86,7 @@ export default function SubscriptionStatus({ userData, loading }: { userData: an
           <p className="text-sm text-gray-500">Data Sources</p>
           <p className="text-lg font-medium">
             {dataSourceCount}/
-            {subscription.subscriptionStatus === 'active' ? '10' : '3'} Used
+            {subscription.status === 'active' ? '10' : '3'} Used
           </p>
         </div>
       </div>

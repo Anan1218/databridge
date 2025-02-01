@@ -1,5 +1,5 @@
 export interface UserSubscription {
-  subscriptionStatus: 'active' | 'canceled' | 'trial' | null;
+  status: 'active' | 'canceled' | 'trial' | null;
   subscriptionId?: string;
   customerId?: string;
   trialEnds?: Date;

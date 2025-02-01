@@ -15,7 +15,7 @@ export default function BillingPage() {
   useEffect(() => {
     if (userData?.subscription) {
       setIsPremium(userData.subscription.status === 'active');
-      setCurrentPlan(userData.subscription.interval || '');
+      setCurrentPlan(userData.subscription.plan || '');
       setLoading(false);
     }
   }, [userData]);

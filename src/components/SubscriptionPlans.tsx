@@ -19,40 +19,16 @@ const CheckIcon = () => (
 
 export default function SubscriptionPlans({ userData, loading = false }: { userData: any, loading?: boolean }) {
   const [error, setError] = useState<string | null>(null);
-  const [isPremium, setIsPremium] = useState(false);
-  const [currentPlan, setCurrentPlan] = useState<'monthly' | 'yearly' | null>(null);
+  const [isPremium, setIsPremium] = useState(userData?.subscription?.status === 'active');
+  const [currentPlan, setCurrentPlan] = useState<'monthly' | 'yearly' | null>(userData?.subscription?.plan || null);
   const [isProcessing, setIsProcessing] = useState(false);
   const { user } = useAuthContext();
   const router = useRouter();
 
   useEffect(() => {
-    const verifySubscription = async () => {
-      if (userData?.uid) {
-        try {
-          const response = await fetch('/api/subscriptions/update-status', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ uid: userData.uid }),
-          });
-          
-          const result = await response.json();
-          if (result.success && result.updated) {
-            // Subscription status was updated
-            setIsPremium(result.newStatus === 'active');
-            setCurrentPlan(userData.subscription?.interval || null);
-          }
-        } catch (error) {
-          console.error('Error verifying subscription:', error);
-        }
-      }
-    };
-
-    if (!loading) {
-      verifySubscription();
-    }
-  }, [userData, loading]);
+    setIsPremium(userData?.subscription?.status === 'active');
+    setCurrentPlan(userData?.subscription?.plan || null);
+  }, [userData]);
 
   const handlePlanSelect = async (planType: 'monthly' | 'yearly') => {
     if (!user) return;
@@ -114,17 +90,17 @@ export default function SubscriptionPlans({ userData, loading = false }: { userD
         <div className="inline-flex items-center bg-gray-100 p-2 rounded-full">
           <span 
             className={`px-4 py-2 rounded-full cursor-pointer text-sm transition-colors ${
-              !isPremium ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600'
+              currentPlan === 'monthly' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600'
             }`}
-            onClick={() => setIsPremium(false)}
+            onClick={() => setCurrentPlan('monthly')}
           >
             Monthly
           </span>
           <span 
             className={`px-4 py-2 rounded-full cursor-pointer text-sm transition-colors ${
-              isPremium ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600'
+              currentPlan === 'yearly' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-600'
             }`}
-            onClick={() => setIsPremium(true)}
+            onClick={() => setCurrentPlan('yearly')}
           >
             Yearly
           </span>
@@ -164,8 +140,9 @@ export default function SubscriptionPlans({ userData, loading = false }: { userD
           </div>
           <button
             className="mt-8 w-full bg-transparent border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-lg py-3 px-4 transition-all"
+            disabled={!isPremium}
           >
-            Current Plan
+            {isPremium ? 'Downgrade' : 'Current Plan'}
           </button>
         </div>
 
@@ -180,13 +157,13 @@ export default function SubscriptionPlans({ userData, loading = false }: { userD
             <h3 className="text-2xl font-bold text-center text-gray-800 mt-4">Premium</h3>
             <div className="mt-4 text-center">
               <span className="text-4xl font-bold text-indigo-600">
-                {isPremium ? '$49.99' : '$4.99'}
+                {currentPlan === 'yearly' ? '$49.99' : '$4.99'}
               </span>
               <span className="text-gray-500">
-                {isPremium ? '/year' : '/month'}
+                {currentPlan === 'yearly' ? '/year' : '/month'}
               </span>
             </div>
-            {isPremium && (
+            {currentPlan === 'yearly' && (
               <div className="mt-2 text-center">
                 <span className="text-green-600 text-sm">Get 2 Months Free!</span>
               </div>
@@ -214,22 +191,20 @@ export default function SubscriptionPlans({ userData, loading = false }: { userD
               </li>
               <li className="flex items-center">
                 <CheckIcon />
-                {isPremium ? 'Priority Support' : 'Cancel Anytime'}
+                {currentPlan === 'yearly' ? 'Priority Support' : 'Cancel Anytime'}
               </li>
             </ul>
           </div>
           <button
-            onClick={() => handlePlanSelect(isPremium ? 'yearly' : 'monthly')}
-            disabled={currentPlan === (isPremium ? 'yearly' : 'monthly')}
+            onClick={() => handlePlanSelect(currentPlan || 'monthly')}
+            disabled={isPremium}
             className={`mt-8 w-full ${
-              currentPlan === (isPremium ? 'yearly' : 'monthly')
+              isPremium
                 ? 'bg-gray-400 hover:bg-gray-400 cursor-default'
                 : 'bg-indigo-600 hover:bg-indigo-700'
             } text-white rounded-lg py-3 px-4 transition-all`}
           >
-            {currentPlan === (isPremium ? 'yearly' : 'monthly')
-              ? 'Your current plan'
-              : `Get Premium ${isPremium ? 'Yearly' : 'Monthly'}`}
+            {isPremium ? 'Your current plan' : `Get Premium ${currentPlan === 'yearly' ? 'Yearly' : 'Monthly'}`}
           </button>
         </div>
       </div>
