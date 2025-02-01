@@ -1,19 +1,24 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { FirebaseError } from "firebase/app";
-import WelcomeFlow from "./WelcomeFlow";
 
-export default function SignIn() {
+interface LoginModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const router = useRouter();
   const { signIn, signUp } = useAuthContext();
-  const [showWelcomeFlow, setShowWelcomeFlow] = useState(false);
+
+  if (!isOpen) return null;
 
   const getErrorMessage = (error: FirebaseError) => {
     switch (error.code) {
@@ -37,9 +42,11 @@ export default function SignIn() {
     try {
       if (isSignUp) {
         await signUp(email, password);
-        setShowWelcomeFlow(true);
+        onClose();
+        router.push("/admin");
       } else {
         await signIn(email, password);
+        onClose();
         router.push("/admin");
       }
     } catch (err) {
@@ -52,25 +59,19 @@ export default function SignIn() {
   };
 
   return (
-    <div className={`min-h-screen ${showWelcomeFlow ? 'bg-black' : ''}`}>
-      <div className="max-w-md mx-auto mt-8">
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6 bg-white p-8 rounded-lg shadow"
-        >
-          <h2 className="text-2xl font-bold text-center text-black">
-            {isSignUp ? "Create Account" : "Sign In"}
-          </h2>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg p-6 max-w-md w-full">
+        <h2 className="text-2xl font-bold text-center mb-6">
+          {isSignUp ? "Create Account" : "Sign In"}
+        </h2>
 
-          {error && (
-            <div className="bg-red-50 text-red-500 p-3 rounded">{error}</div>
-          )}
+        {error && (
+          <div className="bg-red-50 text-red-500 p-3 rounded mb-4">{error}</div>
+        )}
 
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="email" className="block text-sm font-medium mb-1">
               Email
             </label>
             <input
@@ -78,17 +79,13 @@ export default function SignIn() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-input"
-              // className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black"
+              className="w-full p-2 border rounded"
               required
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="password" className="block text-sm font-medium mb-1">
               Password
             </label>
             <input
@@ -96,43 +93,49 @@ export default function SignIn() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="form-input"
-              // className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-black"
+              className="w-full p-2 border rounded"
               required
             />
           </div>
 
-          <button type="submit" className="w-full btn btn-primary">
+          <button
+            type="submit"
+            className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700"
+          >
             {isSignUp ? "Sign Up" : "Sign In"}
           </button>
 
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-blue-600 hover:text-blue-800 text-sm"
-            >
-              {isSignUp
-                ? "Already have an account? Sign in"
-                : "Don't have an account? Sign up"}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setIsSignUp(!isSignUp)}
+            className="text-purple-600 hover:text-purple-700 text-sm"
+          >
+            {isSignUp
+              ? "Already have an account? Sign in"
+              : "Don't have an account? Sign up"}
+          </button>
         </form>
-      </div>
 
-      {showWelcomeFlow && (
-        <WelcomeFlow
-          onComplete={(completed: boolean) => {
-            setShowWelcomeFlow(false);
-            if (!completed) {
-              setEmail("");
-              setPassword("");
-            } else {
-              router.push("/admin");
-            }
-          }}
-        />
-      )}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
   );
-}
+} 

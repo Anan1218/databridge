@@ -73,7 +73,29 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
   };
 
   const signUpHandler = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    // Initialize user data after sign up
+    await fetch('/api/users/init', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        uid: userCredential.user.uid, 
+        userData: {
+          email: userCredential.user.email || '',
+          location: 'default',
+          businessType: 'restaurant',
+          businessName: '',
+          createdAt: new Date(),
+          dataSources: [],
+          website: '',
+          firstName: '',
+          lastName: '',
+          updatedAt: new Date(),
+          receiveUpdates: false
+        }
+      })
+    });
+    return userCredential;
   };
 
   const signOutHandler = async () => {
