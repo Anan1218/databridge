@@ -6,7 +6,8 @@ import Image from "next/image";
 import { useState } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { MdArrowDropDown } from "react-icons/md";
+import { MdArrowDropDown, MdNotifications, MdPerson, MdHelpOutline, MdLogout } from "react-icons/md";
+import NotificationBell from './NotificationBell';
 
 export default function AdminNavbar() {
   const { signOut, user } = useAuthContext();
@@ -40,6 +41,15 @@ export default function AdminNavbar() {
     }
   };
 
+  // Example notifications - replace with your actual data
+  const notifications = [
+    // {
+    //   id: '1',
+    //   message: 'New data source connected',
+    //   timestamp: new Date()
+    // }
+  ];
+
   return (
     <nav className="bg-[#1a1f37] border-b border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -70,6 +80,7 @@ export default function AdminNavbar() {
           </div>
           
           <div className="flex items-center gap-4">
+            <NotificationBell notifications={notifications} />
             
             <div className="relative">
               <button 
@@ -89,27 +100,30 @@ export default function AdminNavbar() {
                   <Link
                     href="/admin/account"
                     onClick={() => setShowAccountDropdown(false)}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    Account Settings
+                    <MdPerson className="w-4 h-4" />
+                    Profile
                   </Link>
                   <Link
                     href="/admin/help"
                     onClick={() => setShowAccountDropdown(false)}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    Need Help
+                    <MdHelpOutline className="w-4 h-4" />
+                    Support
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="w-full flex items-center gap-2 text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
+                    <MdLogout className="w-4 h-4" />
                     Sign Out
                   </button>
-        </div>
+                </div>
               )}
-        </div>
-      </div>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
