@@ -7,7 +7,6 @@ import { useAuthContext } from '@/contexts/AuthContext';
 interface DataSourceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dashboardId: string;
   currentSources: string[];
   onSave: (sources: string[]) => void;
 }
@@ -15,7 +14,6 @@ interface DataSourceModalProps {
 export default function DataSourceModal({ 
   isOpen, 
   onClose, 
-  dashboardId, 
   currentSources,
   onSave 
 }: DataSourceModalProps) {
@@ -48,7 +46,7 @@ export default function DataSourceModal({
           </div>
 
           <div className="space-y-3">
-            {userData?.dataSources?.map(sourceId => (
+            {userData?.dataSources?.map((sourceId: string) => (
               <div
                 key={sourceId}
                 className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-purple-500 transition-colors"

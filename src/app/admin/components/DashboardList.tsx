@@ -1,36 +1,34 @@
 import React, { useState, useCallback } from 'react';
-import EventCalendar from './EventCalendar';
-import { Dashboard, Workspace } from '@/types/workspace';
-import { MdSettings, MdDelete } from 'react-icons/md';
+import { Dashboard } from '@/types/workspace';
 import DataSourceModal from './DataSourceModal';
 import DashboardCard from './DashboardCard';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
-import { useWorkspace } from './AdminLayout';
+import { Workspace } from '@/types/workspace';
 
 interface DashboardListProps {
   dashboards: Dashboard[];
   isEditing: boolean;
   onDeleteClick: (dashboardId: string) => void;
   setDashboards: React.Dispatch<React.SetStateAction<Dashboard[]>>;
+  selectedWorkspace: Workspace;
 }
 
 export default React.memo(function DashboardList({ 
   dashboards, 
   isEditing, 
   onDeleteClick,
-  setDashboards 
+  setDashboards,
+  selectedWorkspace 
 }: DashboardListProps) {
-  const { selectedWorkspace } = useWorkspace();
   const [selectedDashboard, setSelectedDashboard] = useState<Dashboard | null>(null);
   const [isDataSourceModalOpen, setIsDataSourceModalOpen] = useState(false);
 
   // Memoize handlers
   const handleSaveDataSources = useCallback(async (sources: string[]) => {
-    if (!selectedDashboard || !selectedWorkspace) return;
+    if (!selectedDashboard || !selectedWorkspace?.id) return;
     
     try {
-      if (!selectedWorkspace?.id) throw new Error('Workspace ID is undefined');
       const workspaceRef = doc(db, 'workspaces', selectedWorkspace.id);
       
       // Update the specific dashboard in the array
@@ -101,7 +99,6 @@ export default React.memo(function DashboardList({
         <DataSourceModal
           isOpen={isDataSourceModalOpen}
           onClose={() => setIsDataSourceModalOpen(false)}
-          dashboardId={selectedDashboard.id}
           currentSources={selectedDashboard.dataSources || []}
           onSave={handleSaveDataSources}
         />

@@ -20,10 +20,6 @@ type WorkspaceDisplay = {
   role: 'Owner' | 'User';
 };
 
-interface SecondaryNavbarProps {
-  refreshDashboards: () => void;
-}
-
 export default function SecondaryNavbar() {
   const { refreshDashboards } = useWorkspace();
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
@@ -34,9 +30,7 @@ export default function SecondaryNavbar() {
   const { user, userData, refreshUserData } = useAuthContext();
   const router = useRouter();
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
-  const [selectedDashboardType, setSelectedDashboardType] = useState<string | null>(null);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
-  const [availableDataSources, setAvailableDataSources] = useState<string[]>([]);
   const searchParams = useSearchParams();
 
   const isPremium = userData?.subscription?.status === 'active';
@@ -78,12 +72,6 @@ export default function SecondaryNavbar() {
     }
   }, [workspaces, selectedWorkspace]);
 
-  useEffect(() => {
-    if (userData?.dataSources) {
-      setAvailableDataSources(userData.dataSources);
-    }
-  }, [userData?.dataSources]);
-
   const handleNewWorkspace = () => {
     if (!isPremium) {
       setShowWorkspaceDropdown(false);
@@ -109,6 +97,7 @@ export default function SecondaryNavbar() {
         id: nanoid(),
         type: type,
         title: `New ${type} Dashboard`,
+        workspaceId: selectedWorkspace.id,
         dataSources: [],
         settings: {},
         position: maxPosition + 1,

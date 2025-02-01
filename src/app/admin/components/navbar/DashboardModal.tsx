@@ -1,6 +1,5 @@
 import { MdClose, MdCalendarToday, MdShowChart, MdTextFields } from "react-icons/md";
 import { DashboardType } from '@/types/workspace';
-import { nanoid } from 'nanoid';
 
 interface DashboardModalProps {
   isOpen: boolean;

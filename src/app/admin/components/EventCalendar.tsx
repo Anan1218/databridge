@@ -4,11 +4,11 @@ import { Calendar, momentLocalizer, View } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useState, useEffect } from 'react';
-import { db } from '@/utils/firebase'; // Adjust the import path as necessary
-import { collection, doc, getDocs, getDoc } from 'firebase/firestore';
+import { db } from '@/utils/firebase';
+import { collection, doc, getDocs } from 'firebase/firestore';
 import { useWorkspace } from './AdminLayout';
-import { User } from '@/types/user';  // Add this import
-import { useAuthContext } from '@/contexts/AuthContext'; // Add this import if not already present
+import { User } from '@/types/user';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 const localizer = momentLocalizer(moment);
 
@@ -97,9 +97,15 @@ export default function EventCalendar() {
         date={currentDate}
         onNavigate={(date) => setCurrentDate(date)}
         selectable
-        onSelectEvent={(event) => console.log('Event selected:', event)}
-        onSelectSlot={(slotInfo) => console.log('Slot selected:', slotInfo)}
-        eventPropGetter={(event) => ({
+        onSelectEvent={(event) => {
+          // TODO: Implement event selection handling
+          console.log('Event selected:', event);
+        }}
+        onSelectSlot={(slotInfo) => {
+          // TODO: Implement slot selection handling
+          console.log('Slot selected:', slotInfo);
+        }}
+        eventPropGetter={() => ({
           style: {
             backgroundColor: '#8b5cf6',
             borderRadius: '4px',
@@ -107,7 +113,7 @@ export default function EventCalendar() {
             color: 'white',
           },
         })}
-        dayPropGetter={(date) => ({
+        dayPropGetter={() => ({
           style: {
             border: '1px solid #e5e7eb',
             color: 'black',

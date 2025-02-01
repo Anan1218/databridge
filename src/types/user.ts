@@ -21,7 +21,8 @@ export interface User {
   workspaces: string[];
   defaultWorkspace?: string;
   receiveUpdates: boolean;
-} 
+  dataSources: string[];
+}
 
 export interface UserData {
   email: string;

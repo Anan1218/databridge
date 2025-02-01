@@ -1,11 +1,12 @@
 "use client";
 
 import { useAuthContext } from "@/contexts/AuthContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { Workspace } from "@/types/workspace";
+import { Dashboard } from "@/types/workspace";
 import DashboardList from "./components/DashboardList";
 import DashboardInitialSetup from "./components/DashboardInitialSetup";
 import DeleteModal from "./components/DeleteModal";
@@ -21,9 +22,9 @@ export default function AdminDashboard() {
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
   const [dashboardToDelete, setDashboardToDelete] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [dashboards, setDashboards] = useState(selectedWorkspace?.dashboards || []);
+  const [dashboards, setDashboards] = useState<Dashboard[]>([]);
 
-  const fetchWorkspaceData = async () => {
+  const fetchWorkspaceData = useCallback(async () => {
     if (!user?.uid) return;
     try {
       const userRef = doc(db, "users", user.uid);
@@ -35,24 +36,25 @@ export default function AdminDashboard() {
       const workspaceRef = doc(db, "workspaces", userSnap.data().defaultWorkspace);
       const workspaceSnap = await getDoc(workspaceRef);
       if (workspaceSnap.exists()) {
-        setSelectedWorkspace({ id: workspaceSnap.id, ...workspaceSnap.data() } as Workspace);
-        setDashboards(workspaceSnap.data().dashboards);
+        const workspaceData = { id: workspaceSnap.id, ...workspaceSnap.data() } as Workspace;
+        setSelectedWorkspace(workspaceData);
+        setDashboards(workspaceData.dashboards || []);
       }
     } catch (error) {
       console.error("Error fetching workspace:", error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user?.uid]);
 
   useEffect(() => {
     fetchWorkspaceData();
-  }, [user?.uid]);
+  }, [fetchWorkspaceData]);
 
   const handleDelete = async (dashboardId: string) => {
-    if (!user?.uid || !selectedWorkspace?.id) return;
+    if (!selectedWorkspace?.id) return;
     try {
-      const updatedDashboards = selectedWorkspace.dashboards.filter(d => d.id !== dashboardId);
+      const updatedDashboards = dashboards.filter(d => d.id !== dashboardId);
       const workspaceRef = doc(db, "workspaces", selectedWorkspace.id);
       await updateDoc(workspaceRef, {
         dashboards: updatedDashboards,
