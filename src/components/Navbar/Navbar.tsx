@@ -19,19 +19,19 @@ export default function Navbar() {
     }
   };
 
-  const scrollToPricing = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const pricingSection = document.getElementById('pricing');
-    if (pricingSection) {
-      const offset = 115; // Adjust this value to control how much higher it stops
-      const elementPosition = pricingSection.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+  // const scrollToPricing = (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   const pricingSection = document.getElementById('pricing');
+  //   if (pricingSection) {
+  //     const offset = 115; // Adjust this value to control how much higher it stops
+  //     const elementPosition = pricingSection.getBoundingClientRect().top;
+  //     const offsetPosition = elementPosition + window.pageYOffset - offset;
       
-      window.scrollTo({
-        top: offsetPosition
-      });
-    }
-  };
+  //     window.scrollTo({
+  //       top: offsetPosition
+  //     });
+  //   }
+  // };
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50">

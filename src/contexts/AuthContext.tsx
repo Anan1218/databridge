@@ -95,7 +95,6 @@ export const AuthContextProvider = ({ children }: { children: React.ReactNode })
         }
       })
     });
-    return userCredential;
   };
 
   const signOutHandler = async () => {
