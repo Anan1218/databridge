@@ -105,7 +105,7 @@ export function Features() {
   return (
     <>
       {/* Testimonials Section */}
-      <section className="pt-10 pb-12">
+      {/* <section className="pt-10 pb-12">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-medium text-stone-950">Our Reviews 👋</h2>
@@ -122,11 +122,9 @@ export function Features() {
                   transition: 'all 750ms cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
-                {/* Decorative elements */}
                 <div className="absolute -top-2 -left-2 w-4 h-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                 
-                {/* Quote icon */}
                 <div className="mb-2 text-purple-400">
                   <svg className="w-6 h-6 opacity-80" fill="currentColor" viewBox="0 0 32 32">
                     <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H6c0-2.2 1.8-4 4-4V8zm18 0c-3.3 0-6 2.7-6 6v10h10V14h-8c0-2.2 1.8-4 4-4V8z"/>
@@ -150,7 +148,7 @@ export function Features() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Features Section */}
       <div className="bg-white">
@@ -165,12 +163,12 @@ export function Features() {
 
             {/* Main Feature Cards */}
             <div className="grid md:grid-cols-2 gap-6">
-              {/* Unified Business Dashboard */}
+              {/* Market Research */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
                   <Image 
-                    src="/features/unified-dashboard.jpg"
-                    alt="Unified Business Dashboard"
+                    src="/features/market-research.jpg"
+                    alt="Market Research"
                     width={600}
                     height={400}
                     className="w-full h-full object-contain"
@@ -178,19 +176,19 @@ export function Features() {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Unified Business Dashboard</h3>
+                  <h3 className="text-xl font-semibold mb-3">Market Research</h3>
                   <p className="text-gray-600">
-                    Get a complete view of your business with our customizable dashboard. Monitor reviews, local events, and business metrics all in one place.
+                    Track pricing, trends, and industry news across multiple sources. Get real-time insights into your market position and competitors.
                   </p>
                 </div>
               </div>
 
-              {/* AI-Powered Insights */}
+              {/* Financial Analysis */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
                   <Image 
-                    src="/features/unified-dashboard.jpg"
-                    alt="AI-Powered Insights"
+                    src="/features/financial-analysis.jpg"
+                    alt="Financial Analysis"
                     width={600}
                     height={400}
                     className="w-full h-full object-contain"
@@ -198,19 +196,19 @@ export function Features() {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">AI-Powered Insights</h3>
+                  <h3 className="text-xl font-semibold mb-3">Financial Analysis</h3>
                   <p className="text-gray-600">
-                    Let AI analyze your data and provide actionable insights. Get smart recommendations for staffing, inventory, and business operations.
+                    Automate earnings reports, scan SEC filings, and generate financial summaries. Get AI-powered insights into your financial performance.
                   </p>
                 </div>
               </div>
 
-              {/* Event Monitoring */}
+              {/* Lead Generation */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
                   <Image 
-                    src="/features/unified-dashboard.jpg"
-                    alt="Smart Event Monitoring"
+                    src="/features/lead-generation.jpg"
+                    alt="Lead Generation"
                     width={600}
                     height={400}
                     className="w-full h-full object-contain"
@@ -218,19 +216,19 @@ export function Features() {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Smart Event Monitoring</h3>
+                  <h3 className="text-xl font-semibold mb-3">Lead Generation</h3>
                   <p className="text-gray-600">
-                    Stay ahead of local events that impact your business. Monitor sports games, concerts, and community events that drive customer traffic.
+                    Scrape company info, find potential leads, and auto-fill CRM entries. Our AI identifies high-quality leads and enriches them with relevant data.
                   </p>
                 </div>
               </div>
 
-              {/* Review Analytics */}
+              {/* Compliance & Due Diligence */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
                   <Image 
-                    src="/features/unified-dashboard.jpg"
-                    alt="Review Analytics"
+                    src="/features/compliance.jpg"
+                    alt="Compliance & Due Diligence"
                     width={600}
                     height={400}
                     className="w-full h-full object-contain"
@@ -238,9 +236,9 @@ export function Features() {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Review Analytics</h3>
+                  <h3 className="text-xl font-semibold mb-3">Compliance & Due Diligence</h3>
                   <p className="text-gray-600">
-                    Monitor and analyze customer feedback across Yelp, Google Maps, and social media. Get AI-powered summaries and sentiment analysis.
+                    Monitor regulatory updates, legal filings, and policy changes. Automate compliance reporting and risk assessment processes.
                   </p>
                 </div>
               </div>

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const words = ['Analytics', 'Insights', 'Predictions', 'Performance'];
+const words = ['extract', 'analyze', 'predict', 'connect'];
 
 const colors = [
   'text-[#ca16a1]',  // Pink (Analytics)
@@ -50,7 +50,7 @@ export function Hero() {
       setTimeout(() => {
         setCurrentWord((prev) => (prev + 1) % words.length);
         setIsExiting(false);
-      }, 400);
+      }, 600);
     }, 3000);
     return () => clearInterval(wordInterval);
   }, []);
@@ -86,7 +86,7 @@ export function Hero() {
       <div className="flex flex-col items-center max-w-[1200px] mx-auto mt-9">
         <div className="w-full text-center mb-8">
           <h1 className="text-[3.2rem] font-bold text-gray-900 leading-tight mb-2">
-            <div>The best way to build</div>
+            <div>The best way to</div>
             <div className="flex flex-col items-center">
               <div className="flex items-center gap-3">
                 <div
@@ -95,7 +95,7 @@ export function Hero() {
                 >
                   {renderStaggeredWord(words[currentWord])}
                 </div>
-                <div>in one page</div>
+                <div>data with AI</div>
               </div>
             </div>
           </h1>
@@ -134,8 +134,8 @@ export function Hero() {
           `}</style>
           
           <p className="text-base text-gray-600 leading-relaxed animate-fade-in max-w-[660px] mx-auto mb-4">
-            Simplify SEO analytics with <span className="font-semibold">Google Analytics</span>, <span className="font-semibold">Search Console</span> & <span className="font-semibold">Indexing</span> in one intuitive dashboard. 
-            Effortlessly track key insights for all your websites in one place.
+            Automate data workflows with <span className="font-semibold">market research</span>, <span className="font-semibold">financial analysis</span> & <span className="font-semibold">lead generation</span> in one powerful platform. 
+            Streamline compliance, reporting, and business intelligence across all your data sources.
           </p>
 
           <div className="flex gap-3 justify-center mb-4">
@@ -143,7 +143,7 @@ export function Hero() {
               href="/contact" 
               className="inline-block bg-[#974eea] text-white px-5 py-2.5 rounded-lg font-normal transition-all hover:bg-[#8b5cf6] hover:shadow-[0_0_45px_12px_rgba(167,139,250,0.35)]"
             >
-              Get Started - It's Free
+              Get Started
             </Link>
             <Link 
               href="/demo" 
@@ -153,7 +153,7 @@ export function Hero() {
             </Link>
           </div>
 
-          <div className="flex items-center gap-2 justify-center mb-1">
+          {/* <div className="flex items-center gap-2 justify-center mb-1">
             <div className="flex items-center gap-2 mt-3">
               <Image src="/laurel-left.svg" alt="" width={16} height={16} className="h-4" />
               <div className="text-center">
@@ -162,7 +162,7 @@ export function Hero() {
               </div>
               <Image src="/laurel-right.svg" alt="" width={24} height={24} className="h-6" />
             </div>
-          </div>
+          </div> */}
         </div>
         
         {/* iPad Dashboard Container */}

@@ -5,24 +5,24 @@ import Link from 'next/link';
 export function Faq() {
   const faqs = [
     {
-      question: "How does DataBridge's AI forecasting work?",
-      answer: "Our AI system analyzes your historical sales data, local events, weather patterns, and other relevant factors to generate accurate demand forecasts. The system continuously learns and adapts to improve prediction accuracy over time.",
+      question: "How does the AI data extraction work?",
+      answer: "Our AI system uses advanced natural language processing to extract key information from documents, websites, and databases. It can handle structured and unstructured data with high accuracy.",
     },
     {
-      question: "What data do I need to get started?",
-      answer: "You'll need at least 6 months of historical sales data to begin. Our system can integrate with most major POS systems and inventory management platforms to automatically import your data.",
+      question: "What types of data sources can I connect?",
+      answer: "You can connect to 550+ data sources including financial filings, market research databases, CRM systems, and public web sources. Our system supports APIs, web scraping, and direct integrations.",
     },
     {
-      question: "How accurate are the predictions?",
-      answer: "Our AI typically achieves 85-95% accuracy in demand forecasting, depending on the industry and data quality. The system's accuracy improves over time as it learns from your specific business patterns.",
+      question: "How accurate is the data analysis?",
+      answer: "Our AI achieves 95%+ accuracy in data extraction and analysis. The system continuously learns and improves through machine learning models trained on millions of data points.",
     },
     {
-      question: "Can DataBridge integrate with my existing systems?",
-      answer: "Yes, DataBridge integrates with major retail management systems, POS systems, and inventory platforms. We provide APIs and pre-built integrations for seamless data flow.",
+      question: "Can I automate workflows with the platform?",
+      answer: "Yes, you can create automated workflows for data collection, analysis, and reporting. Set up triggers and actions to streamline your data processes.",
     },
     {
-      question: "How quickly can I see results?",
-      answer: "Most retailers see meaningful improvements in inventory efficiency within the first month. The full benefits of staff optimization and automated planning typically materialize within 2-3 months of implementation.",
+      question: "How quickly can I get started?",
+      answer: "Most users can set up their first data pipeline within 15 minutes. Our intuitive interface and pre-built templates make it easy to start extracting and analyzing data immediately.",
     },
   ];
 
@@ -71,7 +71,7 @@ export function Faq() {
             href="/contact" 
             className="inline-block bg-[#974eea] text-white px-3.5 py-2.5 rounded-lg font-normal text-[0.95rem] transition-all hover:bg-[#8b5cf6] hover:shadow-[0_0_45px_12px_rgba(167,139,250,0.35)]"
           >
-            Get Started - It's Free
+            Get Started
           </Link>
           <Link 
             href="/demo" 
