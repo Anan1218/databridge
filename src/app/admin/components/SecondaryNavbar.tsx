@@ -5,7 +5,7 @@ import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
 import { collection, getDocs, query, where, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import { Workspace, Dashboard, DashboardType } from '@/types/workspace';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
 import WorkspaceDropdown from './navbar/WorkspaceDropdown';
 import SearchBar from './navbar/SearchBar';
@@ -22,16 +22,11 @@ type WorkspaceDisplay = {
 interface SecondaryNavbarProps {
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedWorkspace: Workspace | null;
-  setSelectedWorkspace: React.Dispatch<React.SetStateAction<Workspace | null>>;
-  // ...other props if required
 }
 
 export default function SecondaryNavbar({
   isEditing,
   setIsEditing,
-  selectedWorkspace,
-  setSelectedWorkspace
 }: SecondaryNavbarProps) {
   const { selectedWorkspace: contextWorkspace, setSelectedWorkspace: contextSetSelectedWorkspace, refreshDashboards } = useWorkspace();
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
@@ -42,7 +37,6 @@ export default function SecondaryNavbar({
   const router = useRouter();
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
-  const searchParams = useSearchParams();
 
   const isPremium = userData?.subscription?.status === 'active';
 

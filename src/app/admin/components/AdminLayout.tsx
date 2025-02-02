@@ -64,8 +64,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <SecondaryNavbar
             isEditing={isEditing}
             setIsEditing={setIsEditing}
-            selectedWorkspace={selectedWorkspace}
-            setSelectedWorkspace={setSelectedWorkspace}
           />
         )}
         <main className="flex-1 p-6">
