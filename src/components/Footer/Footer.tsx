@@ -6,28 +6,16 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   const sections = {
-    product: {
-      title: 'Product',
-      links: [
-        { name: 'Blog', href: '/blog' },
-        { name: 'Pricing', href: '/pricing' },
-        { name: 'Roadmap', href: '/roadmap' },
-        { name: 'Feature Request', href: '/feature-request' },
-      ],
-    },
     help: {
       title: 'Help',
       links: [
         { name: 'FAQs', href: '/faq' },
         { name: 'Email Support', href: '/support' },
-        { name: 'Chat Support', href: '/chat' },
-        { name: 'System Status', href: '/status' },
       ],
     },
     socials: {
       title: 'Connect',
       links: [
-        { name: 'Twitter', href: 'https://twitter.com/databridge', icon: <FaTwitter className="w-5 h-5" /> },
         { name: 'Discord', href: 'https://discord.gg/databridge', icon: <FaDiscord className="w-5 h-5" /> },
       ],
     },
@@ -36,7 +24,7 @@ export default function Footer() {
   return (
     <footer className="bg-gray-50 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-center">
           {/* Logo and Copyright */}
           <div className="col-span-2 md:col-span-1 flex flex-col items-center">
             <Link href="/" className="flex items-center gap-2">
@@ -48,24 +36,6 @@ export default function Footer() {
               <br />
               All rights reserved.
             </p>
-            <div className="mt-2 flex items-center gap-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-sm text-gray-500">All systems operational</span>
-            </div>
-          </div>
-
-          {/* Product Links */}
-          <div className="flex flex-col items-center">
-            <h3 className="text-gray-900 font-semibold mb-4">{sections.product.title}</h3>
-            <ul className="space-y-3">
-              {sections.product.links.map((link) => (
-                <li key={link.name}>
-                  <Link href={link.href} className="text-gray-600 hover:text-[#8b5cf6] text-sm">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* Help Links */}
