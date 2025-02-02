@@ -3,6 +3,10 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
+interface FeaturesProps {
+  openModal: () => void;
+}
+
 const testimonials = [
   {
     name: 'James Johnson',
@@ -54,7 +58,7 @@ const testimonials = [
   }
 ];
 
-export function Features() {
+export function Features({ openModal }: FeaturesProps) {
   const [visibleTestimonials, setVisibleTestimonials] = useState(testimonials.slice(0, 6));
   const [currentIndex, setCurrentIndex] = useState(-1);
   // const [isTransitioning, setIsTransitioning] = useState(false);
@@ -321,7 +325,12 @@ export function Features() {
                 <span className="text-gray-500">/month</span>
               </div>
               <p className="text-gray-600 text-sm mb-6">Perfect for getting started</p>
-              <button className="w-full bg-[#8b5cf6] text-white rounded-lg py-2.5 mb-6 hover:bg-[#7c3aed] transition-colors">Get Started</button>
+              <button 
+                onClick={openModal}
+                className="w-full bg-[#8b5cf6] text-white rounded-lg py-2.5 mb-6 hover:bg-[#7c3aed] transition-colors"
+              >
+                Get Started
+              </button>
               <ul className="space-y-4">
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -361,7 +370,12 @@ export function Features() {
                 <span className="text-gray-500">/month</span>
               </div>
               <p className="text-gray-600 text-sm mb-6">Full Platform Access</p>
-              <button className="w-full bg-[#8b5cf6] text-white rounded-lg py-2.5 mb-6 hover:bg-[#7c3aed] transition-colors">Get Started Monthly</button>
+              <button 
+                onClick={openModal}
+                className="w-full bg-[#8b5cf6] text-white rounded-lg py-2.5 mb-6 hover:bg-[#7c3aed] transition-colors"
+              >
+                Get Started Monthly
+              </button>
               <ul className="space-y-4">
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -398,7 +412,12 @@ export function Features() {
                 <span className="text-gray-500">/year</span>
               </div>
               <p className="text-[#4b4545] text-sm mb-6">Get 2 Months Free!</p>
-              <button className="w-full bg-[#8b5cf6] text-white rounded-lg py-2.5 mb-6 hover:bg-[#7c3aed] transition-colors">Get Started Yearly</button>
+              <button 
+                onClick={openModal}
+                className="w-full bg-[#8b5cf6] text-white rounded-lg py-2.5 mb-6 hover:bg-[#7c3aed] transition-colors"
+              >
+                Get Started Yearly
+              </button>
               <ul className="space-y-4">
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

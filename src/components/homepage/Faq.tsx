@@ -2,7 +2,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-export function Faq() {
+interface FaqProps {
+  openModal: () => void;
+}
+
+export function Faq({ openModal }: FaqProps) {
   const faqs = [
     {
       question: "How does the AI data extraction work?",
@@ -67,18 +71,18 @@ export function Faq() {
           Create and customize your perfect dashboard with ease, tailored to your needs.
         </p>
         <div className="flex gap-3 justify-center">
-          <Link 
-            href="/contact" 
+          <button 
+            onClick={openModal}
             className="inline-block bg-[#974eea] text-white px-3.5 py-2.5 rounded-lg font-normal text-[0.95rem] transition-all hover:bg-[#8b5cf6] hover:shadow-[0_0_45px_12px_rgba(167,139,250,0.35)]"
           >
             Get Started
-          </Link>
-          <Link 
-            href="/contact" 
+          </button>
+          <button 
+            onClick={openModal}
             className="inline-block bg-white border border-gray-300 text-[#374151] px-3.5 py-2.5 rounded-lg font-normal text-[0.95rem] transition-all hover:bg-gray-50"
           >
             Live Demo
-          </Link>
+          </button>
         </div>
       </div>
     </div>
