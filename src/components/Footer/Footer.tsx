@@ -10,14 +10,13 @@ export default function Footer() {
     help: {
       title: 'Help',
       links: [
-        { name: 'FAQs', href: '/faq' },
-        { name: 'Email Support', href: '/support' },
+        { name: 'Contact', href: '/contact' },
       ],
     },
     socials: {
       title: 'Connect',
       links: [
-        { name: 'Discord', href: 'https://discord.gg/databridge', icon: <FaDiscord className="w-5 h-5" /> },
+        { name: 'Discord', href: 'https://discord.gg/xHz98f8T', icon: <FaDiscord className="w-5 h-5" /> },
       ],
     },
   };
