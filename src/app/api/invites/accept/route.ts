@@ -28,6 +28,12 @@ export async function POST(request: Request) {
     }
 
     const inviteData = inviteDoc.data();
+    if (!inviteData) {
+      return NextResponse.json(
+        { success: false, error: 'Invitation not found.' },
+        { status: 404 }
+      );
+    }
     if (inviteData.status !== 'pending') {
       return NextResponse.json(
         { success: false, error: 'Invitation has already been processed.' },
@@ -56,6 +62,13 @@ export async function POST(request: Request) {
     }
     
     const userData = userDoc.data();
+
+    if (!userData) {
+      return NextResponse.json(
+        { success: false, error: 'User data not found.' },
+        { status: 404 }
+      );
+    }
 
     // Create new member object; use the invitation's role if provided.
     const newMember = {

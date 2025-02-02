@@ -29,6 +29,10 @@ export default function NotificationBell({ notifications = [] }: NotificationBel
 
   const handleAcceptInvite = async (inviteId: string) => {
     console.log("Accept invite clicked for id:", inviteId);
+    if (!user) {
+      console.error('Cannot accept invite because user is null');
+      return;
+    }
     try {
       const res = await fetch('/api/invites/accept', {
         method: 'POST',
@@ -50,6 +54,10 @@ export default function NotificationBell({ notifications = [] }: NotificationBel
 
   const handleDeclineInvite = async (inviteId: string) => {
     console.log("Decline invite clicked for id:", inviteId);
+    if (!user) {
+      console.error('Cannot decline invite because user is null');
+      return;
+    }
     try {
       const res = await fetch('/api/invites/decline', {
         method: 'POST',

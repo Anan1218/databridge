@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
-import { collection, getDocs, query, where, doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 import { Workspace, Dashboard, DashboardType } from '@/types/workspace';
 import { useRouter } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
@@ -175,7 +175,7 @@ export default function SecondaryNavbar({
     (contextWorkspace.owner.uid === user.uid ||
       (contextWorkspace.members &&
         contextWorkspace.members.some(
-          (member) => member.uid === user.uid && member.role === 'admin'
+          (member) => member.uid === user.uid && member.role === 'owner'
         )));
 
   const isPremium = userData?.subscription?.status === 'active';

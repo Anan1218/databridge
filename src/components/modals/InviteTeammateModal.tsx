@@ -40,7 +40,9 @@ export default function InviteTeammateModal({
         setError(data.error || 'An error occurred.');
       }
     } catch (err) {
-      setError('An error occurred.');
+      console.error('Failed to invite teammate:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      setError(`An error occurred: ${errorMessage}`);
     } finally {
       setLoading(false);
     }

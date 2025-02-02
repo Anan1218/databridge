@@ -9,12 +9,6 @@ import { useRouter } from "next/navigation";
 import { MdArrowDropDown, MdPerson, MdHelpOutline, MdLogout } from "react-icons/md";
 import NotificationBell from './NotificationBell';
 
-interface Notification {
-  id: string;
-  message: string;
-  timestamp: Date;
-}
-
 export default function AdminNavbar() {
   const { signOut, user } = useAuthContext();
   const router = useRouter();
@@ -62,7 +56,7 @@ export default function AdminNavbar() {
     fetchNotifications();
 
     // Optionally, add polling or real-time listeners
-  }, [user]);
+  }, [user, notifications]);
 
   return (
     <nav className="bg-[#1a1f37] border-b border-gray-700">

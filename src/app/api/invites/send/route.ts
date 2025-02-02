@@ -34,6 +34,14 @@ export async function POST(req: Request) {
     }
     console.log('Workspace exists:', workspaceDoc.data());
 
+    const workspaceData = workspaceDoc.data();
+    if (!workspaceData) {
+      return NextResponse.json(
+        { success: false, error: 'Workspace not found.' },
+        { status: 404 }
+      );
+    }
+
     // Lookup the user by email.
     const usersQuery = await adminDb
       .collection('users')
@@ -79,7 +87,7 @@ export async function POST(req: Request) {
     // Create a new invitation as a notification.
     const notification = {
       type: 'invite',
-      message: `You've been invited to join the workspace "${workspaceDoc.data().name}" as a ${role || 'member'}.`,
+      message: `You've been invited to join the workspace "${workspaceData.name}" as a ${role || 'member'}.`,
       workspaceId,
       role: role || 'member',
       timestamp: admin.firestore.Timestamp.now(), // Immediate and sort-able timestamp

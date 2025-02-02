@@ -27,6 +27,12 @@ export async function POST(request: Request) {
     }
 
     const inviteData = inviteDoc.data();
+    if (!inviteData) {
+      return NextResponse.json(
+        { success: false, error: 'Invitation not found.' },
+        { status: 404 }
+      );
+    }
     if (inviteData.status !== 'pending') {
       return NextResponse.json(
         { success: false, error: 'Invitation has already been processed.' },
