@@ -76,11 +76,23 @@ export default function SecondaryNavbar() {
 
         setWorkspaces(workspacesData);
         
-        // Set default workspace if available
+        // If the user has a default workspace, fetch its full data
         if (userData?.defaultWorkspace) {
-          const defaultWorkspace = workspacesData.find(w => w.id === userData.defaultWorkspace);
-          if (defaultWorkspace) {
-            setSelectedWorkspace(defaultWorkspace);
+          const defaultWorkspaceItem = workspacesData.find(
+            w => w.id === userData.defaultWorkspace
+          );
+          if (defaultWorkspaceItem) {
+            const workspaceRef = doc(db, 'workspaces', defaultWorkspaceItem.id);
+            const workspaceSnap = await getDoc(workspaceRef);
+            if (workspaceSnap.exists()) {
+              const data = workspaceSnap.data();
+              setSelectedWorkspace({
+                ...data,
+                id: workspaceSnap.id,
+                createdAt: data.createdAt?.toDate() || new Date(),
+                updatedAt: data.updatedAt?.toDate() || new Date()
+              } as Workspace);
+            }
           }
         }
       } catch (error) {
@@ -94,9 +106,22 @@ export default function SecondaryNavbar() {
   }, [user?.uid, userData?.defaultWorkspace, setSelectedWorkspace]);
 
   useEffect(() => {
-    if (workspaces.length > 0 && !selectedWorkspace) {
-      setSelectedWorkspace(workspaces[0]);
-    }
+    const selectFirstWorkspace = async () => {
+      if (workspaces.length > 0 && !selectedWorkspace) {
+        const workspaceRef = doc(db, 'workspaces', workspaces[0].id);
+        const workspaceSnap = await getDoc(workspaceRef);
+        if (workspaceSnap.exists()) {
+          const data = workspaceSnap.data();
+          setSelectedWorkspace({
+            ...data,
+            id: workspaceSnap.id,
+            createdAt: data.createdAt?.toDate() || new Date(),
+            updatedAt: data.updatedAt?.toDate() || new Date()
+          } as Workspace);
+        }
+      }
+    };
+    selectFirstWorkspace();
   }, [workspaces, selectedWorkspace, setSelectedWorkspace]);
 
   const handleNewWorkspace = () => {
@@ -110,7 +135,7 @@ export default function SecondaryNavbar() {
   };
 
   const handleCreateDashboard = async (type: DashboardType) => {
-    if (!selectedWorkspace) return;
+    if (!selectedWorkspace || !selectedWorkspace.id) return;
     
     try {
       const workspaceRef = doc(db, 'workspaces', selectedWorkspace.id);
@@ -169,12 +194,30 @@ export default function SecondaryNavbar() {
           <div className="flex items-center gap-4">
             <WorkspaceDropdown 
               showDropdown={showWorkspaceDropdown}
-              selectedWorkspace={selectedWorkspace}
+              selectedWorkspace={
+                selectedWorkspace
+                  ? {
+                      id: selectedWorkspace.id!,
+                      name: selectedWorkspace.name,
+                      role: user && selectedWorkspace.owner?.uid === user.uid ? 'Owner' : 'User'
+                    }
+                  : null
+              }
               workspaces={workspaces}
               isLoading={isLoading}
               onToggleDropdown={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
-              onSelectWorkspace={(workspace) => {
-                setSelectedWorkspace(workspace);
+              onSelectWorkspace={async (workspaceDisplay: WorkspaceDisplay) => {
+                const workspaceRef = doc(db, 'workspaces', workspaceDisplay.id);
+                const workspaceSnap = await getDoc(workspaceRef);
+                if (workspaceSnap.exists()) {
+                  const data = workspaceSnap.data();
+                  setSelectedWorkspace({
+                    ...data,
+                    id: workspaceSnap.id,
+                    createdAt: data.createdAt?.toDate() || new Date(),
+                    updatedAt: data.updatedAt?.toDate() || new Date()
+                  } as Workspace);
+                }
                 setShowWorkspaceDropdown(false);
               }}
               onNewWorkspace={handleNewWorkspace}

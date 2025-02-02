@@ -4,6 +4,7 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import { FaYelp, FaTicketAlt } from "react-icons/fa";
 import { MdArrowBack } from "react-icons/md";
 import Link from "next/link";
+import Image from "next/image";
 
 interface DataSource {
   id: string;
@@ -29,7 +30,7 @@ export default function IntegratedPage() {
     {
       id: 'uc-berkeley-sports',
       name: 'UC Berkeley Sports',
-      icon: <img src="/datasource-icons/uc-berkeley.svg" alt="UC Berkeley Sports" className="w-8 h-8" />,
+      icon: <Image src="/datasource-icons/uc-berkeley.svg" alt="UC Berkeley Sports" width={32} height={32} />,
       status: 'available',
     },
     {

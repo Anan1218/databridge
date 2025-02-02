@@ -7,7 +7,6 @@ import { useState, useEffect } from 'react';
 import { db } from '@/utils/firebase';
 import { collection, doc, getDocs } from 'firebase/firestore';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
-import { User } from '@/types/user';
 import { useAuthContext } from '@/contexts/AuthContext';
 
 const localizer = momentLocalizer(moment);

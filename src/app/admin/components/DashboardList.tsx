@@ -43,8 +43,8 @@ export default React.memo(function DashboardList({
         updatedAt: new Date()
       });
       
-      // Update local state preserving the workspace object
-      setDashboards(prev => (prev ? { ...prev, dashboards: updatedDashboards } : null));
+      // Update local state
+      setDashboards(prev => prev ? { ...prev, dashboards: updatedDashboards } : null);
       setIsDataSourceModalOpen(false);
     } catch (error) {
       console.error('Error updating data sources:', error);
@@ -71,8 +71,8 @@ export default React.memo(function DashboardList({
         updatedAt: new Date()
       });
       
-      // Update local state to trigger re-render of just that card
-      setDashboards(updatedDashboards);
+      // Update local state
+      setDashboards(prev => prev ? { ...prev, dashboards: updatedDashboards } : null);
       
     } catch (error) {
       console.error('Error renaming dashboard:', error);
