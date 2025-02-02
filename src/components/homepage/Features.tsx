@@ -180,7 +180,7 @@ export function Features({ openModal }: FeaturesProps) {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Web Data Extraction</h3>
+                  <h3 className="text-xl font-semibold mb-3">Data Extraction</h3>
                   <p className="text-gray-600">
                     Track pricing, trends, and industry news across multiple sources. Get real-time insights into your market position and competitors.
                   </p>
@@ -240,9 +240,9 @@ export function Features({ openModal }: FeaturesProps) {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Lead Generation</h3>
+                  <h3 className="text-xl font-semibold mb-3">Demand Forecasting</h3>
                   <p className="text-gray-600">
-                    Monitor regulatory updates, legal filings, and policy changes. Automate compliance reporting and risk assessment processes.
+                    Analyze historical sales data, identify trends, and predict future demand. Optimize inventory levels and reduce stockouts with AI-driven forecasting.
                   </p>
                 </div>
               </div>
@@ -261,17 +261,17 @@ export function Features({ openModal }: FeaturesProps) {
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
-                <div className="text-blue-600 font-semibold mb-2">INTEGRATIONS</div>
-                <h3 className="text-xl font-bold mb-3">550+ Data Sources</h3>
+                <div className="text-blue-600 font-semibold mb-2">SUPPORT</div>
+                <h3 className="text-xl font-bold mb-3">24/7 Customer Support</h3>
                 <p className="text-gray-600">
-                  Connect with hundreds of data sources including Yelp, Google Maps, Ticketmaster, and more. Easily integrate your business data for comprehensive insights.
+                  Our dedicated support team is available around the clock to assist you with any issues or questions. Get help anytime, anywhere, ensuring your business runs smoothly.
                 </p>
               </div>
 
               <div className="bg-white rounded-2xl p-5 pb-14 shadow-sm border border-purple-100 relative group overflow-hidden hover:border-purple-600">
               <div className="h-44 relative">
                   <Image 
-                    src="/features/unified-dashboard.jpg"
+                    src="/features/data-integrations.png"
                     alt="Review Analytics"
                     width={600}
                     height={400}
@@ -279,10 +279,10 @@ export function Features({ openModal }: FeaturesProps) {
                   />
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
-                <div className="text-purple-600 font-semibold mb-2">AUTOMATION</div>
-                <h3 className="text-xl font-bold mb-3">Weekly Reports</h3>
+                <div className="text-purple-600 font-semibold mb-2">INTEGRATION</div>
+                <h3 className="text-xl font-bold mb-3">Seamless Data Integrations</h3>
                 <p className="text-gray-600">
-                  Receive automated weekly email reports summarizing key metrics, upcoming events, and business insights. Stay informed without the manual work.
+                  Connect effortlessly with various data sources, including CRMs, ERPs, and cloud storage. Ensure your data is always up-to-date and accessible for analysis.
                 </p>
               </div>
 
