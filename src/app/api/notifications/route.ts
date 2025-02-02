@@ -13,6 +13,7 @@ export async function GET(req: Request) {
       .collection('users')
       .doc(uid)
       .collection('notifications')
+      .where('status', '==', 'pending')
       .orderBy('timestamp', 'desc')
       .get();
 

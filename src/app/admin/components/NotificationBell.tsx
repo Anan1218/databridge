@@ -39,6 +39,7 @@ export default function NotificationBell({ notifications = [] }: NotificationBel
       console.log("Response from accept invite:", data);
       if (data.success) {
         console.log("Invite accepted successfully");
+        window.location.reload();
       } else {
         console.error(data.error);
       }
