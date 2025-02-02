@@ -170,7 +170,7 @@ export function Hero({ openModal }: HeroProps) {
         </div>
         
         {/* iPad Dashboard Container */}
-        <div className="w-full [perspective:1500px] relative flex justify-center -mt-4">
+        <div className="w-screen md:w-full [perspective:1500px] relative flex justify-center -mt-4 -mx-4 md:mx-0">
           <div 
             className="absolute left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent pointer-events-none" 
             style={{ 
@@ -181,7 +181,7 @@ export function Hero({ openModal }: HeroProps) {
           />
           
           <div 
-            className="relative w-full md:w-[80%] px-0 md:px-4 transition-all duration-500 ease-out will-change-transform"
+            className="relative w-[92%] md:w-[80%] transition-all duration-500 ease-out will-change-transform"
             style={{
               transform: `
                 rotateX(${Math.max(0, 12 * (1 - scrollY))}deg)
@@ -192,13 +192,13 @@ export function Hero({ openModal }: HeroProps) {
             }}
           >
             <div 
-              className="relative rounded-none md:rounded-[2.5rem] overflow-hidden bg-black p-0 md:p-[10px] will-change-transform shadow-2xl transition-all duration-700"
+              className="relative rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden bg-black p-[6px] md:p-[10px] will-change-transform shadow-2xl transition-all duration-700"
             >
               {/* iPad Camera */}
               <div className="absolute -top-0 left-1/2 -translate-x-1/2 w-20 h-6 bg-black rounded-md z-10 border border-gray-700 hidden md:block" />
               
               {/* Screen Content */}
-              <div className="relative rounded-none md:rounded-[2.4rem] overflow-hidden bg-white">
+              <div className="relative rounded-[1.2rem] md:rounded-[2.4rem] overflow-hidden bg-white">
                 <Image 
                   src="/homepage/image1.png"
                   alt="DataBridge Dashboard"
@@ -207,7 +207,7 @@ export function Hero({ openModal }: HeroProps) {
                   className="w-full h-auto object-cover transform-gpu"
                   priority
                   loading="eager"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                  sizes="(max-width: 768px) 92vw, (max-width: 1200px) 80vw, 1200px"
                 />
               </div>
             </div>

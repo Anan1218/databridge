@@ -158,7 +158,7 @@ export function Features({ openModal }: FeaturesProps) {
       <div className="bg-white">
         <section className="pt-16 pb-14">
           <div className="max-w-5xl mx-auto px-4">
-            <div className="text-center mb-7">
+            <div className="text-center mb-7 relative z-10">
               <div className="space-y-0.5">
                 <h2 className="text-xl font-medium text-gray-900">Everything you need</h2>
                 <h3 className="text-[2.75rem] font-semibold bg-gradient-to-r from-[#6366F1] to-pink-500 text-transparent bg-clip-text">All-in-one platform</h3>
