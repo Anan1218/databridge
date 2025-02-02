@@ -10,7 +10,7 @@ interface DashboardListProps {
   dashboards: Dashboard[];
   isEditing: boolean;
   onDeleteClick: (dashboardId: string) => void;
-  setDashboards: React.Dispatch<React.SetStateAction<Dashboard[]>>;
+  setDashboards: React.Dispatch<React.SetStateAction<Workspace | null>>;
   selectedWorkspace: Workspace;
 }
 
@@ -43,8 +43,8 @@ export default React.memo(function DashboardList({
         updatedAt: new Date()
       });
       
-      // Update local state
-      setDashboards(updatedDashboards);
+      // Update local state preserving the workspace object
+      setDashboards(prev => (prev ? { ...prev, dashboards: updatedDashboards } : null));
       setIsDataSourceModalOpen(false);
     } catch (error) {
       console.error('Error updating data sources:', error);
