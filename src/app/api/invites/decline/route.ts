@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/utils/firebaseAdmin';
-import { FieldValue } from 'firebase-admin/firestore';
 
 export async function POST(request: Request) {
   try {
@@ -13,7 +12,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Retrieve the invitation document
+    // Retrieve the invitation document.
     const inviteRef = adminDb.collection('invitations').doc(inviteId);
     const inviteDoc = await inviteRef.get();
     if (!inviteDoc.exists) {
@@ -31,11 +30,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Mark the invitation as declined
-    await inviteRef.update({
-      status: 'declined',
-      declinedAt: FieldValue.serverTimestamp(),
-    });
+    // Delete the invitation record.
+    await inviteRef.delete();
 
     return NextResponse.json({
       success: true,

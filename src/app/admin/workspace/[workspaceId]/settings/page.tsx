@@ -23,10 +23,6 @@ export default function WorkspaceSettings() {
   const isPremium = userData?.subscription?.status === 'active';
   const isWorkspaceOwner = user?.uid === workspace?.owner.uid;
 
-  console.log('user.uid:', user?.uid);
-  console.log('workspace.owner.uid:', workspace?.owner.uid);
-  console.log('isWorkspaceOwner:', isWorkspaceOwner);
-
   useEffect(() => {
     const fetchWorkspace = async () => {
       if (!workspaceId) return;

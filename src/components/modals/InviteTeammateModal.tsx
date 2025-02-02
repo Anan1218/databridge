@@ -27,7 +27,7 @@ export default function InviteTeammateModal({
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/invite-teammate', {
+      const res = await fetch('/api/invites/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ workspaceId, invitedEmail: email, role }),

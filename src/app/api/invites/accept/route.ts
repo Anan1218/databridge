@@ -8,17 +8,17 @@ export async function POST(request: Request) {
 
     if (!inviteId || !userId) {
       return NextResponse.json(
-        { success: false, error: 'Invite ID and user ID are required' },
+        { success: false, error: 'Invite ID and user ID are required.' },
         { status: 400 }
       );
     }
 
-    // Retrieve the invitation document
+    // Retrieve the invitation document.
     const inviteRef = adminDb.collection('invitations').doc(inviteId);
     const inviteDoc = await inviteRef.get();
     if (!inviteDoc.exists) {
       return NextResponse.json(
-        { success: false, error: 'Invitation not found' },
+        { success: false, error: 'Invitation not found.' },
         { status: 404 }
       );
     }
@@ -26,22 +26,22 @@ export async function POST(request: Request) {
     const inviteData = inviteDoc.data();
     if (inviteData.status !== 'pending') {
       return NextResponse.json(
-        { success: false, error: 'Invitation has already been processed' },
+        { success: false, error: 'Invitation has already been processed.' },
         { status: 400 }
       );
     }
 
-    // Retrieve the workspace referenced by the invitation
+    // Retrieve the workspace.
     const workspaceRef = adminDb.collection('workspaces').doc(inviteData.workspaceId);
     const workspaceDoc = await workspaceRef.get();
     if (!workspaceDoc.exists) {
       return NextResponse.json(
-        { success: false, error: 'Workspace not found' },
+        { success: false, error: 'Workspace not found.' },
         { status: 404 }
       );
     }
 
-    // Retrieve the user's document
+    // Get user details.
     const userRef = adminDb.collection('users').doc(userId);
     const userDoc = await userRef.get();
     if (!userDoc.exists) {
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     }
     const userData = userDoc.data();
 
-    // Create a new member object; optionally, use the role provided in the invitation
+    // Create new member object; use invitation role if provided.
     const newMember = {
       uid: userId,
       email: userData.email,
@@ -61,16 +61,14 @@ export async function POST(request: Request) {
       role: inviteData.role || 'member',
     };
 
-    // Update the workspace:
-    // • Add the user to the members list  
-    // • Add the email to the memberEmails list  
+    // Add the user to the workspace.
     await workspaceRef.update({
       members: FieldValue.arrayUnion(newMember),
       memberEmails: FieldValue.arrayUnion(userData.email),
       updatedAt: FieldValue.serverTimestamp(),
     });
 
-    // Mark the invitation as accepted
+    // Mark the invitation as accepted.
     await inviteRef.update({
       status: 'accepted',
       acceptedAt: FieldValue.serverTimestamp(),
@@ -79,6 +77,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, message: 'Invitation accepted successfully' });
   } catch (error) {
     console.error('Error accepting invite:', error);
-    return NextResponse.json({ success: false, error: 'Server error' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'Server error' },
+      { status: 500 }
+    );
   }
 } 

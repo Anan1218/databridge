@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { MdArrowDropDown, MdPerson, MdHelpOutline, MdLogout } from "react-icons/md";
@@ -19,6 +19,7 @@ export default function AdminNavbar() {
   const { signOut, user } = useAuthContext();
   const router = useRouter();
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
+  const [notifications, setNotifications] = useState([]);
   
   const navItems = [
     {
@@ -47,8 +48,19 @@ export default function AdminNavbar() {
     }
   };
 
-  // Example notifications - replace with your actual data
-  const notifications: Notification[] = [];
+  useEffect(() => {
+    async function fetchNotifications() {
+      if (!user) return;
+      const res = await fetch(`/api/notifications?uid=${user.uid}`);
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data.notifications);
+      }
+    }
+    fetchNotifications();
+
+    // Optionally, add polling or real-time listeners
+  }, [user]);
 
   return (
     <nav className="bg-[#1a1f37] border-b border-gray-700">
