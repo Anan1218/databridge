@@ -253,7 +253,7 @@ export function Features({ openModal }: FeaturesProps) {
               <div className="bg-white rounded-2xl p-5 pb-14 shadow-sm border border-purple-100 relative group overflow-hidden hover:border-blue-600">
               <div className="h-44 relative">
                   <Image 
-                    src="/features/unified-dashboard.jpg"
+                    src="/features/help.png"
                     alt="Review Analytics"
                     width={600}
                     height={400}
@@ -289,7 +289,7 @@ export function Features({ openModal }: FeaturesProps) {
               <div className="bg-white rounded-2xl p-5 pb-14 shadow-sm border border-purple-100 relative group overflow-hidden hover:border-green-600">
               <div className="h-44 relative">
                   <Image 
-                    src="/features/unified-dashboard.jpg"
+                    src="/features/workspace.png"
                     alt="Review Analytics"
                     width={600}
                     height={400}
