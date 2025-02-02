@@ -57,6 +57,8 @@ export default function AdminNavbar() {
         setNotifications(data.notifications);
       }
     }
+    console.log("Fetching notifications for user:", user);
+    console.log(notifications)
     fetchNotifications();
 
     // Optionally, add polling or real-time listeners

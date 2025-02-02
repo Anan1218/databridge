@@ -82,8 +82,8 @@ export async function POST(req: Request) {
       message: `You've been invited to join the workspace "${workspaceDoc.data().name}" as a ${role || 'member'}.`,
       workspaceId,
       role: role || 'member',
-      invitedAt: FieldValue.serverTimestamp(),
-      status: 'pending' // pending, accepted, or declined
+      timestamp: FieldValue.serverTimestamp(),  // Added timestamp field
+      status: 'pending'
     };
     
     console.log('Creating notification:', notification);

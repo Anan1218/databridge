@@ -16,10 +16,14 @@ export async function GET(req: Request) {
       .orderBy('timestamp', 'desc')
       .get();
 
+    console.log("Notifications snap:", notificationsSnap);
+
     const notifications = notificationsSnap.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
+
+    console.log("Notifications:", notifications);
 
     return NextResponse.json({ notifications });
   } catch (error) {
