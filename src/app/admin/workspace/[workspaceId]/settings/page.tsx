@@ -10,7 +10,7 @@ import InviteTeammateModal from '@/components/modals/InviteTeammateModal';
 
 export default function WorkspaceSettings() {
   const { workspaceId } = useParams();
-  const { userData } = useAuthContext();
+  const { user, userData } = useAuthContext();
   const router = useRouter();
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [workspaceName, setWorkspaceName] = useState('');
@@ -21,6 +21,11 @@ export default function WorkspaceSettings() {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   const isPremium = userData?.subscription?.status === 'active';
+  const isWorkspaceOwner = user?.uid === workspace?.owner.uid;
+
+  console.log('user.uid:', user?.uid);
+  console.log('workspace.owner.uid:', workspace?.owner.uid);
+  console.log('isWorkspaceOwner:', isWorkspaceOwner);
 
   useEffect(() => {
     const fetchWorkspace = async () => {
@@ -76,6 +81,42 @@ export default function WorkspaceSettings() {
   const getDisplayName = (member: { firstName?: string; lastName?: string; email: string }) => {
     const fullName = [member.firstName, member.lastName].filter(Boolean).join(' ');
     return fullName || member.email;
+  };
+
+  const handleRemoveMember = async (member: { firstName?: string; lastName?: string; email: string; uid?: string; role: string }) => {
+    if (!workspaceId || !workspace) return;
+    const confirmRemoval = window.confirm(
+      `Are you sure you want to remove ${getDisplayName(member)} from the workspace?`
+    );
+    if (!confirmRemoval) return;
+
+    try {
+      const workspaceRef = doc(db, 'workspaces', workspaceId as string);
+      const updatedMembers = workspace.members.filter(
+        m => (m.uid || m.email) !== (member.uid || member.email)
+      );
+      const updatedMemberEmails = workspace.memberEmails.filter(
+        email => email !== member.email
+      );
+      
+      await updateDoc(workspaceRef, {
+        members: updatedMembers,
+        memberEmails: updatedMemberEmails,
+        updatedAt: new Date()
+      });
+      
+      setWorkspace({
+        ...workspace,
+        members: updatedMembers,
+        memberEmails: updatedMemberEmails
+      });
+      setUpdateMessage(`Removed ${getDisplayName(member)} successfully!`);
+      setTimeout(() => setUpdateMessage(''), 3000);
+    } catch (error) {
+      console.error('Error removing member:', error);
+      setUpdateMessage('Failed to remove member');
+      setTimeout(() => setUpdateMessage(''), 3000);
+    }
   };
 
   const handleInviteClick = () => {
@@ -144,17 +185,18 @@ export default function WorkspaceSettings() {
 
         {/* Members Table */}
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <div className="grid grid-cols-4 gap-4 px-6 py-3 border-b border-gray-200 bg-gray-50">
+          <div className={`grid ${isWorkspaceOwner ? 'grid-cols-5' : 'grid-cols-4'} gap-4 px-6 py-3 border-b border-gray-200 bg-gray-50`}>
             <div className="text-sm font-medium text-gray-500">Name</div>
             <div className="text-sm font-medium text-gray-500">Status</div>
             <div className="text-sm font-medium text-gray-500">Role</div>
             <div className="text-sm font-medium text-gray-500">Email Address</div>
+            {isWorkspaceOwner && <div className="text-sm font-medium text-gray-500">Actions</div>}
           </div>
           
           {workspace && workspace.members && (
             <div className="divide-y divide-gray-200">
               {workspace.members.map((member) => (
-                <div key={member.uid || member.email} className="grid grid-cols-4 gap-4 px-6 py-4 items-center">
+                <div key={member.uid || member.email} className={`grid ${isWorkspaceOwner ? 'grid-cols-5' : 'grid-cols-4'} gap-4 px-6 py-4 items-center`}>
                   <div className="flex items-center gap-3">
                     <div className={`h-8 w-8 rounded-full ${
                       member.role === 'owner' ? 'bg-[#8b5cf6]' : 'bg-gray-200'
@@ -183,6 +225,18 @@ export default function WorkspaceSettings() {
                   </div>
                   <div className="text-gray-900 capitalize">{member.role}</div>
                   <div className="text-gray-500">{member.email}</div>
+                  {isWorkspaceOwner && (
+                    <div>
+                      {member.role !== 'owner' && (
+                        <button 
+                          onClick={() => handleRemoveMember(member)}
+                          className="text-red-600 hover:text-red-800 text-sm"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
