@@ -45,45 +45,30 @@ export default function SecondaryNavbar({
       if (!user?.uid) return;
 
       try {
-        // Query workspaces where the user is either the owner or a member
-        const workspacesRef = collection(db, 'workspaces');
-        const ownerQuery = query(workspacesRef, where('owner.uid', '==', user.uid));
-        const memberQuery = query(workspacesRef, where('members', 'array-contains', { uid: user.uid }));
-        
-        // Execute both queries
-        const [ownerSnapshot, memberSnapshot] = await Promise.all([
-          getDocs(ownerQuery),
-          getDocs(memberQuery)
-        ]);
+        // Use the workspace IDs stored in the userData rather than querying a subcollection.
+        const workspaceIds: string[] = userData?.workspaces || [];
+        console.log("Workspace IDs from userData:", workspaceIds);
 
-        // Combine results, removing duplicates
         const workspacesData: WorkspaceDisplay[] = [];
-        const addedIds = new Set<string>();
 
-        ownerSnapshot.docs.forEach(doc => {
-          const data = doc.data() as Workspace;
-          workspacesData.push({
-            id: doc.id,
-            name: data.name,
-            role: 'Owner'
-          });
-          addedIds.add(doc.id);
-        });
+        // For each workspace ID, fetch the workspace document from the main "workspaces" collection
+        for (const id of workspaceIds) {
+          const workspaceRef = doc(db, 'workspaces', id);
+          const workspaceSnap = await getDoc(workspaceRef);
 
-        memberSnapshot.docs.forEach(doc => {
-          if (!addedIds.has(doc.id)) {
-            const data = doc.data() as Workspace;
+          if (workspaceSnap.exists()) {
+            const data = workspaceSnap.data() as Workspace;
             workspacesData.push({
-              id: doc.id,
+              id: workspaceSnap.id,
               name: data.name,
-              role: data.owner.uid === user.uid ? 'Owner' : 'User'
+              role: data.owner.uid === user.uid ? 'Owner' : 'User',
             });
           }
-        });
+        }
 
         setWorkspaces(workspacesData);
-        
-        // If the user has a default workspace, fetch its full data
+
+        // Update context with the default workspace, if set
         if (userData?.defaultWorkspace) {
           const defaultWorkspaceItem = workspacesData.find(
             w => w.id === userData.defaultWorkspace
@@ -97,7 +82,7 @@ export default function SecondaryNavbar({
                 ...data,
                 id: workspaceSnap.id,
                 createdAt: data.createdAt?.toDate() || new Date(),
-                updatedAt: data.updatedAt?.toDate() || new Date()
+                updatedAt: data.updatedAt?.toDate() || new Date(),
               } as Workspace);
             }
           }
@@ -110,7 +95,7 @@ export default function SecondaryNavbar({
     };
 
     fetchWorkspaces();
-  }, [user?.uid, userData?.defaultWorkspace, contextSetSelectedWorkspace]);
+  }, [user?.uid, userData?.workspaces, userData?.defaultWorkspace, contextSetSelectedWorkspace]);
 
   useEffect(() => {
     const selectFirstWorkspace = async () => {
