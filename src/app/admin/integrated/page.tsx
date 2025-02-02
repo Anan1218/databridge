@@ -29,9 +29,7 @@ export default function IntegratedPage() {
     {
       id: 'uc-berkeley-sports',
       name: 'UC Berkeley Sports',
-      icon: <svg className="w-8 h-8 text-yellow-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm2-1.93c1.1 0 2-.9 2-2v-1l2.79-2.79c.13.58.21 1.17.21 1.79 0 4.08-3.05 7.44-7 7.93V18zm-4-6c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2z" fill="currentColor"/>
-            </svg>,
+      icon: <img src="/datasource-icons/uc-berkeley.svg" alt="UC Berkeley Sports" className="w-8 h-8" />,
       status: 'available',
     },
     {
