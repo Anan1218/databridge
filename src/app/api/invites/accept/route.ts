@@ -73,6 +73,12 @@ export async function POST(request: Request) {
       updatedAt: FieldValue.serverTimestamp(),
     });
 
+    // Update user's document to include the workspace they just joined.
+    await userRef.update({
+      workspaces: FieldValue.arrayUnion(inviteData.workspaceId),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+
     // Mark the invitation as accepted.
     await inviteRef.update({
       status: 'accepted',

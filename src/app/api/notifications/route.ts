@@ -8,23 +8,21 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Missing user ID' }, { status: 400 });
   }
 
+  console.log("Fetching notifications for user:", uid);
   try {
     const notificationsSnap = await adminDb
       .collection('users')
       .doc(uid)
       .collection('notifications')
       .where('status', '==', 'pending')
-      .orderBy('timestamp', 'desc')
+      // .orderBy('timestamp', 'desc')
       .get();
 
     console.log("Notifications snap:", notificationsSnap);
-
     const notifications = notificationsSnap.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
-
-    console.log("Notifications:", notifications);
 
     return NextResponse.json({ notifications });
   } catch (error) {

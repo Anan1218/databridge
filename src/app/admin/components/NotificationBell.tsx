@@ -75,7 +75,6 @@ export default function NotificationBell({ notifications = [] }: NotificationBel
         onClick={() => {
           const newState = !isOpen;
           setIsOpen(newState);
-          console.log("NotificationBell toggled:", newState ? "Open" : "Closed");
         }}
       >
         <MdNotifications className="w-6 h-6" />

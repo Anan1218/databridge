@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/utils/firebaseAdmin';
-import { FieldValue } from 'firebase-admin/firestore';
+import admin from 'firebase-admin';
 
 export async function POST(req: Request) {
   try {
@@ -82,7 +82,7 @@ export async function POST(req: Request) {
       message: `You've been invited to join the workspace "${workspaceDoc.data().name}" as a ${role || 'member'}.`,
       workspaceId,
       role: role || 'member',
-      timestamp: FieldValue.serverTimestamp(),  // Added timestamp field
+      timestamp: admin.firestore.Timestamp.now(), // Immediate and sort-able timestamp
       status: 'pending'
     };
     
