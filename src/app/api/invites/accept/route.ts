@@ -13,8 +13,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Retrieve the invitation document.
-    const inviteRef = adminDb.collection('invitations').doc(inviteId);
+    // Retrieve the invitation from the notifications subcollection in the user document
+    const inviteRef = adminDb
+      .collection('users')
+      .doc(userId)
+      .collection('notifications')
+      .doc(inviteId);
     const inviteDoc = await inviteRef.get();
     if (!inviteDoc.exists) {
       return NextResponse.json(
@@ -31,7 +35,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Retrieve the workspace.
+    // Retrieve the workspace using inviteData.workspaceId.
     const workspaceRef = adminDb.collection('workspaces').doc(inviteData.workspaceId);
     const workspaceDoc = await workspaceRef.get();
     if (!workspaceDoc.exists) {
@@ -50,9 +54,10 @@ export async function POST(request: Request) {
         { status: 404 }
       );
     }
+    
     const userData = userDoc.data();
 
-    // Create new member object; use invitation role if provided.
+    // Create new member object; use the invitation's role if provided.
     const newMember = {
       uid: userId,
       email: userData.email,

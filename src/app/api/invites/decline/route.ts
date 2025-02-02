@@ -12,8 +12,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Retrieve the invitation document.
-    const inviteRef = adminDb.collection('invitations').doc(inviteId);
+    // Retrieve the invitation from the notifications subcollection in the user document
+    const inviteRef = adminDb
+      .collection('users')
+      .doc(userId)
+      .collection('notifications')
+      .doc(inviteId);
     const inviteDoc = await inviteRef.get();
     if (!inviteDoc.exists) {
       return NextResponse.json(
