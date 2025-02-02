@@ -45,18 +45,18 @@ export default function AdminNavbar() {
   useEffect(() => {
     async function fetchNotifications() {
       if (!user) return;
-      const res = await fetch(`/api/notifications?uid=${user.uid}`);
-      if (res.ok) {
-        const data = await res.json();
-        setNotifications(data.notifications);
+      try {
+        const res = await fetch(`/api/notifications?uid=${user.uid}`);
+        if (res.ok) {
+          const data = await res.json();
+          setNotifications(data.notifications);
+        }
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
       }
     }
-    console.log("Fetching notifications for user:", user);
-    console.log(notifications)
     fetchNotifications();
-
-    // Optionally, add polling or real-time listeners
-  }, [user, notifications]);
+  }, [user]);
 
   return (
     <nav className="bg-[#1a1f37] border-b border-gray-700">

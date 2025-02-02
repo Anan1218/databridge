@@ -8,7 +8,6 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Missing user ID' }, { status: 400 });
   }
 
-  console.log("Fetching notifications for user:", uid);
   try {
     const notificationsSnap = await adminDb
       .collection('users')
@@ -18,7 +17,6 @@ export async function GET(req: Request) {
       // .orderBy('timestamp', 'desc')
       .get();
 
-    console.log("Notifications snap:", notificationsSnap);
     const notifications = notificationsSnap.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
