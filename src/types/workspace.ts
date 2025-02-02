@@ -44,3 +44,12 @@ export interface WorkspaceMember {
   email: string;
   name: string;
 }
+
+export interface Event {
+  id: string;
+  source: string;
+  title: string;
+  start: Date;
+  end: Date;
+  // include any additional fields as needed
+}

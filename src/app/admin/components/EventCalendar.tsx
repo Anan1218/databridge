@@ -8,49 +8,10 @@ import { db } from '@/utils/firebase';
 import { collection, doc, getDocs } from 'firebase/firestore';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { useAuthContext } from '@/contexts/AuthContext';
+import { getEvents } from '@/utils/getEvents';
+import { Event } from '@/types/workspace';
 
 const localizer = momentLocalizer(moment);
-
-export interface Event {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  description?: string;
-  // Add other event properties as needed
-  source: string;
-}
-
-export async function getEvents(workspaceId: string, enabledDataSources: string[]): Promise<Event[]> {
-  try {
-    const eventsDocRef = doc(db, 'workspaces', workspaceId, 'dataSources', 'events');
-    const allEvents: Event[] = [];
-
-    // Only fetch events for enabled data sources
-    for (const source of enabledDataSources) {
-      try {
-        const sourceCollection = collection(eventsDocRef, source);
-        const sourceEvents = await getDocs(sourceCollection);
-        
-        sourceEvents.forEach(doc => {
-          const eventData = doc.data();
-          allEvents.push({
-            id: doc.id,
-            source,
-            ...eventData
-          } as Event);
-        });
-      } catch (error) {
-        console.error(`Error fetching events for source ${source}:`, error);
-      }
-    }
-
-    return allEvents;
-  } catch (error) {
-    console.error('Error in getEvents:', error);
-    return [];
-  }
-}
 
 export default function EventCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -89,7 +50,7 @@ export default function EventCalendar() {
       // Remove duplicates if any exist.
       const uniqueDataSources = Array.from(new Set(enabledDataSources));
 
-      // Fetch events only for the enabled data sources.
+      // Fetch events using the updated getEvents function
       getEvents(selectedWorkspace.id, uniqueDataSources).then(setEvents);
     } else {
       setEvents([]);
