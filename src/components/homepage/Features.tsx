@@ -336,12 +336,6 @@ export function Features({ openModal }: FeaturesProps) {
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  Full Platform Access
-                </li>
-                <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
                   24/7 Support
                 </li>
                 <li className="flex items-center gap-2 text-sm">
@@ -377,11 +371,29 @@ export function Features({ openModal }: FeaturesProps) {
                 Get Started Monthly
               </button>
               <ul className="space-y-4">
-                <li className="flex items-center gap-2 text-sm">
+              <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                   Full Platform Access
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Up to 10 data sources
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Up to 3 workspaces
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  5 team members
                 </li>
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -393,13 +405,7 @@ export function Features({ openModal }: FeaturesProps) {
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  All Features Included
-                </li>
-                <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  Cancel Anytime
+                  Money back guarantee
                 </li>
               </ul>
             </div>
@@ -429,19 +435,31 @@ export function Features({ openModal }: FeaturesProps) {
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
+                  Up to 10 data sources
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Up to 3 workspaces
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  5 team members
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
                   24/7 Support
                 </li>
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  All Features Included
-                </li>
-                <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  Priority Support
+                  Money back guarantee
                 </li>
               </ul>
             </div>

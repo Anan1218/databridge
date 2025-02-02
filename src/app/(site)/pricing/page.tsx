@@ -19,8 +19,11 @@ export default function PricingPage() {
             <div className="text-4xl font-bold text-indigo-500 mb-4">$5<span className="text-lg text-gray-400">/month</span></div>
             <ul className="text-gray-400 space-y-3 mb-6">
               <li>✓ Full Platform Access</li>
+              <li>✓ Link up to 10 data sources</li>
+              <li>✓ Create up to 3 spaces</li>
+              <li>✓ Invite up to 5 team members</li>
               <li>✓ 24/7 Support</li>
-              <li>✓ All Features Included</li>
+              <li>✓ 30 day money back guarantee</li>
               <li>✓ Cancel Anytime</li>
             </ul>
             <button className="w-full py-3 px-4 rounded-lg text-center font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition-colors">
@@ -34,8 +37,11 @@ export default function PricingPage() {
             <div className="text-green-500 text-sm mb-4">Get 2 Months Free!</div>
             <ul className="text-gray-400 space-y-3 mb-6">
               <li>✓ Full Platform Access</li>
+              <li>✓ Link up to 10 data sources</li>
+              <li>✓ Create up to 3 spaces</li>
+              <li>✓ Invite up to 5 team members</li>
               <li>✓ 24/7 Support</li>
-              <li>✓ All Features Included</li>
+              <li>✓ 30 day money back guarantee</li>
               <li>✓ Priority Support</li>
             </ul>
             <button className="w-full py-3 px-4 rounded-lg text-center font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition-colors">
