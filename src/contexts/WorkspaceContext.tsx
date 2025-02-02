@@ -6,14 +6,18 @@ import { useAuthContext } from '@/contexts/AuthContext';
 
 export interface WorkspaceContextType {
   selectedWorkspace: Workspace | null;
-  refreshDashboards: () => Promise<void>;
   setSelectedWorkspace: React.Dispatch<React.SetStateAction<Workspace | null>>;
+  refreshDashboards: () => Promise<void>;
+  isEditing: boolean;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextType>({
   selectedWorkspace: null,
-  refreshDashboards: async () => {},
   setSelectedWorkspace: () => {},
+  refreshDashboards: async () => {},
+  isEditing: false,
+  setIsEditing: () => {},
 });
 
 export function useWorkspace() {
@@ -25,6 +29,7 @@ export default WorkspaceContext;
 export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuthContext();
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   const refreshDashboards = useCallback(async () => {
     if (!user?.uid) return;
@@ -51,7 +56,9 @@ export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) =
   }, [user, refreshDashboards]);
 
   return (
-    <WorkspaceContext.Provider value={{ selectedWorkspace, setSelectedWorkspace, refreshDashboards }}>
+    <WorkspaceContext.Provider
+      value={{ selectedWorkspace, setSelectedWorkspace, refreshDashboards, isEditing, setIsEditing }}
+    >
       {children}
     </WorkspaceContext.Provider>
   );

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { Workspace } from "@/types/workspace";
@@ -15,10 +15,8 @@ import { useWorkspace } from '@/contexts/WorkspaceContext';
 export default function AdminDashboard() {
   const { user, userData, refreshUserData } = useAuthContext();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const isEditing = searchParams.get("edit") === "true";
-  
-  const { selectedWorkspace, setSelectedWorkspace } = useWorkspace();
+
+  const { selectedWorkspace, setSelectedWorkspace, isEditing } = useWorkspace();
   const dashboards = selectedWorkspace?.dashboards || [];
 
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
@@ -109,7 +107,6 @@ export default function AdminDashboard() {
           </>
         )}
 
-        {/* Render dashboards list or initial setup based on workspace data */}
         {selectedWorkspace?.dashboards?.length ? (
           <DashboardList
             dashboards={dashboards}
@@ -141,7 +138,7 @@ export default function AdminDashboard() {
           router.push("/admin/billing");
         }}
         title="Premium Feature"
-        description="You need to upgrade to a premium plan to integrate custom data sources."
+        description="You need to upgrade to a premium plan to create additional workspaces."
       />
     </div>
   );

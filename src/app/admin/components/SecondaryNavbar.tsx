@@ -19,8 +19,21 @@ type WorkspaceDisplay = {
   role: 'Owner' | 'User';
 };
 
-export default function SecondaryNavbar() {
-  const { selectedWorkspace, setSelectedWorkspace, refreshDashboards } = useWorkspace();
+interface SecondaryNavbarProps {
+  isEditing: boolean;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedWorkspace: Workspace | null;
+  setSelectedWorkspace: React.Dispatch<React.SetStateAction<Workspace | null>>;
+  // ...other props if required
+}
+
+export default function SecondaryNavbar({
+  isEditing,
+  setIsEditing,
+  selectedWorkspace,
+  setSelectedWorkspace
+}: SecondaryNavbarProps) {
+  const { selectedWorkspace: contextWorkspace, setSelectedWorkspace: contextSetSelectedWorkspace, refreshDashboards } = useWorkspace();
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [workspaces, setWorkspaces] = useState<WorkspaceDisplay[]>([]);
@@ -86,7 +99,7 @@ export default function SecondaryNavbar() {
             const workspaceSnap = await getDoc(workspaceRef);
             if (workspaceSnap.exists()) {
               const data = workspaceSnap.data();
-              setSelectedWorkspace({
+              contextSetSelectedWorkspace({
                 ...data,
                 id: workspaceSnap.id,
                 createdAt: data.createdAt?.toDate() || new Date(),
@@ -103,16 +116,16 @@ export default function SecondaryNavbar() {
     };
 
     fetchWorkspaces();
-  }, [user?.uid, userData?.defaultWorkspace, setSelectedWorkspace]);
+  }, [user?.uid, userData?.defaultWorkspace, contextSetSelectedWorkspace]);
 
   useEffect(() => {
     const selectFirstWorkspace = async () => {
-      if (workspaces.length > 0 && !selectedWorkspace) {
+      if (workspaces.length > 0 && !contextWorkspace) {
         const workspaceRef = doc(db, 'workspaces', workspaces[0].id);
         const workspaceSnap = await getDoc(workspaceRef);
         if (workspaceSnap.exists()) {
           const data = workspaceSnap.data();
-          setSelectedWorkspace({
+          contextSetSelectedWorkspace({
             ...data,
             id: workspaceSnap.id,
             createdAt: data.createdAt?.toDate() || new Date(),
@@ -122,7 +135,7 @@ export default function SecondaryNavbar() {
       }
     };
     selectFirstWorkspace();
-  }, [workspaces, selectedWorkspace, setSelectedWorkspace]);
+  }, [workspaces, contextWorkspace, contextSetSelectedWorkspace]);
 
   const handleNewWorkspace = () => {
     if (!isPremium) {
@@ -135,10 +148,10 @@ export default function SecondaryNavbar() {
   };
 
   const handleCreateDashboard = async (type: DashboardType) => {
-    if (!selectedWorkspace || !selectedWorkspace.id) return;
+    if (!contextWorkspace || !contextWorkspace.id) return;
     
     try {
-      const workspaceRef = doc(db, 'workspaces', selectedWorkspace.id);
+      const workspaceRef = doc(db, 'workspaces', contextWorkspace.id);
       
       // Get current dashboards to calculate new position
       const workspaceDoc = await getDoc(workspaceRef);
@@ -149,7 +162,7 @@ export default function SecondaryNavbar() {
         id: nanoid(),
         type: type,
         title: `New ${type} Dashboard`,
-        workspaceId: selectedWorkspace.id,
+        workspaceId: contextWorkspace.id,
         dataSources: [],
         settings: {},
         position: maxPosition + 1,
@@ -177,14 +190,7 @@ export default function SecondaryNavbar() {
   };
 
   const handleEditLayout = () => {
-    const currentUrl = new URL(window.location.href);
-    const isEditing = currentUrl.searchParams.get('edit') === 'true';
-    
-    if (isEditing) {
-      router.push('/admin');
-    } else {
-      router.push('/admin?edit=true');
-    }
+    setIsEditing((prev) => !prev);
   };
 
   return (
@@ -195,11 +201,11 @@ export default function SecondaryNavbar() {
             <WorkspaceDropdown 
               showDropdown={showWorkspaceDropdown}
               selectedWorkspace={
-                selectedWorkspace
+                contextWorkspace
                   ? {
-                      id: selectedWorkspace.id!,
-                      name: selectedWorkspace.name,
-                      role: user && selectedWorkspace.owner?.uid === user.uid ? 'Owner' : 'User'
+                      id: contextWorkspace.id!,
+                      name: contextWorkspace.name,
+                      role: user && contextWorkspace.owner?.uid === user.uid ? 'Owner' : 'User'
                     }
                   : null
               }
@@ -211,7 +217,7 @@ export default function SecondaryNavbar() {
                 const workspaceSnap = await getDoc(workspaceRef);
                 if (workspaceSnap.exists()) {
                   const data = workspaceSnap.data();
-                  setSelectedWorkspace({
+                  contextSetSelectedWorkspace({
                     ...data,
                     id: workspaceSnap.id,
                     createdAt: data.createdAt?.toDate() || new Date(),
@@ -222,8 +228,8 @@ export default function SecondaryNavbar() {
               }}
               onNewWorkspace={handleNewWorkspace}
               onSettingsClick={() => {
-                if (selectedWorkspace) {
-                  router.push(`/admin/workspace/${selectedWorkspace.id}/settings`);
+                if (contextWorkspace) {
+                  router.push(`/admin/workspace/${contextWorkspace.id}/settings`);
                 }
               }}
             />
@@ -235,16 +241,16 @@ export default function SecondaryNavbar() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={handleEditLayout}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${
-                searchParams.get('edit') === 'true'
+                isEditing
                   ? 'text-white bg-purple-600 hover:bg-purple-700'
                   : 'text-purple-600 border border-purple-600 hover:bg-purple-50'
               } rounded-lg`}
             >
               <MdEdit className="w-5 h-5" />
-              {searchParams.get('edit') === 'true' ? 'Done Editing' : 'Edit Layout'}
+              {isEditing ? 'Done Editing' : 'Edit Layout'}
             </button>
             
             <button 

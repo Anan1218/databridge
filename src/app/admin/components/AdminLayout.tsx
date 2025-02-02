@@ -1,6 +1,5 @@
-// AdminLayout.tsx
 'use client';
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
@@ -19,14 +18,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   const refreshDashboards = useCallback(async () => {
     if (!user?.uid) return;
-    
+
     try {
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
-      
+
       if (!userSnap.exists() || !userSnap.data().defaultWorkspace) {
         console.error("No default workspace found");
         return;
@@ -34,7 +34,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
       const workspaceRef = doc(db, "workspaces", userSnap.data().defaultWorkspace);
       const workspaceSnap = await getDoc(workspaceRef);
-      
+
       if (workspaceSnap.exists()) {
         setSelectedWorkspace({ id: workspaceSnap.id, ...workspaceSnap.data() } as Workspace);
       }
@@ -55,10 +55,19 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const showSecondaryNav = pathname === "/admin";
 
   return (
-    <WorkspaceContext.Provider value={{ selectedWorkspace, refreshDashboards, setSelectedWorkspace }}>
+    <WorkspaceContext.Provider
+      value={{ selectedWorkspace, isEditing, setIsEditing, refreshDashboards, setSelectedWorkspace }}
+    >
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <AdminNavbar />
-        {showSecondaryNav && <SecondaryNavbar />}
+        {showSecondaryNav && (
+          <SecondaryNavbar
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            selectedWorkspace={selectedWorkspace}
+            setSelectedWorkspace={setSelectedWorkspace}
+          />
+        )}
         <main className="flex-1 p-6">
           {children}
         </main>
