@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { Workspace } from "@/types/workspace";
-import { Dashboard } from "@/types/workspace";
 import DashboardList from "./components/DashboardList";
 import DashboardInitialSetup from "./components/DashboardInitialSetup";
 import DeleteModal from "./components/DeleteModal";
@@ -19,7 +18,7 @@ export default function AdminDashboard() {
   const searchParams = useSearchParams();
   const isEditing = searchParams.get("edit") === "true";
   
-  const { selectedWorkspace, setSelectedWorkspace, refreshDashboards } = useWorkspace();
+  const { selectedWorkspace, setSelectedWorkspace } = useWorkspace();
   const dashboards = selectedWorkspace?.dashboards || [];
 
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
@@ -56,7 +55,7 @@ export default function AdminDashboard() {
     } finally {
       setIsLoading(false);
     }
-  }, [user?.uid]);
+  }, [user?.uid, setSelectedWorkspace]);
 
   useEffect(() => {
     fetchWorkspaceData();

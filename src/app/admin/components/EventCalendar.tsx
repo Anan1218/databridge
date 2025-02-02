@@ -59,7 +59,6 @@ export default function EventCalendar() {
   const [events, setEvents] = useState<Event[]>([]);
   const { selectedWorkspace } = useWorkspace();
   const { user } = useAuthContext();
-  const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -68,8 +67,7 @@ export default function EventCalendar() {
       try {
         const response = await fetch(`/api/users?uid=${user.uid}`);
         if (!response.ok) throw new Error('Failed to fetch user data');
-        const data = await response.json();
-        setUserData(data);
+        await response.json();
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -79,15 +77,15 @@ export default function EventCalendar() {
   }, [user]);
 
   useEffect(() => {
-    if (selectedWorkspace?.id) {
+    if (selectedWorkspace?.id && selectedWorkspace.dashboards) {
       // Derive enabled data sources from the workspace dashboards.
       // Each dashboard has an array of enabled data sources.
-      const enabledDataSources = selectedWorkspace.dashboards?.reduce<string[]>((acc, dashboard) => {
+      const enabledDataSources = selectedWorkspace.dashboards.reduce<string[]>((acc, dashboard) => {
         if (dashboard.dataSources) {
           acc.push(...dashboard.dataSources);
         }
         return acc;
-      }, []) || [];
+      }, []);
 
       // Remove duplicates if any exist.
       const uniqueDataSources = Array.from(new Set(enabledDataSources));
@@ -97,7 +95,7 @@ export default function EventCalendar() {
     } else {
       setEvents([]);
     }
-  }, [selectedWorkspace?.id, JSON.stringify(selectedWorkspace?.dashboards)]);
+  }, [selectedWorkspace?.id, selectedWorkspace?.dashboards]);
 
   return (
     <div className="w-full h-[800px] text-black">
