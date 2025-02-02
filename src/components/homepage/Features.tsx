@@ -156,7 +156,7 @@ export function Features({ openModal }: FeaturesProps) {
 
       {/* Features Section */}
       <div className="bg-white">
-        <section className="pt-4 pb-14">
+        <section className="pt-16 pb-14">
           <div className="max-w-5xl mx-auto px-4">
             <div className="text-center mb-7">
               <div className="space-y-0.5">
@@ -171,7 +171,7 @@ export function Features({ openModal }: FeaturesProps) {
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
                   <Image 
-                    src="/features/market-research.jpg"
+                    src="/features/data-extraction.png"
                     alt="Market Research"
                     width={600}
                     height={400}
@@ -231,7 +231,7 @@ export function Features({ openModal }: FeaturesProps) {
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
                   <Image 
-                    src="/features/compliance.jpg"
+                    src="/features/demand-forecast.png"
                     alt="Compliance & Due Diligence"
                     width={600}
                     height={400}
