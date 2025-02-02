@@ -74,7 +74,7 @@ export function Faq() {
             Get Started
           </Link>
           <Link 
-            href="/demo" 
+            href="/contact" 
             className="inline-block bg-white border border-gray-300 text-[#374151] px-3.5 py-2.5 rounded-lg font-normal text-[0.95rem] transition-all hover:bg-gray-50"
           >
             Live Demo

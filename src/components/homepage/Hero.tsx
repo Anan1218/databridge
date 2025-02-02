@@ -146,7 +146,7 @@ export function Hero() {
               Get Started
             </Link>
             <Link 
-              href="/demo" 
+              href="/contact" 
               className="inline-block border border-[#d5d4d4] text-[#000000] hover:bg-[#8b5cf6]/5 px-4 py-2.5 rounded-lg font-normal transition-all hover:scale-105"
             >
               Live Demo
