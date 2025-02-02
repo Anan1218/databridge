@@ -6,7 +6,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useState, useEffect } from 'react';
 import { db } from '@/utils/firebase';
 import { collection, doc, getDocs } from 'firebase/firestore';
-import { useWorkspace } from './AdminLayout';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { User } from '@/types/user';
 import { useAuthContext } from '@/contexts/AuthContext';
 

@@ -11,7 +11,7 @@ import WorkspaceDropdown from './navbar/WorkspaceDropdown';
 import SearchBar from './navbar/SearchBar';
 import DashboardModal from './navbar/DashboardModal';
 import { nanoid } from 'nanoid';
-import { useWorkspace } from './AdminLayout';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 
 type WorkspaceDisplay = {
   id: string;
@@ -20,11 +20,10 @@ type WorkspaceDisplay = {
 };
 
 export default function SecondaryNavbar() {
-  const { refreshDashboards } = useWorkspace();
+  const { selectedWorkspace, setSelectedWorkspace, refreshDashboards } = useWorkspace();
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [workspaces, setWorkspaces] = useState<WorkspaceDisplay[]>([]);
-  const [selectedWorkspace, setSelectedWorkspace] = useState<WorkspaceDisplay | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user, userData, refreshUserData } = useAuthContext();
   const router = useRouter();
@@ -92,13 +91,13 @@ export default function SecondaryNavbar() {
     };
 
     fetchWorkspaces();
-  }, [user?.uid, userData?.defaultWorkspace]);
+  }, [user?.uid, userData?.defaultWorkspace, setSelectedWorkspace]);
 
   useEffect(() => {
     if (workspaces.length > 0 && !selectedWorkspace) {
       setSelectedWorkspace(workspaces[0]);
     }
-  }, [workspaces, selectedWorkspace]);
+  }, [workspaces, selectedWorkspace, setSelectedWorkspace]);
 
   const handleNewWorkspace = () => {
     if (!isPremium) {
@@ -133,18 +132,18 @@ export default function SecondaryNavbar() {
         updatedAt: new Date()
       };
 
-      // Add the new dashboard to the workspace's dashboards array
+      // Add the new dashboard
       await updateDoc(workspaceRef, {
         dashboards: arrayUnion(newDashboard),
         updatedAt: new Date()
       });
 
-      // Refresh user data to update the UI
+      // Refresh user data … (if needed)
       await refreshUserData();
-      
-      // Call the refresh function instead of reloading the window
+
+      // Refresh workspaces/dashboards via the context
       refreshDashboards();
-      
+
       // Close the modal
       setIsDashboardModalOpen(false);
     } catch (error) {

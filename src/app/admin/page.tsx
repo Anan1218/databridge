@@ -1,7 +1,7 @@
 "use client";
 
+import React, { useState, useCallback, useEffect } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
-import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
@@ -11,6 +11,7 @@ import DashboardList from "./components/DashboardList";
 import DashboardInitialSetup from "./components/DashboardInitialSetup";
 import DeleteModal from "./components/DeleteModal";
 import PremiumUpgradeModal from "@/components/PremiumUpgradeModal";
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 
 export default function AdminDashboard() {
   const { user, userData, refreshUserData } = useAuthContext();
@@ -18,11 +19,12 @@ export default function AdminDashboard() {
   const searchParams = useSearchParams();
   const isEditing = searchParams.get("edit") === "true";
   
-  const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null);
+  const { selectedWorkspace, setSelectedWorkspace, refreshDashboards } = useWorkspace();
+  const dashboards = selectedWorkspace?.dashboards || [];
+
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
   const [dashboardToDelete, setDashboardToDelete] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [dashboards, setDashboards] = useState<Dashboard[]>([]);
 
   const fetchWorkspaceData = useCallback(async () => {
     if (!user?.uid) return;
@@ -48,7 +50,6 @@ export default function AdminDashboard() {
       if (workspaceSnap.exists()) {
         const workspaceData = { id: workspaceSnap.id, ...workspaceSnap.data() } as Workspace;
         setSelectedWorkspace(workspaceData);
-        setDashboards(workspaceData.dashboards || []);
       }
     } catch (error) {
       console.error("Error fetching workspace:", error);
@@ -71,7 +72,6 @@ export default function AdminDashboard() {
         updatedAt: new Date()
       });
       setSelectedWorkspace(prev => (prev ? { ...prev, dashboards: updatedDashboards } : null));
-      setDashboards(updatedDashboards);
       await refreshUserData();
       await fetchWorkspaceData();
     } catch (error) {
@@ -117,7 +117,7 @@ export default function AdminDashboard() {
             isEditing={isEditing}
             onDeleteClick={setDashboardToDelete}
             selectedWorkspace={selectedWorkspace}
-            setDashboards={setDashboards}
+            setDashboards={setSelectedWorkspace}
           />
         ) : (
           <DashboardInitialSetup handleCustomIntegration={handleCustomIntegration} />
