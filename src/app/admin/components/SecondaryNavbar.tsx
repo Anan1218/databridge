@@ -28,7 +28,11 @@ export default function SecondaryNavbar({
   isEditing,
   setIsEditing,
 }: SecondaryNavbarProps) {
-  const { selectedWorkspace: contextWorkspace, setSelectedWorkspace: contextSetSelectedWorkspace, refreshDashboards } = useWorkspace();
+  const {
+    selectedWorkspace: contextWorkspace,
+    setSelectedWorkspace: contextSetSelectedWorkspace,
+    refreshDashboards,
+  } = useWorkspace();
   const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [workspaces, setWorkspaces] = useState<WorkspaceDisplay[]>([]);
@@ -38,14 +42,12 @@ export default function SecondaryNavbar({
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
 
-  const isPremium = userData?.subscription?.status === 'active';
-
+  // Use the workspace IDs stored in the userData rather than querying a subcollection.
   useEffect(() => {
     const fetchWorkspaces = async () => {
       if (!user?.uid) return;
 
       try {
-        // Use the workspace IDs stored in the userData rather than querying a subcollection.
         const workspaceIds: string[] = userData?.workspaces || [];
         console.log("Workspace IDs from userData:", workspaceIds);
 
@@ -123,7 +125,6 @@ export default function SecondaryNavbar({
       return;
     }
     // Implementation for creating new workspace
-    // This would call the existing workspace creation API
   };
 
   const handleCreateDashboard = async (type: DashboardType) => {
@@ -155,13 +156,8 @@ export default function SecondaryNavbar({
         updatedAt: new Date()
       });
 
-      // Refresh user data … (if needed)
       await refreshUserData();
-
-      // Refresh workspaces/dashboards via the context
       refreshDashboards();
-
-      // Close the modal
       setIsDashboardModalOpen(false);
     } catch (error) {
       console.error('Failed to create dashboard:', error);
@@ -171,6 +167,18 @@ export default function SecondaryNavbar({
   const handleEditLayout = () => {
     setIsEditing((prev) => !prev);
   };
+
+  // Only show the edit layout button if the current user is the owner or an admin.
+  const isWorkspaceOwnerOrAdmin =
+    user &&
+    contextWorkspace &&
+    (contextWorkspace.owner.uid === user.uid ||
+      (contextWorkspace.members &&
+        contextWorkspace.members.some(
+          (member) => member.uid === user.uid && member.role === 'admin'
+        )));
+
+  const isPremium = userData?.subscription?.status === 'active';
 
   return (
     <nav className="bg-white border-b">
@@ -220,17 +228,19 @@ export default function SecondaryNavbar({
           </div>
 
           <div className="flex items-center gap-4">
-            <button
-              onClick={handleEditLayout}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${
-                isEditing
-                  ? 'text-white bg-purple-600 hover:bg-purple-700'
-                  : 'text-purple-600 border border-purple-600 hover:bg-purple-50'
-              } rounded-lg`}
-            >
-              <MdEdit className="w-5 h-5" />
-              {isEditing ? 'Done Editing' : 'Edit Layout'}
-            </button>
+            {isWorkspaceOwnerOrAdmin && (
+              <button
+                onClick={handleEditLayout}
+                className={`flex items-center gap-2 px-4 py-2 text-sm font-medium ${
+                  isEditing
+                    ? 'text-white bg-purple-600 hover:bg-purple-700'
+                    : 'text-purple-600 border border-purple-600 hover:bg-purple-50'
+                } rounded-lg`}
+              >
+                <MdEdit className="w-5 h-5" />
+                {isEditing ? 'Done Editing' : 'Edit Layout'}
+              </button>
+            )}
             
             <button 
               onClick={() => setIsDashboardModalOpen(true)} 
