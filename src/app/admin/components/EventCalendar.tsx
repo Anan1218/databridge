@@ -4,8 +4,6 @@ import { Calendar, momentLocalizer, View } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useState, useEffect } from 'react';
-import { db } from '@/utils/firebase';
-import { collection, doc, getDocs } from 'firebase/firestore';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { getEvents } from '@/utils/getEvents';

@@ -40,22 +40,13 @@ export async function getEvents(workspaceId: string, enabledDataSources: string[
         const sourceCollection = collection(eventsDocRef, source);
         const sourceEvents = await getDocs(sourceCollection);
 
-        // Debug: log the number of docs found for this source
-        console.log(`Fetching events for source: ${source}. Count: ${sourceEvents.size}`);
-
         sourceEvents.forEach(docSnapshot => {
           const eventData = docSnapshot.data();
-          // Debug: log the raw event data
-          console.log('Fetched event data: ', eventData);
-
-          // Convert start and end fields using our helper function.
           const start = convertTimestamp(eventData.start);
           const end = convertTimestamp(eventData.end);
 
-          // Check if the dates are valid
           if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-            console.warn(`Skipping event ${docSnapshot.id} due to invalid date`, eventData);
-            return; // skip this event
+            return; // skip this event if dates are invalid
           }
 
           allEvents.push({
@@ -67,13 +58,13 @@ export async function getEvents(workspaceId: string, enabledDataSources: string[
           } as Event);
         });
       } catch (error) {
-        console.error(`Error fetching events for source ${source}:`, error);
+        console.error(`Failed to fetch events for source ${source}:`, error);
       }
     }
 
     return allEvents;
   } catch (error) {
-    console.error('Error in getEvents:', error);
+    console.error('Failed to fetch events:', error);
     return [];
   }
 }
