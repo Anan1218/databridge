@@ -88,19 +88,19 @@ export function Hero({ openModal }: HeroProps) {
   return (
     <div className="relative px-4" ref={containerRef}>
       <div className="flex flex-col items-center max-w-[1200px] mx-auto mt-9">
-        <div className="w-full text-center mb-8">
-          <h1 className="text-[3.2rem] font-bold text-gray-900 leading-tight mb-2">
-            <div>The best way to</div>
-            <div className="flex flex-col items-center">
-              <div className="flex items-center gap-3">
-                <div
-                  key={currentWord}
-                  className={`${colors[currentWord]} overflow-hidden`}
-                >
-                  {renderStaggeredWord(words[currentWord])}
-                </div>
-                <div>data with AI</div>
+        <div className="text-center max-w-3xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 flex flex-col gap-2">
+            <div className="flex items-center justify-center gap-2 whitespace-nowrap">
+              <span>The best way to</span>
+            </div>
+            <div className="flex items-center justify-center gap-2 whitespace-nowrap mb-8">
+              <div
+                key={currentWord}
+                className={`${colors[currentWord]} overflow-hidden`}
+              >
+                {renderStaggeredWord(words[currentWord])}
               </div>
+              <span>data with AI</span>
             </div>
           </h1>
           
@@ -142,7 +142,7 @@ export function Hero({ openModal }: HeroProps) {
             Streamline business intelligence operations across all your data sources.
           </p>
 
-          <div className="flex gap-3 justify-center mb-4">
+          <div className="flex gap-3 justify-center mb-12 mt-8">
             <button 
               onClick={openModal}
               className="inline-block bg-[#974eea] text-white px-5 py-2.5 rounded-lg font-normal transition-all hover:bg-[#8b5cf6] hover:shadow-[0_0_45px_12px_rgba(167,139,250,0.35)]"
@@ -181,7 +181,7 @@ export function Hero({ openModal }: HeroProps) {
           />
           
           <div 
-            className="relative w-[80%] transition-all duration-500 ease-out will-change-transform"
+            className="relative w-full md:w-[80%] px-0 md:px-4 transition-all duration-500 ease-out will-change-transform"
             style={{
               transform: `
                 rotateX(${Math.max(0, 12 * (1 - scrollY))}deg)
@@ -192,13 +192,13 @@ export function Hero({ openModal }: HeroProps) {
             }}
           >
             <div 
-              className="relative rounded-[2.5rem] overflow-hidden bg-black p-[10px] will-change-transform shadow-2xl transition-all duration-700"
+              className="relative rounded-none md:rounded-[2.5rem] overflow-hidden bg-black p-0 md:p-[10px] will-change-transform shadow-2xl transition-all duration-700"
             >
               {/* iPad Camera */}
-              <div className="absolute -top-0 left-1/2 -translate-x-1/2 w-20 h-6 bg-black rounded-md z-10 border border-gray-700" />
+              <div className="absolute -top-0 left-1/2 -translate-x-1/2 w-20 h-6 bg-black rounded-md z-10 border border-gray-700 hidden md:block" />
               
               {/* Screen Content */}
-              <div className="relative rounded-[2.4rem] overflow-hidden bg-white">
+              <div className="relative rounded-none md:rounded-[2.4rem] overflow-hidden bg-white">
                 <Image 
                   src="/homepage/image1.png"
                   alt="DataBridge Dashboard"
@@ -207,7 +207,7 @@ export function Hero({ openModal }: HeroProps) {
                   className="w-full h-auto object-cover transform-gpu"
                   priority
                   loading="eager"
-                  sizes="(max-width: 1200px) 80vw, 1200px"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                 />
               </div>
             </div>
