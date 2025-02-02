@@ -12,7 +12,7 @@ import { useAuthContext } from '@/contexts/AuthContext';
 
 const localizer = momentLocalizer(moment);
 
-interface Event {
+export interface Event {
   id: string;
   title: string;
   start: Date;
@@ -22,12 +22,13 @@ interface Event {
   source: string;
 }
 
-async function getEvents(workspaceId: string, dataSources: string[]): Promise<Event[]> {
+export async function getEvents(workspaceId: string, enabledDataSources: string[]): Promise<Event[]> {
   try {
     const eventsDocRef = doc(db, 'workspaces', workspaceId, 'dataSources', 'events');
     const allEvents: Event[] = [];
 
-    for (const source of dataSources) {
+    // Only fetch events for enabled data sources
+    for (const source of enabledDataSources) {
       try {
         const sourceCollection = collection(eventsDocRef, source);
         const sourceEvents = await getDocs(sourceCollection);
@@ -78,12 +79,25 @@ export default function EventCalendar() {
   }, [user]);
 
   useEffect(() => {
-    if (selectedWorkspace?.id && userData?.dataSources) {
-      getEvents(selectedWorkspace.id, userData.dataSources).then(fetchedEvents => {
-        setEvents(fetchedEvents);
-      });
+    if (selectedWorkspace?.id) {
+      // Derive enabled data sources from the workspace dashboards.
+      // Each dashboard has an array of enabled data sources.
+      const enabledDataSources = selectedWorkspace.dashboards?.reduce<string[]>((acc, dashboard) => {
+        if (dashboard.dataSources) {
+          acc.push(...dashboard.dataSources);
+        }
+        return acc;
+      }, []) || [];
+
+      // Remove duplicates if any exist.
+      const uniqueDataSources = Array.from(new Set(enabledDataSources));
+
+      // Fetch events only for the enabled data sources.
+      getEvents(selectedWorkspace.id, uniqueDataSources).then(setEvents);
+    } else {
+      setEvents([]);
     }
-  }, [selectedWorkspace, userData]);
+  }, [selectedWorkspace?.id, JSON.stringify(selectedWorkspace?.dashboards)]);
 
   return (
     <div className="w-full h-[800px] text-black">
