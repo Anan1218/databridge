@@ -32,7 +32,7 @@ export default function AccountSettings() {
       try {
         const workspacesQuery = query(
           collection(db, 'workspaces'),
-          where('members', 'array-contains', user.email)
+          where('memberEmails', 'array-contains', user.email)
         );
         const workspacesSnap = await getDocs(workspacesQuery);
         const workspacesData = workspacesSnap.docs.map(doc => ({

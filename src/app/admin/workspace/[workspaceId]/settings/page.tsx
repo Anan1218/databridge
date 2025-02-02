@@ -6,6 +6,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { Workspace } from '@/types/workspace';
 import { useAuthContext } from '@/contexts/AuthContext';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
+import InviteTeammateModal from '@/components/modals/InviteTeammateModal';
 
 export default function WorkspaceSettings() {
   const { workspaceId } = useParams();
@@ -17,6 +18,7 @@ export default function WorkspaceSettings() {
   const [isLoading, setIsLoading] = useState(true);
   const [updateMessage, setUpdateMessage] = useState('');
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   const isPremium = userData?.subscription?.status === 'active';
 
@@ -81,7 +83,7 @@ export default function WorkspaceSettings() {
       setIsPremiumModalOpen(true);
       return;
     }
-    // Future implementation: Handle invite functionality
+    setIsInviteModalOpen(true);
   };
 
   if (isLoading) {
@@ -204,6 +206,16 @@ export default function WorkspaceSettings() {
         title="Premium Feature"
         description="You need to upgrade to a premium plan to invite additional team members."
       />
+
+      {/* Render the invite modal */}
+      {isInviteModalOpen && (
+        <InviteTeammateModal
+          isOpen={isInviteModalOpen}
+          onClose={() => setIsInviteModalOpen(false)}
+          workspaceId={workspaceId as string}
+          onSuccess={(message) => setUpdateMessage(message)}
+        />
+      )}
     </div>
   );
 } 

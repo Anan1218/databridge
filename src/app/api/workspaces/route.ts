@@ -56,6 +56,7 @@ export async function POST(req: Request) {
         lastName: workspace.ownerLastName || '',
         role: 'owner' as const
       }],
+      memberEmails: [workspace.ownerEmail || ''],
       dashboards: [],
       dataSources: []
     };

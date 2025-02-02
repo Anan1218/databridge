@@ -31,6 +31,7 @@ export async function POST(req: Request) {
         lastName: userData.lastName || '',
         role: 'owner'
       }],
+      memberEmails: [userData.email || ''],
       dashboards: [],
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp()

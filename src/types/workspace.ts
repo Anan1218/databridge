@@ -14,6 +14,7 @@ export interface Workspace {
     lastName: string;
     role: 'owner' | 'member';
   }>;
+  memberEmails: string[];
   dashboards: Array<Dashboard>;
   createdAt: Date;
   updatedAt: Date;
