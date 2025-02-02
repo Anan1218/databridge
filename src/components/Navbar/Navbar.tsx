@@ -67,7 +67,7 @@ export default function Navbar() {
                   onClick={() => setIsLoginModalOpen(true)}
                   className="bg-[#974eea] text-white px-3.5 py-2 rounded-lg hover:bg-[#8b5cf6] transition-all"
                 >
-                  Get Started
+                  Login
                 </button>
               )}
             </div>

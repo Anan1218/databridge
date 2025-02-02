@@ -138,8 +138,8 @@ export function Hero({ openModal }: HeroProps) {
           `}</style>
           
           <p className="text-base text-gray-600 leading-relaxed animate-fade-in max-w-[660px] mx-auto mb-4">
-            Automate data workflows with <span className="font-semibold">market research</span>, <span className="font-semibold">financial analysis</span> & <span className="font-semibold">lead generation</span> in one powerful platform. 
-            Streamline compliance, reporting, and business intelligence across all your data sources.
+            Automate workflows for <span className="font-semibold">market research</span>, <span className="font-semibold">data analysis</span> & <span className="font-semibold">lead generation</span> with AI agents. 
+            Streamline business intelligence operations across all your data sources.
           </p>
 
           <div className="flex gap-3 justify-center mb-4">

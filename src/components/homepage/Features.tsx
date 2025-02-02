@@ -180,14 +180,14 @@ export function Features({ openModal }: FeaturesProps) {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Market Research</h3>
+                  <h3 className="text-xl font-semibold mb-3">Web Data Extraction</h3>
                   <p className="text-gray-600">
                     Track pricing, trends, and industry news across multiple sources. Get real-time insights into your market position and competitors.
                   </p>
                 </div>
               </div>
 
-              {/* Financial Analysis */}
+              {/* Financial Analysis
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
                   <Image 
@@ -200,14 +200,14 @@ export function Features({ openModal }: FeaturesProps) {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Financial Analysis</h3>
+                  <h3 className="text-xl font-semibold mb-3">Connect Existing Data</h3>
                   <p className="text-gray-600">
                     Automate earnings reports, scan SEC filings, and generate financial summaries. Get AI-powered insights into your financial performance.
                   </p>
                 </div>
-              </div>
+              </div> */}
 
-              {/* Lead Generation */}
+              {/* Lead Generation
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
                   <Image 
@@ -220,12 +220,12 @@ export function Features({ openModal }: FeaturesProps) {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Lead Generation</h3>
+                  <h3 className="text-xl font-semibold mb-3">Data Analysis</h3>
                   <p className="text-gray-600">
                     Scrape company info, find potential leads, and auto-fill CRM entries. Our AI identifies high-quality leads and enriches them with relevant data.
                   </p>
                 </div>
-              </div>
+              </div> */}
 
               {/* Compliance & Due Diligence */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
@@ -240,7 +240,7 @@ export function Features({ openModal }: FeaturesProps) {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Compliance & Due Diligence</h3>
+                  <h3 className="text-xl font-semibold mb-3">Lead Generation</h3>
                   <p className="text-gray-600">
                     Monitor regulatory updates, legal filings, and policy changes. Automate compliance reporting and risk assessment processes.
                   </p>
