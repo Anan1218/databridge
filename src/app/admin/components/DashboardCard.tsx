@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Dashboard } from '@/types/workspace';
 import { MdDelete, MdSettings, MdEdit, MdCheck } from 'react-icons/md';
 import EventCalendar from './EventCalendar';
+import { LeadMonitoringTable } from './leads/LeadMonitoringTable';
 
 interface DashboardCardProps {
   dashboard: Dashboard;
@@ -78,16 +79,8 @@ export default function DashboardCard({
 
       {/* Dashboard type specific content */}
       <div className="mt-4">
-        {dashboard.type === 'calendar' ? (
-          <EventCalendar />
-        ) : dashboard.type === 'graph' ? (
-          <div className="text-gray-500 text-center py-4">
-            Graph visualization coming soon
-          </div>
-        ) : dashboard.type === 'text' ? (
-          <div className="text-gray-500 text-center py-4">
-            Text component coming soon
-          </div>
+        {dashboard.type === 'leads_table' ? (
+          <LeadMonitoringTable leads={dashboard.leads} />
         ) : null}
       </div>
     </div>

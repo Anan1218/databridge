@@ -133,24 +133,18 @@ export default function SecondaryNavbar({
     try {
       const workspaceRef = doc(db, 'workspaces', contextWorkspace.id);
       
-      // Get current dashboards to calculate new position
-      const workspaceDoc = await getDoc(workspaceRef);
-      const currentDashboards = workspaceDoc.data()?.dashboards || [];
-      const maxPosition = Math.max(...currentDashboards.map((d: Dashboard) => d.position || 0), -1);
-      
       const newDashboard: Dashboard = {
         id: nanoid(),
         type: type,
-        title: `New ${type} Dashboard`,
+        title: 'New Leads Collection',
         workspaceId: contextWorkspace.id,
         dataSources: [],
         settings: {},
-        position: maxPosition + 1,
+        position: contextWorkspace.dashboards?.length || 0,
         createdAt: new Date(),
         updatedAt: new Date()
       };
 
-      // Add the new dashboard
       await updateDoc(workspaceRef, {
         dashboards: arrayUnion(newDashboard),
         updatedAt: new Date()

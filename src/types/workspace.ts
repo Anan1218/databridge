@@ -20,7 +20,7 @@ export interface Workspace {
   updatedAt: Date;
 }
 
-export type DashboardType = 'calendar' | 'graph' | 'text';
+export type DashboardType = 'leads_table';
 
 export interface Dashboard {
   id: string;

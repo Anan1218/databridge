@@ -14,6 +14,7 @@ const dashboardTypes = [
     name: 'Leads Table',
     description: 'View and manage your leads in a customizable table format',
     icon: <MdTextFields className="w-6 h-6 text-purple-600" />,
+    disabled: false
   }
 ];
 
