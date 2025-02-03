@@ -138,7 +138,7 @@ export function Hero({ openModal }: HeroProps) {
         
         <p className="text-base text-gray-600 leading-relaxed animate-fade-in max-w-[660px] mx-auto mb-4 text-center">
           Automate workflows for <span className="font-semibold">data extraction</span> & <span className="font-semibold">lead generation</span> with AI agents. 
-          Streamline business intelligence operations across all your data sources.
+          Find what customers are saying about you online for engagement opportunities and analysis.
         </p>
 
         <div className="flex gap-3 justify-center mb-12 mt-8">

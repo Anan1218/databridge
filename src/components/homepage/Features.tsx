@@ -180,38 +180,18 @@ export function Features({ openModal }: FeaturesProps) {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Data Extraction</h3>
+                  <h3 className="text-xl font-semibold mb-3">Data Monitoring</h3>
                   <p className="text-gray-600">
-                    Track pricing, trends, and industry news across multiple sources. Get real-time insights into your market position and competitors.
+                    Track customer reviews, pricing, trends, and news across multiple sources. Get real-time insights into your market position and competitors.
                   </p>
                 </div>
               </div>
 
-              {/* Financial Analysis
+              {/* Lead Generation */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
                   <Image 
-                    src="/features/financial-analysis.jpg"
-                    alt="Financial Analysis"
-                    width={600}
-                    height={400}
-                    className="w-full h-full object-contain"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
-                </div>
-                <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Connect Existing Data</h3>
-                  <p className="text-gray-600">
-                    Automate earnings reports, scan SEC filings, and generate financial summaries. Get AI-powered insights into your financial performance.
-                  </p>
-                </div>
-              </div> */}
-
-              {/* Lead Generation
-              <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
-                <div className="h-60 relative">
-                  <Image 
-                    src="/features/lead-generation.jpg"
+                    src="/features/lead-generation.png"
                     alt="Lead Generation"
                     width={600}
                     height={400}
@@ -220,32 +200,13 @@ export function Features({ openModal }: FeaturesProps) {
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
                 </div>
                 <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Data Analysis</h3>
+                  <h3 className="text-xl font-semibold mb-3">Lead Generation</h3>
                   <p className="text-gray-600">
-                    Scrape company info, find potential leads, and auto-fill CRM entries. Our AI identifies high-quality leads and enriches them with relevant data.
-                  </p>
-                </div>
-              </div> */}
-
-              {/* Compliance & Due Diligence */}
-              <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
-                <div className="h-60 relative">
-                  <Image 
-                    src="/features/demand-forecast.png"
-                    alt="Compliance & Due Diligence"
-                    width={600}
-                    height={400}
-                    className="w-full h-full object-contain"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
-                </div>
-                <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Demand Forecasting</h3>
-                  <p className="text-gray-600">
-                    Analyze historical sales data, identify trends, and predict future demand. Optimize inventory levels and reduce stockouts with AI-driven forecasting.
+                    Our agents monitor social media to find quality leads based on contextual information, and categorize them for your use.
                   </p>
                 </div>
               </div>
+
             </div>
 
             {/* Integration Section */}
