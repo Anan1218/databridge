@@ -167,26 +167,6 @@ export function Features({ openModal }: FeaturesProps) {
 
             {/* Main Feature Cards */}
             <div className="grid md:grid-cols-2 gap-6">
-              {/* Market Research */}
-              <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
-                <div className="h-60 relative">
-                  <Image 
-                    src="/features/data-extraction.png"
-                    alt="Data Monitoring"
-                    width={600}
-                    height={400}
-                    className="w-full h-full object-contain"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
-                </div>
-                <div className="p-8 -mt-4 relative">
-                  <h3 className="text-xl font-semibold mb-3">Data Monitoring</h3>
-                  <p className="text-gray-600">
-                    Track customer reviews, pricing, trends, and news across multiple sources. Get real-time insights into your market position and competitors.
-                  </p>
-                </div>
-              </div>
-
               {/* Lead Generation */}
               <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
                 <div className="h-60 relative">
@@ -203,6 +183,26 @@ export function Features({ openModal }: FeaturesProps) {
                   <h3 className="text-xl font-semibold mb-3">Lead Generation</h3>
                   <p className="text-gray-600">
                     Our agents monitor social media to find quality leads based on contextual information, and categorize them for your use.
+                  </p>
+                </div>
+              </div>
+
+              {/* Market Research */}
+              <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-purple-100 hover:border-purple-600 transition-colors duration-300">
+                <div className="h-60 relative">
+                  <Image 
+                    src="/features/data-extraction.png"
+                    alt="Data Monitoring"
+                    width={600}
+                    height={400}
+                    className="w-full h-full object-contain"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
+                </div>
+                <div className="p-8 -mt-4 relative">
+                  <h3 className="text-xl font-semibold mb-3">Market Research</h3>
+                  <p className="text-gray-600">
+                    Track customer reviews, pricing, trends, and news across multiple sources. Get real-time insights into your market position and competitors.
                   </p>
                 </div>
               </div>
@@ -243,7 +243,7 @@ export function Features({ openModal }: FeaturesProps) {
                 <div className="text-purple-600 font-semibold mb-2">INTEGRATION</div>
                 <h3 className="text-xl font-bold mb-3">Seamless Data Integrations</h3>
                 <p className="text-gray-600">
-                  Connect effortlessly with various data sources, including CRMs, ERPs, and cloud storage. Ensure your data is always up-to-date and accessible for analysis.
+                  Effortlessly connect with a variety of data sources to uncover valuable leads and insights. Our seamless integration ensures you have all the information you need at your fingertips.
                 </p>
               </div>
 
@@ -271,156 +271,159 @@ export function Features({ openModal }: FeaturesProps) {
 
       {/* Pricing Section */}
       <div id="pricing" className="bg-white py-10">
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12 -mt-10">
             <h2 className="text-3xl font-medium text-gray-900">Simple, Affordable Pricing</h2>
             <p className="text-neutral-700 mt-2 font-normal">Choose the plan that works best for you</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            {/* Free Plan */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {/* Starter Plan */}
             <div className="bg-white rounded-2xl p-6 border border-gray-200 transform transition-all duration-300 hover:scale-105 hover:shadow-lg">
-              <h3 className="text-xl font-semibold mb-2">Free</h3>
+              <h3 className="text-xl font-semibold mb-2">Starter</h3>
               <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-3xl font-bold">$0</span>
-                <span className="text-gray-500">/month</span>
+                <span className="text-gray-600">Contact us for pricing</span>
               </div>
-              <p className="text-gray-600 text-sm mb-6">Perfect for getting started</p>
+              <p className="text-gray-600 text-sm mb-6">Perfect for small teams</p>
               <button 
                 onClick={openModal}
                 className="w-full bg-[#8b5cf6] text-white rounded-lg py-2.5 mb-6 hover:bg-[#7c3aed] transition-colors"
               >
-                Get Started
+                Contact Sales
               </button>
               <ul className="space-y-4">
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  24/7 Support
+                  Basic data extraction
                 </li>
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  All Features Included
+                  Up to 5 data sources
                 </li>
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  Cancel Anytime
+                  1 workspace
+                </li>
+                <li className="flex items-center gap-2 text-sm">
+                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Email support
                 </li>
               </ul>
             </div>
 
-            {/* Monthly Plan */}
+            {/* Pro Plan */}
             <div className="bg-[#faf5ff] rounded-2xl p-6 border-[1px] border-[#8b5cf6] relative transform transition-all duration-300 hover:scale-105 hover:shadow-lg">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#8b5cf6] text-white px-3 py-1 rounded-full text-sm">
                 Most popular
               </div>
-              <h3 className="text-xl font-semibold mb-2">Monthly</h3>
+              <h3 className="text-xl font-semibold mb-2">Pro</h3>
               <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-3xl font-bold">$5</span>
-                <span className="text-gray-500">/month</span>
+                <span className="text-gray-600">Contact us for pricing</span>
               </div>
-              <p className="text-gray-600 text-sm mb-6">Full Platform Access</p>
+              <p className="text-gray-600 text-sm mb-6">For growing businesses</p>
               <button 
                 onClick={openModal}
                 className="w-full bg-[#8b5cf6] text-white rounded-lg py-2.5 mb-6 hover:bg-[#7c3aed] transition-colors"
               >
-                Get Started Monthly
+                Contact Sales
               </button>
               <ul className="space-y-4">
-              <li className="flex items-center gap-2 text-sm">
+                <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  Full Platform Access
+                  Advanced data extraction
                 </li>
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  Up to 10 data sources
+                  Unlimited data sources
                 </li>
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  Up to 3 workspaces
+                  Multiple workspaces
                 </li>
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  5 team members
+                  Unlimited team members
                 </li>
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  24/7 Support
+                  24/7 Priority support
                 </li>
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  Money back guarantee
+                  Custom integrations
                 </li>
               </ul>
             </div>
 
-            {/* Yearly Plan */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 transform transition-all duration-300 hover:scale-105 hover:shadow-lg">
-              <h3 className="text-xl font-semibold mb-2">Yearly</h3>
+            {/* Custom Plan */}
+            <div className="bg-gradient-to-b from-purple-50 to-blue-50 rounded-2xl p-6 border border-blue-200 transform transition-all duration-300 hover:scale-105 hover:shadow-lg">
+              <h3 className="text-xl font-semibold mb-2">Enterprise</h3>
               <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-3xl font-bold">$50</span>
-                <span className="text-gray-500">/year</span>
+                <span className="text-gray-600">Enterprise pricing</span>
               </div>
-              <p className="text-[#4b4545] text-sm mb-6">Get 2 Months Free!</p>
+              <p className="text-gray-600 text-sm mb-6">Enterprise-grade solution</p>
               <button 
                 onClick={openModal}
-                className="w-full bg-[#8b5cf6] text-white rounded-lg py-2.5 mb-6 hover:bg-[#7c3aed] transition-colors"
+                className="w-full bg-blue-600 text-white rounded-lg py-2.5 mb-6 hover:bg-blue-700 transition-colors"
               >
-                Get Started Yearly
+                Contact Sales
               </button>
               <ul className="space-y-4">
                 <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  Full Platform Access
+                  Everything in Pro
                 </li>
                 <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  Up to 10 data sources
+                  Custom API integration
                 </li>
                 <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  Up to 3 workspaces
+                  Support ticket integration
                 </li>
                 <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  5 team members
+                  Custom data sources
                 </li>
                 <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  24/7 Support
+                  Dedicated account manager
                 </li>
                 <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
-                  Money back guarantee
+                  Custom SLA
                 </li>
               </ul>
             </div>
