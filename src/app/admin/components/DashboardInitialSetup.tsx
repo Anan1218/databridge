@@ -1,10 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
-import { MdStorage, MdIntegrationInstructions } from 'react-icons/md';
+import { MdStorage, MdCode } from 'react-icons/md';
 
-export default function DashboardInitialSetup() {
+interface DashboardInitialSetupProps {
+  onCustomIntegrationClick: (e: React.MouseEvent) => void;
+}
+
+export default function DashboardInitialSetup({ onCustomIntegrationClick }: DashboardInitialSetupProps) {
   return (
-    <div className="max-w-xl mx-auto w-full">
+    <div className="max-w-xl mx-auto w-full space-y-6">
       {/* Browse Integrated Data Sources Card */}
       <Link href="/admin/integrated" className="group block">
         <div className="bg-white rounded-xl p-8 border border-gray-200 hover:border-blue-500 transition-all duration-300 h-full flex flex-col">
@@ -19,6 +23,21 @@ export default function DashboardInitialSetup() {
           </div>
         </div>
       </Link>
+
+      {/* Custom Integration Card */}
+      <button onClick={onCustomIntegrationClick} className="w-full">
+        <div className="bg-white rounded-xl p-8 border border-gray-200 hover:border-blue-500 transition-all duration-300 h-full flex flex-col">
+          <div className="flex-1">
+            <div className="bg-blue-50 w-12 h-12 rounded-lg flex items-center justify-center mb-6">
+              <MdCode className="w-6 h-6 text-blue-600" />
+            </div>
+            <h3 className="text-2xl font-bold mb-4 text-black">Custom Integration</h3>
+            <p className="text-black mb-6">
+              Connect your own data source or API to create custom dashboards and visualizations.
+            </p>
+          </div>
+        </div>
+      </button>
     </div>
   );
 }

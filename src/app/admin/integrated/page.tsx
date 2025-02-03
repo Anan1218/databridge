@@ -5,7 +5,6 @@ import { FaYelp, FaReddit, FaLinkedin, FaProductHunt, FaYoutube } from "react-ic
 import { SiUpwork, SiFiverr } from "react-icons/si";
 import { MdArrowBack } from "react-icons/md";
 import Link from "next/link";
-import Image from "next/image";
 
 interface DataSource {
   id: string;

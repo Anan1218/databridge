@@ -1,4 +1,4 @@
-import { MdClose, MdCalendarToday, MdShowChart, MdTextFields } from "react-icons/md";
+import { MdClose, MdTextFields } from "react-icons/md";
 import { DashboardType } from '@/types/workspace';
 import Link from 'next/link';
 

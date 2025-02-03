@@ -3,7 +3,7 @@
 import { useAuthContext } from '@/contexts/AuthContext';
 
 export default function BillingPage() {
-  const { userData } = useAuthContext();
+  useAuthContext();
 
   return (
     <div id="pricing" className="bg-white py-10">

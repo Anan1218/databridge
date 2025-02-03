@@ -32,6 +32,7 @@ export interface Dashboard {
     [key: string]: any;  // Custom settings specific to each dashboard type
   };
   position?: number;  // Optional position for ordering
+  leads?: Lead[];  // For leads_table type dashboards
   createdAt: Date;
   updatedAt: Date;
 }
@@ -53,4 +54,10 @@ export interface Event {
   start: Date;
   end: Date;
   // include any additional fields as needed
+}
+
+export interface Lead {
+  website: string;
+  summary: string;
+  hasPurchaseIntent: boolean;
 }

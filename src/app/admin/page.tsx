@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { Workspace } from "@/types/workspace";
 import DashboardList from "./components/DashboardList";
@@ -60,14 +60,11 @@ export default function AdminDashboard() {
   }, [fetchWorkspaceData]);
 
   const handleDelete = async (dashboardId: string) => {
-    if (!selectedWorkspace?.id) return;
     try {
-      const updatedDashboards = dashboards.filter(d => d.id !== dashboardId);
-      const workspaceRef = doc(db, "workspaces", selectedWorkspace.id);
-      await updateDoc(workspaceRef, {
-        dashboards: updatedDashboards,
-        updatedAt: new Date()
+      await fetch(`/api/workspaces/${selectedWorkspace?.id}/dashboards/${dashboardId}`, {
+        method: "DELETE",
       });
+      const updatedDashboards = selectedWorkspace?.dashboards?.filter((d) => d.id !== dashboardId) ?? [];
       setSelectedWorkspace(prev => (prev ? { ...prev, dashboards: updatedDashboards } : null));
       await refreshUserData();
       await fetchWorkspaceData();
@@ -97,16 +94,6 @@ export default function AdminDashboard() {
   return (
     <div className="flex-1">
       <div className="max-w-6xl mx-auto px-4 py-12 text-center">
-        {/* Render initial setup when there are no dashboards */}
-        {!selectedWorkspace?.dashboards?.length && (
-          <>
-            <h1 className="text-3xl font-bold mb-8 text-black">Start Collecting Leads</h1>
-            <p className="text-black mb-12 text-lg">
-              Get started with your data monitoring setup.
-            </p>
-          </>
-        )}
-
         {selectedWorkspace?.dashboards?.length ? (
           <DashboardList
             dashboards={dashboards}
@@ -116,7 +103,10 @@ export default function AdminDashboard() {
             setDashboards={setSelectedWorkspace}
           />
         ) : (
-          <DashboardInitialSetup />
+          <>
+            <h1 className="text-3xl font-bold mb-8 text-black">Start Collecting Leads</h1>
+            <DashboardInitialSetup onCustomIntegrationClick={handleCustomIntegration} />
+          </>
         )}
 
         {dashboardToDelete && (

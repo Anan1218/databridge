@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Dashboard } from '@/types/workspace';
 import { MdDelete, MdSettings, MdEdit, MdCheck, MdDownload } from 'react-icons/md';
-import EventCalendar from './EventCalendar';
 import { LeadMonitoringTable } from './leads/LeadMonitoringTable';
 
 interface DashboardCardProps {
