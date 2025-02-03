@@ -1,7 +1,8 @@
 "use client";
 
 import { useAuthContext } from "@/contexts/AuthContext";
-import { FaYelp, FaTicketAlt } from "react-icons/fa";
+import { FaYelp, FaReddit, FaLinkedin, FaProductHunt, FaYoutube } from "react-icons/fa";
+import { SiUpwork, SiFiverr } from "react-icons/si";
 import { MdArrowBack } from "react-icons/md";
 import Link from "next/link";
 import Image from "next/image";
@@ -22,32 +23,45 @@ export default function IntegratedPage() {
 
   const dataSources: DataSource[] = [
     {
-      id: 'ticketmaster',
-      name: 'Ticketmaster',
-      icon: <FaTicketAlt className="w-8 h-8 text-blue-500" />,
+      id: 'reddit',
+      name: 'Reddit',
+      icon: <FaReddit className="w-8 h-8 text-orange-500" />,
       status: 'available',
     },
     {
-      id: 'uc-berkeley-sports',
-      name: 'UC Berkeley Sports',
-      icon: <Image src="/datasource-icons/uc-berkeley.svg" alt="UC Berkeley Sports" width={32} height={32} />,
+      id: 'linkedin',
+      name: 'LinkedIn',
+      icon: <FaLinkedin className="w-8 h-8 text-blue-600" />,
       status: 'available',
     },
     {
-      id: 'google-business',
-      name: 'Google Business',
-      icon: <svg className="w-8 h-8 text-blue-500" viewBox="0 0 48 48">
-              <path fill="#4285F4" d="M24 9.5c3.9 0 6.6 1.7 8.1 3.1l5.9-5.9C34.4 3.1 29.7 1 24 1 14.7 1 6.9 6.9 3.5 15.4l6.9 5.4C12.1 14.1 17.5 9.5 24 9.5z"/>
-              <path fill="#34A853" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3.1-2.4 5.7-5 7.4l7.7 6C43.1 38.1 46.5 31.8 46.5 24.5z"/>
-              <path fill="#FBBC05" d="M10.4 28.8c-1-3.1-1-6.5 0-9.6L3.5 13.8C-1.2 22.1-1.2 33.9 3.5 42.2l6.9-5.4z"/>
-              <path fill="#EA4335" d="M24 46.5c5.7 0 10.4-1.9 13.9-5.1l-7.7-6c-2.1 1.4-4.7 2.2-7.4 2.2-6.5 0-12-4.6-13.9-10.8l-6.9 5.4C6.9 41.1 14.7 46.5 24 46.5z"/>
-            </svg>,
+      id: 'producthunt',
+      name: 'Product Hunt',
+      icon: <FaProductHunt className="w-8 h-8 text-orange-600" />,
+      status: 'coming_soon',
+    },
+    {
+      id: 'fiverr',
+      name: 'Fiverr',
+      icon: <SiFiverr className="w-8 h-8 text-green-500" />,
       status: 'coming_soon',
     },
     {
       id: 'yelp',
       name: 'Yelp',
       icon: <FaYelp className="w-8 h-8 text-red-500" />,
+      status: 'coming_soon',
+    },
+    {
+      id: 'youtube',
+      name: 'YouTube',
+      icon: <FaYoutube className="w-8 h-8 text-red-600" />,
+      status: 'coming_soon',
+    },
+    {
+      id: 'upwork',
+      name: 'UpWork',
+      icon: <SiUpwork className="w-8 h-8 text-green-600" />,
       status: 'coming_soon',
     },
   ];

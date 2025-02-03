@@ -100,9 +100,9 @@ export default function AdminDashboard() {
         {/* Render initial setup when there are no dashboards */}
         {!selectedWorkspace?.dashboards?.length && (
           <>
-            <h1 className="text-3xl font-bold mb-8 text-black">Build Your Dashboard</h1>
+            <h1 className="text-3xl font-bold mb-8 text-black">Start Collecting Leads</h1>
             <p className="text-black mb-12 text-lg">
-              Select a category below to get started with your data monitoring setup.
+              Get started with your data monitoring setup.
             </p>
           </>
         )}
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
             setDashboards={setSelectedWorkspace}
           />
         ) : (
-          <DashboardInitialSetup handleCustomIntegration={handleCustomIntegration} />
+          <DashboardInitialSetup />
         )}
 
         {dashboardToDelete && (
