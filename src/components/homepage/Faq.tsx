@@ -8,24 +8,24 @@ interface FaqProps {
 export function Faq({ openModal }: FaqProps) {
   const faqs = [
     {
-      question: "How does the AI data extraction work?",
-      answer: "Our AI system uses advanced natural language processing to extract key information from documents, websites, and databases. It can handle structured and unstructured data with high accuracy.",
+      question: "How does the lead generation work?",
+      answer: "Our AI agents actively monitor social media platforms to find quality leads based on contextual information. They analyze conversations and posts to identify potential customers with specific needs, then categorize and prioritize them for your business.",
     },
     {
-      question: "What types of data sources can I connect?",
-      answer: "You can connect to 550+ data sources including financial filings, market research databases, CRM systems, and public web sources. Our system supports APIs, web scraping, and direct integrations.",
+      question: "What kind of market research can I conduct?",
+      answer: "You can track customer reviews, pricing trends, competitor analysis, and industry news across multiple sources. Our platform provides real-time insights into your market position and helps you stay ahead of industry trends.",
     },
     {
-      question: "How accurate is the data analysis?",
-      answer: "Our AI achieves 95%+ accuracy in data extraction and analysis. The system continuously learns and improves through machine learning models trained on millions of data points.",
+      question: "What data sources can I integrate with?",
+      answer: "Our platform offers seamless integration with a variety of data sources. Whether you need social media data, market research databases, or custom data sources, our system supports multiple integration methods to ensure you have all the information you need.",
     },
     {
-      question: "Can I automate workflows with the platform?",
-      answer: "Yes, you can create automated workflows for data collection, analysis, and reporting. Set up triggers and actions to streamline your data processes.",
+      question: "How does team collaboration work?",
+      answer: "Multiple team members can access shared workspaces, collaborate on analysis, and make data-driven decisions together. You can manage permissions, share insights, and work collectively on projects, making it perfect for businesses of all sizes.",
     },
     {
-      question: "How quickly can I get started?",
-      answer: "Most users can set up their first data pipeline within 15 minutes. Our intuitive interface and pre-built templates make it easy to start extracting and analyzing data immediately.",
+      question: "What kind of support do you offer?",
+      answer: "We provide 24/7 customer support to assist you with any issues or questions. Our dedicated support team is available around the clock, and Enterprise customers get additional benefits like a dedicated account manager and custom SLA.",
     },
   ];
 
