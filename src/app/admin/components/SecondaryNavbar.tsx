@@ -247,7 +247,7 @@ export default function SecondaryNavbar({
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700"
             >
               <MdAdd className="w-5 h-5" />
-              New Dashboard
+              New Leads Collection
             </button>
           </div>
         </div>

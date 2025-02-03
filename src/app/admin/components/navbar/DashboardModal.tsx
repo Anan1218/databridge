@@ -10,24 +10,10 @@ interface DashboardModalProps {
 
 const dashboardTypes = [
   {
-    id: 'calendar' as DashboardType,
-    name: 'Calendar View',
-    description: 'Add an event calendar to track and display upcoming events',
-    icon: <MdCalendarToday className="w-6 h-6 text-purple-600" />,
-  },
-  {
-    id: 'graph' as DashboardType,
-    name: 'Data Graph',
-    description: 'Visualize your data with customizable charts and graphs',
-    icon: <MdShowChart className="w-6 h-6 text-gray-400" />,
-    disabled: true,
-  },
-  {
-    id: 'text' as DashboardType,
-    name: 'Summary Widget',
-    description: 'Add custom content to your dashboard',
-    icon: <MdTextFields className="w-6 h-6 text-gray-400" />,
-    disabled: true,
+    id: 'leads_table' as DashboardType,
+    name: 'Leads Table',
+    description: 'View and manage your leads in a customizable table format',
+    icon: <MdTextFields className="w-6 h-6 text-purple-600" />,
   }
 ];
 
@@ -46,7 +32,7 @@ export default function DashboardModal({
         <div className="relative mx-auto max-w-md rounded-xl bg-white p-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-black">
-              Add New Dashboard Component
+              Add New Leads Collection
             </h2>
             <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
               <MdClose className="w-6 h-6" />
