@@ -94,7 +94,8 @@ export function Hero({ openModal }: HeroProps) {
           <div className="flex items-center justify-center gap-2 whitespace-nowrap mb-8">
             <div
               key={currentWord}
-              className={`${colors[currentWord]} overflow-hidden lg:mr-2 min-w-[80px] sm:min-w-[120px] text-center flex justify-center`}
+              className={`${colors[currentWord]} lg:mr-2 min-w-[80px] sm:min-w-[120px] text-center flex justify-center`}
+              style={{ padding: '4px 0' }}
             >
               {renderStaggeredWord(words[currentWord])}
             </div>
