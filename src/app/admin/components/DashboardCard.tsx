@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Dashboard } from '@/types/workspace';
-import { MdDelete, MdSettings, MdEdit, MdCheck } from 'react-icons/md';
+import { MdDelete, MdSettings, MdEdit, MdCheck, MdDownload } from 'react-icons/md';
 import EventCalendar from './EventCalendar';
 import { LeadMonitoringTable } from './leads/LeadMonitoringTable';
 
@@ -32,7 +32,7 @@ export default function DashboardCard({
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 w-full">
       <div className="flex justify-between items-start mb-4">
-        <div>
+        <div className="flex items-center gap-4">
           {isRenaming ? (
             <div className="flex items-center gap-2">
               <input
@@ -50,7 +50,18 @@ export default function DashboardCard({
               </button>
             </div>
           ) : (
-            <h3 className="text-lg font-semibold text-gray-900">{dashboard.title}</h3>
+            <>
+              <h3 className="text-lg font-semibold text-gray-900">{dashboard.title}</h3>
+              {dashboard.type === 'leads_table' && (
+                <button
+                  className="flex items-center gap-1 px-2 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+                  title="Download CSV"
+                >
+                  <MdDownload className="w-4 h-4" />
+                  <span>CSV</span>
+                </button>
+              )}
+            </>
           )}
         </div>
         {isEditing && (
