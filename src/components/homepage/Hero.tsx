@@ -4,12 +4,12 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const words = ['extract', 'monitor'];
+const words = ['find', 'monitor', 'analyze'];
 
 const colors = [
-  'text-[#ca16a1]',  // Pink (Analytics)
-  'text-[#a055cf]',  // Purple (Insights)
-  // 'text-[#43a868]',  // Green (Predictions)
+  'text-[#ca16a1]',
+  'text-[#a055cf]',
+  'text-[#43a868]',
   // 'text-[#468de3]'   // Blue (Performance)
 ];
 
@@ -99,7 +99,7 @@ export function Hero({ openModal }: HeroProps) {
             >
               {renderStaggeredWord(words[currentWord])}
             </div>
-            <span className="text-center">web data with AI</span>
+            <span className="text-center">customers with AI</span>
           </div>
         </h1>
         
@@ -137,8 +137,7 @@ export function Hero({ openModal }: HeroProps) {
         `}</style>
         
         <p className="text-base text-gray-600 leading-relaxed animate-fade-in max-w-[660px] mx-auto mb-4 text-center">
-          Automate workflows for <span className="font-semibold">data extraction</span> & <span className="font-semibold">lead generation</span> with AI agents. 
-          Find what customers are saying about you online for engagement opportunities and analysis.
+          Our AI agents scan the web 24/7 to find valuable leads, insights, and customer conversations—so you don't have to. Automate data extraction and stay ahead effortlessly.
         </p>
 
         <div className="flex gap-3 justify-center mb-12 mt-8">

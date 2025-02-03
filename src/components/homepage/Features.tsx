@@ -172,7 +172,7 @@ export function Features({ openModal }: FeaturesProps) {
                 <div className="h-60 relative">
                   <Image 
                     src="/features/data-extraction.png"
-                    alt="Market Research"
+                    alt="Data Monitoring"
                     width={600}
                     height={400}
                     className="w-full h-full object-contain"
