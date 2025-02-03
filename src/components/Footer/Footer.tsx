@@ -28,11 +28,11 @@ export default function Footer() {
           {/* Logo and Copyright */}
           <div className="col-span-2 md:col-span-1 flex flex-col items-center">
             <Link href="/" className="flex items-center gap-2">
-              <Image src="/databridgelogo.png" alt="DataBridge" width={32} height={32} />
-              <span className="text-gray-900 font-semibold">DataBridge</span>
+              <Image src="/prospectailogo.png" alt="ProspectAI" width={32} height={32} />
+              <span className="text-gray-900 font-semibold">ProspectAI</span>
             </Link>
             <p className="mt-4 text-sm text-gray-500">
-              © {currentYear} DataBridge.
+              © {currentYear} ProspectAI.
               <br />
               All rights reserved.
             </p>

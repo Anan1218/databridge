@@ -65,13 +65,13 @@ export default function AdminNavbar() {
           <div className="flex items-center">
             <Link href="/admin" className="flex items-center">
               <Image
-                src="/databridgelogo.png"
+                src="/prospectailogo.png"
                 alt="Logo"
                 width={32}
                 height={32}
                 className="mr-4"
               />
-              <span className="text-white text-lg font-semibold mr-8">DataBridge</span>
+              <span className="text-white text-lg font-semibold mr-8">ProspectAI</span>
             </Link>
             <div className="flex space-x-4">
               {navItems.map((item, index) => (

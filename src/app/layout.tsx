@@ -3,11 +3,11 @@ import "./globals.css";
 import { AuthContextProvider } from '@/contexts/AuthContext';
 
 export const metadata: Metadata = {
-  title: "DataBridge",
+  title: "ProspectAI",
   description: "Connect, monitor, and analyze data with AI",
   icons: {
-    icon: '/databridgelogo.png',
-    apple: '/databridgelogo.png',
+    icon: '/prospectailogo.png',
+    apple: '/prospectailogo.png',
   },
 };
 

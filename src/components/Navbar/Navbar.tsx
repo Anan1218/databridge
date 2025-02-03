@@ -41,8 +41,8 @@ export default function Navbar() {
         <div className="container mx-auto px-4 sm:px-[6rem]">
           <div className="flex justify-between h-16 items-center">
             <Link href="/" className="flex items-center gap-2">
-              <Image src="/databridgelogo.png" alt="DataBridge" width={32} height={32} />
-              <span className="text-gray-900 font-semibold text-lg">DataBridge</span>
+              <Image src="/prospectailogo.png" alt="ProspectAI" width={32} height={32} />
+              <span className="text-gray-900 font-semibold text-lg">ProspectAI</span>
             </Link>
 
             {/* Mobile Menu Button */}
