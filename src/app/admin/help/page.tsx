@@ -19,7 +19,7 @@ export default function HelpPage() {
     {
       id: 'getting-started',
       title: 'Getting Started',
-      description: 'Learn the basics of setting up and using DataBridge',
+      description: 'Learn the basics of setting up and using ProspectAI',
       icon: <MdOutlineHelp className="w-6 h-6 text-purple-600" />,
       articles: [
         {

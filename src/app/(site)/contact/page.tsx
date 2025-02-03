@@ -136,7 +136,7 @@ export default function ContactPage() {
         {/* Contact Information */}
         <div className="mt-12 text-center">
           <p className="text-gray-600 mb-4">
-            You can also reach us at <a href="mailto:support@databridge.com" className="text-indigo-600 hover:text-indigo-500">support@databridge.com</a>
+            You can also reach us at <a href="mailto:support@withprospect.com" className="text-indigo-600 hover:text-indigo-500">support@withprospect.com</a>
           </p>
           <p className="text-sm text-gray-500">
             We'll get back to you within 24 hours.
