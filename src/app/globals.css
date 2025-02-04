@@ -208,3 +208,24 @@ body {
   transform: translateY(-2px);
   transition: transform 0.2s ease;
 }
+
+.pause-animation {
+  animation-play-state: paused;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50%));
+  }
+}
+
+.animate-scroll {
+  animation: scroll 8s linear infinite;
+}
