@@ -23,8 +23,8 @@ export async function POST(req: Request) {
     `;
 
     const { data, error } = await resend.emails.send({
-      from: 'Your Website Contact <contact@yourdomain.com>',
-      to: process.env.CONTACT_FORM_RECIPIENT || 'your@email.com',
+      from: 'Your Website Contact <anish@withprospect.com>',
+      to: 'anish@withprospect.com',
       subject: 'New Contact Form Submission',
       text: emailContent,
       html: emailHtml,

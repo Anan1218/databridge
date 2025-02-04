@@ -28,8 +28,8 @@ Average Contract Value: ${body.averageContractValue}`;
       <p><strong>Average Contract Value:</strong> ${body.averageContractValue}</p>`;
 
     const { error } = await resend.emails.send({
-      from: 'ProspectAI Demo Request <demo@yourdomain.com>',
-      to: process.env.DEMO_REQUEST_RECIPIENT || 'demo@yourdomain.com',
+      from: 'ProspectAI Demo Request <anish@withprospect.com>',
+      to: 'anish@withprospect.com',
       subject: 'New Book Demo Request',
       text: emailContent,
       html: emailHtml,
