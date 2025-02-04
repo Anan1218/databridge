@@ -153,7 +153,9 @@ export default function BookDemoPage() {
             name="companyWebsite"
             value={formData.companyWebsite}
             onChange={handleChange}
-            placeholder="www.yourcompany.com"
+            placeholder="https://www.yourcompany.com"
+            pattern="(https?:\/\/)?(www\.)?[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,}"
+            title="Please enter a valid URL. For example, https://www.yourcompany.com"
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
           />
         </div>
