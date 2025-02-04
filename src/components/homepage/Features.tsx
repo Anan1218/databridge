@@ -277,48 +277,7 @@ export function Features({ openModal }: FeaturesProps) {
             <p className="text-neutral-700 mt-2 font-normal">Choose the plan that works best for you</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {/* Starter Plan */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-200 transform transition-all duration-300 hover:scale-105 hover:shadow-lg">
-              <h3 className="text-xl font-semibold mb-2">Starter</h3>
-              <div className="flex items-baseline gap-1 mb-4">
-                <span className="text-gray-600">Contact us for pricing</span>
-              </div>
-              <p className="text-gray-600 text-sm mb-6">Perfect for small teams</p>
-              <button 
-                onClick={openModal}
-                className="w-full bg-[#8b5cf6] text-white rounded-lg py-2.5 mb-6 hover:bg-[#7c3aed] transition-colors"
-              >
-                Contact Sales
-              </button>
-              <ul className="space-y-4">
-                <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  Basic lead generation
-                </li>
-                <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  Up to 5 data sources
-                </li>
-                <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  1 workspace
-                </li>
-                <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  Email support
-                </li>
-              </ul>
-            </div>
-
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {/* Pro Plan */}
             <div className="bg-[#faf5ff] rounded-2xl p-6 border-[1px] border-[#8b5cf6] relative transform transition-all duration-300 hover:scale-105 hover:shadow-lg">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#8b5cf6] text-white px-3 py-1 rounded-full text-sm">
@@ -341,12 +300,6 @@ export function Features({ openModal }: FeaturesProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                   Advanced lead generation
-                </li>
-                <li className="flex items-center gap-2 text-sm">
-                  <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  Autorespond to leads
                 </li>
                 <li className="flex items-center gap-2 text-sm">
                   <svg className="w-5 h-5 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
