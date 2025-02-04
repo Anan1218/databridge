@@ -29,6 +29,7 @@
     "react-qr-code": "^2.0.15",
     "react-qr-reader-es6": "^2.2.1-2",
     "recharts": "^2.15.0",
+    "resend": "^4.1.2",
     "stripe": "^17.5.0",
     "twilio": "^5.3.7",
     "xlsx": "^0.18.5"
