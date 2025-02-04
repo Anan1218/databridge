@@ -77,12 +77,12 @@ export function Faq({ openModal }: FaqProps) {
           >
             Book Demo
           </Link>
-          <Link 
-            href="/contact" 
+          <button
+            onClick={openModal}
             className="inline-block border border-[#d5d4d4] text-[#000000] hover:bg-[#8b5cf6]/5 px-4 py-2.5 rounded-lg font-normal transition-all hover:scale-105"
           >
-            Contact
-          </Link>
+            Login
+          </button>
         </div>
       </div>
     </div>
