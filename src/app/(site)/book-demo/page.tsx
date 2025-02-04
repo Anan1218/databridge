@@ -13,6 +13,9 @@ export default function BookDemoPage() {
     targetCustomer: '',
     averageContractValue: '',
   });
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -23,26 +26,38 @@ export default function BookDemoPage() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Here you could add logic to send formData to an API
-    console.log('Form Data:', formData);
-    alert(
-      "Thank you for requesting a demo. We'll be in touch shortly!"
-    );
-
-    // Optionally, reset the form
-    setFormData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      companyName: '',
-      companyWebsite: '',
-      companyDescription: '',
-      targetCustomer: '',
-      averageContractValue: '',
-    });
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch('/api/email/book-demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to send demo request');
+      }
+  
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Error sending demo request:', error);
+      alert('There was an error submitting your demo request. Please try again later.');
+    }
+    
+    setIsSubmitting(false);
   };
+
+  if (submitted) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-8 text-center">
+        <h1 className="text-3xl font-bold mb-4">Thank You!</h1>
+        <p>Your demo request has been sent. We'll be in touch shortly!</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
@@ -196,9 +211,10 @@ export default function BookDemoPage() {
         <div>
           <button
             type="submit"
+            disabled={isSubmitting}
             className="w-full bg-[#974eea] text-white px-4 py-2 rounded-lg hover:bg-[#8b5cf6] transition-colors"
           >
-            Request Demo
+            {isSubmitting ? 'Requesting...' : 'Request Demo'}
           </button>
         </div>
       </form>
