@@ -218,14 +218,14 @@ body {
 }
 
 @keyframes scroll {
-  from {
+  0% {
     transform: translateX(0);
   }
-  to {
-    transform: translateX(calc(-50%));
+  100% {
+    transform: translateX(calc(-280px * 4 - 24px * 4)); /* Width of 4 cards + 4 gaps */
   }
 }
 
 .animate-scroll {
-  animation: scroll 8s linear infinite;
+  animation: scroll 20s linear infinite;
 }
