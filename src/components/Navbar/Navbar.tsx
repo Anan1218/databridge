@@ -76,12 +76,19 @@ export default function Navbar() {
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={() => setIsLoginModalOpen(true)}
+                // Temporarily disable Sign In button, replaced with Book Demo button
+                // <button
+                //   onClick={() => setIsLoginModalOpen(true)}
+                //   className="bg-[#974eea] text-white px-3.5 py-2 rounded-lg hover:bg-[#8b5cf6] transition-all"
+                // >
+                //   Sign In
+                // </button>
+                <Link
+                  href="/book-demo"
                   className="bg-[#974eea] text-white px-3.5 py-2 rounded-lg hover:bg-[#8b5cf6] transition-all"
                 >
-                  Live Demo
-                </button>
+                  Book Demo
+                </Link>
               )}
             </div>
           </div>
@@ -106,12 +113,18 @@ export default function Navbar() {
                 </div>
               ) : (
                 <div className="px-4 py-2">
-                  <button
+                  {/* <button
                     onClick={() => setIsLoginModalOpen(true)}
                     className="bg-[#974eea] text-white px-3.5 py-2 rounded-lg hover:bg-[#8b5cf6] transition-all w-full"
                   >
-                    Live Demo
-                  </button>
+                    Sign In
+                  </button> */}
+                  <Link
+                    href="/book-demo"
+                    className="bg-[#974eea] text-white px-3.5 py-2 rounded-lg hover:bg-[#8b5cf6] transition-all w-full text-center"
+                  >
+                    Book Demo
+                  </Link>
                 </div>
               )}
             </div>

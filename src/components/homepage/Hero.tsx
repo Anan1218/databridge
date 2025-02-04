@@ -88,7 +88,7 @@ export function Hero({ openModal }: HeroProps) {
     <div className="relative" ref={containerRef}>
       <div className="flex flex-col items-center max-w-3xl mx-auto">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 flex flex-col gap-2">
-          <div className="flex items-center justify-center gap-2 whitespace-nowrap">
+          <div className="flex items-center justify-center gap-2 whitespace-nowrap mt-12">
             <span className="text-center">The best way to</span>
           </div>
           <div className="flex items-center justify-center gap-2 whitespace-nowrap mb-8">
