@@ -16,7 +16,8 @@ interface HeroProps {
   openModal: () => void;
 }
 
-export function Hero({ openModal }: HeroProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Hero({ openModal: _openModal }: HeroProps) {
   const [currentWord, setCurrentWord] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
   const [scrollY, setScrollY] = useState(0);
@@ -147,12 +148,12 @@ export function Hero({ openModal }: HeroProps) {
           >
             Book Demo
           </Link>
-          <button
-            onClick={openModal}
+          <Link
+            href="/contact"
             className="inline-block border border-[#d5d4d4] text-[#000000] hover:bg-[#8b5cf6]/5 px-4 py-2.5 rounded-lg font-normal transition-all hover:scale-105"
           >
-            Login
-          </button>
+            Contact Us
+          </Link>
         </div>
       </div>
       

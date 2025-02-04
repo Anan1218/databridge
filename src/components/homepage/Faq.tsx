@@ -6,7 +6,8 @@ interface FaqProps {
   openModal: () => void;
 }
 
-export function Faq({ openModal }: FaqProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Faq({ openModal: _openModal }: FaqProps) {
   const faqs = [
     {
       question: "How does the lead generation work?",
@@ -77,12 +78,12 @@ export function Faq({ openModal }: FaqProps) {
           >
             Book Demo
           </Link>
-          <button
-            onClick={openModal}
+          <Link
+            href="/contact"
             className="inline-block border border-[#d5d4d4] text-[#000000] hover:bg-[#8b5cf6]/5 px-4 py-2.5 rounded-lg font-normal transition-all hover:scale-105"
           >
-            Login
-          </button>
+            Contact Us
+          </Link>
         </div>
       </div>
     </div>
