@@ -17,11 +17,23 @@ export default function ContactPage() {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Here you would typically send this data to your backend
-    // For now, we'll just simulate a submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+  
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      // You might want to inform the user of the error here
+    }
     
-    setSubmitted(true);
     setIsSubmitting(false);
   };
 
@@ -96,7 +108,7 @@ export default function ContactPage() {
                 />
               </div>
               <div>
-                <label htmlFor="venueName" className="form-label">Venue Name</label>
+                <label htmlFor="venueName" className="form-label">Company Name</label>
                 <input
                   type="text"
                   id="venueName"
