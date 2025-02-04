@@ -1,5 +1,6 @@
 "use client";
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface FaqProps {
   openModal: () => void;
@@ -63,25 +64,25 @@ export function Faq({ openModal }: FaqProps) {
         ))}
       </div>
 
-      {/* Start Building Section */}
+      {/* Generate Leads Section */}
       <div className="mt-[3.2rem] -mb-4 text-center relative bg-[#ffffff] rounded-2xl">
-        <h2 className="text-[2rem] font-medium text-gray-900 mb-1">Start building today</h2>
+        <h2 className="text-[2rem] font-medium text-gray-900 mb-1">Generate Quality Leads Today</h2>
         <p className="text-[1.05rem] leading-relaxed text-[#4b5563] mb-4 max-w-2xl mx-auto">
-          Create and customize your perfect dashboard with ease, tailored to your needs.
+          Harness our AI-powered insights to identify, engage, and convert promising leads effortlessly.
         </p>
         <div className="flex gap-3 justify-center">
-          <button 
-            onClick={openModal}
-            className="inline-block bg-[#974eea] text-white px-3.5 py-2.5 rounded-lg font-normal text-[0.95rem] transition-all hover:bg-[#8b5cf6] hover:shadow-[0_0_45px_12px_rgba(167,139,250,0.35)]"
+          <Link
+            href="/book-demo"
+            className="inline-block bg-[#974eea] text-white px-5 py-2.5 rounded-lg font-normal transition-all hover:bg-[#8b5cf6] hover:shadow-[0_0_45px_12px_rgba(167,139,250,0.35)]"
           >
-            Get Started
-          </button>
-          <button 
-            onClick={openModal}
-            className="inline-block bg-white border border-gray-300 text-[#374151] px-3.5 py-2.5 rounded-lg font-normal text-[0.95rem] transition-all hover:bg-gray-50"
+            Book Demo
+          </Link>
+          <Link 
+            href="/contact" 
+            className="inline-block border border-[#d5d4d4] text-[#000000] hover:bg-[#8b5cf6]/5 px-4 py-2.5 rounded-lg font-normal transition-all hover:scale-105"
           >
-            Live Demo
-          </button>
+            Contact
+          </Link>
         </div>
       </div>
     </div>

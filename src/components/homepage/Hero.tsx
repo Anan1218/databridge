@@ -141,17 +141,17 @@ export function Hero({ openModal }: HeroProps) {
         </p>
 
         <div className="flex gap-3 justify-center mb-12 mt-8">
-          <button 
-            onClick={openModal}
+          <Link
+            href="/book-demo"
             className="inline-block bg-[#974eea] text-white px-5 py-2.5 rounded-lg font-normal transition-all hover:bg-[#8b5cf6] hover:shadow-[0_0_45px_12px_rgba(167,139,250,0.35)]"
           >
-            Get Started
-          </button>
+            Book Demo
+          </Link>
           <Link 
             href="/contact" 
             className="inline-block border border-[#d5d4d4] text-[#000000] hover:bg-[#8b5cf6]/5 px-4 py-2.5 rounded-lg font-normal transition-all hover:scale-105"
           >
-            Live Demo
+            Contact
           </Link>
         </div>
       </div>
