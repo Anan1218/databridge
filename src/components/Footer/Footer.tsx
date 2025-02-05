@@ -11,12 +11,14 @@ export default function Footer() {
       title: 'Help',
       links: [
         { name: 'Contact', href: '/contact' },
+        { name: 'Book Demo', href: '/book-demo' },
       ],
     },
-    socials: {
-      title: 'Connect',
+    legal: {
+      title: 'Legal',
       links: [
-        { name: 'Discord', href: 'https://discord.gg/xHz98f8T', icon: <FaDiscord className="w-5 h-5" /> },
+        { name: 'Terms of Service', href: '/terms' },
+        { name: 'Privacy Policy', href: '/privacy' },
       ],
     },
   };
@@ -52,36 +54,18 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Social Links */}
+          {/* Legal Links */}
           <div className="flex flex-col items-center">
-            <h3 className="text-gray-900 font-semibold mb-4">{sections.socials.title}</h3>
+            <h3 className="text-gray-900 font-semibold mb-4">{sections.legal.title}</h3>
             <ul className="space-y-3">
-              {sections.socials.links.map((link) => (
+              {sections.legal.links.map((link) => (
                 <li key={link.name}>
-                  <Link 
-                    href={link.href}
-                    className="flex items-center gap-2 text-gray-600 hover:text-[#8b5cf6] text-sm"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {link.icon}
+                  <Link href={link.href} className="text-gray-600 hover:text-[#8b5cf6] text-sm">
                     {link.name}
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
-
-        {/* Bottom Links */}
-        <div className="mt-8 pt-8 border-t border-gray-200">
-          <div className="flex justify-center items-center gap-4">
-            <Link href="/terms" className="text-sm text-gray-500 hover:text-[#8b5cf6]">
-              Terms of Service
-            </Link>
-            <Link href="/privacy" className="text-sm text-gray-500 hover:text-[#8b5cf6]">
-              Privacy Policy
-            </Link>
           </div>
         </div>
       </div>
