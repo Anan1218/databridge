@@ -1,9 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/contexts/AuthContext";
-import { FirebaseError } from "firebase/app";
 
 interface LoginModalProps {
   isOpen: boolean;
