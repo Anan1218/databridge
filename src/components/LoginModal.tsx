@@ -11,52 +11,41 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const { signIn } = useAuthContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
-  const router = useRouter();
-  const { signIn, signUp } = useAuthContext();
-
-  if (!isOpen) return null;
-
-  const getErrorMessage = (error: FirebaseError) => {
-    switch (error.code) {
-      case "auth/email-already-in-use":
-        return "An account with this email already exists";
-      case "auth/weak-password":
-        return "Password should be at least 6 characters";
-      case "auth/invalid-email":
-        return "Invalid email address";
-      case "auth/invalid-credential":
-        return "Invalid email or password";
-      default:
-        return "An error occurred. Please try again";
-    }
-  };
+  const [error, setError] = useState<string | JSX.Element>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
-      if (isSignUp) {
-        await signUp(email, password);
-        onClose();
-        router.push("/admin");
+      await signIn(email, password);
+      onClose();
+    } catch (error: any) {
+      // Check for specific Firebase error codes
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
+        setError(
+          <span>
+            There was an error logging into the admin console. If you don't have an account, please contact us through the{' '}
+            <a 
+              href="https://withprospect.com/book-demo" 
+              className="text-purple-600 hover:text-purple-800 underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              booking page
+            </a>
+          </span>
+        );
       } else {
-        await signIn(email, password);
-        onClose();
-        router.push("/admin");
-      }
-    } catch (err) {
-      if (err instanceof FirebaseError) {
-        setError(getErrorMessage(err));
-      } else {
-        setError("An unexpected error occurred");
+        setError(error.message || "Failed to sign in");
       }
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -81,9 +70,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           </svg>
         </button>
 
-        <h2 className="text-2xl font-bold text-center mb-6">
-          {isSignUp ? "Create Account" : "Sign In"}
-        </h2>
+        <h2 className="text-2xl font-bold text-center mb-6">Admin Sign In</h2>
 
         {error && (
           <div className="bg-red-50 text-red-500 p-3 rounded mb-4">{error}</div>
@@ -122,17 +109,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             type="submit"
             className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700"
           >
-            {isSignUp ? "Sign Up" : "Sign In"}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-purple-600 hover:text-purple-700 text-sm"
-          >
-            {isSignUp
-              ? "Already have an account? Sign in"
-              : "Don't have an account? Sign up"}
+            Sign In
           </button>
         </form>
       </div>

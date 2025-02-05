@@ -21,20 +21,6 @@ export default function Navbar() {
     }
   };
 
-  // const scrollToPricing = (e: React.MouseEvent) => {
-  //   e.preventDefault();
-  //   const pricingSection = document.getElementById('pricing');
-  //   if (pricingSection) {
-  //     const offset = 115; // Adjust this value to control how much higher it stops
-  //     const elementPosition = pricingSection.getBoundingClientRect().top;
-  //     const offsetPosition = elementPosition + window.pageYOffset - offset;
-      
-  //     window.scrollTo({
-  //       top: offsetPosition
-  //     });
-  //   }
-  // };
-
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
       <nav className="backdrop-blur-sm bg-white/80 border-b border-gray-200 transition-colors duration-200">
@@ -76,19 +62,20 @@ export default function Navbar() {
                   </button>
                 </>
               ) : (
-                // Temporarily disable Sign In button, replaced with Book Demo button
-                // <button
-                //   onClick={() => setIsLoginModalOpen(true)}
-                //   className="bg-[#974eea] text-white px-3.5 py-2 rounded-lg hover:bg-[#8b5cf6] transition-all"
-                // >
-                //   Sign In
-                // </button>
-                <Link
-                  href="/book-demo"
-                  className="bg-[#974eea] text-white px-3.5 py-2 rounded-lg hover:bg-[#8b5cf6] transition-all"
-                >
-                  Book Demo
-                </Link>
+                <>
+                  <button
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="bg-[#974eea] text-white px-3.5 py-2 rounded-lg hover:bg-[#8b5cf6] transition-all"
+                  >
+                    Admin Console
+                  </button>
+                  <Link
+                    href="/book-demo"
+                    className="bg-[#974eea] text-white px-3.5 py-2 rounded-lg hover:bg-[#8b5cf6] transition-all"
+                  >
+                    Book Demo
+                  </Link>
+                </>
               )}
             </div>
           </div>
@@ -112,13 +99,13 @@ export default function Navbar() {
                   </button>
                 </div>
               ) : (
-                <div className="px-4 py-2">
-                  {/* <button
+                <div className="px-4 py-2 flex flex-col gap-2">
+                  <button
                     onClick={() => setIsLoginModalOpen(true)}
                     className="bg-[#974eea] text-white px-3.5 py-2 rounded-lg hover:bg-[#8b5cf6] transition-all w-full"
                   >
-                    Sign In
-                  </button> */}
+                    Admin Console
+                  </button>
                   <Link
                     href="/book-demo"
                     className="bg-[#974eea] text-white px-3.5 py-2 rounded-lg hover:bg-[#8b5cf6] transition-all w-full text-center"
