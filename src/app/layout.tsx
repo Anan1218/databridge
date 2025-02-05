@@ -7,8 +7,7 @@ export const metadata: Metadata = {
   title: "ProspectAI",
   description: "The best way to generate leads with AI",
   icons: {
-    icon: '/prospectailogo.png',
-    apple: '/prospectailogo.png',
+    icon: '/favicon.ico',
   },
 };
 
