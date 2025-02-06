@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { MdNotifications } from 'react-icons/md';
 import { useAuthContext } from '@/contexts/AuthContext';
 
