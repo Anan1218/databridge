@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
-import { doc, getDoc, setDoc, collection } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { Workspace, DashboardType } from '@/types/workspace';
 import { useRouter } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
@@ -75,8 +75,8 @@ export default function SecondaryNavbar({
             );
             setWorkspaces(fetchedWorkspaces);
           }
-        } catch (error) {
-          // Handle error if necessary
+        } catch (err) {
+          console.error('Error fetching user workspaces:', err);
         } finally {
           setIsLoading(false);
         }
@@ -86,19 +86,23 @@ export default function SecondaryNavbar({
     }
   }, [user]);
 
-  const handleNewWorkspace = () => {
-    if (!isPremium) {
-      setShowWorkspaceDropdown(false);
-      setIsPremiumModalOpen(true);
-      return;
+  const handleNewWorkspace = async () => {
+    try {
+      if (!isPremium) {
+        setShowWorkspaceDropdown(false);
+        setIsPremiumModalOpen(true);
+        return;
+      }
+      // TODO: Implementation for creating a new workspace
+    } catch (err) {
+      console.error("Error creating workspace:", err);
     }
-    // TODO: Implementation for creating a new workspace
   };
 
   const handleCreateDashboard = async (type: DashboardType) => {
-    if (!contextWorkspace || !contextWorkspace.id) return;
-
     try {
+      if (!contextWorkspace || !contextWorkspace.id) return;
+
       const dashboardId = nanoid();
       const newDashboard = {
         id: dashboardId,
@@ -119,8 +123,8 @@ export default function SecondaryNavbar({
       await refreshUserData();
       refreshDashboards();
       setIsDashboardModalOpen(false);
-    } catch (error) {
-      // Handle error if necessary
+    } catch (err) {
+      console.error("Error creating dashboard:", err);
     }
   };
 

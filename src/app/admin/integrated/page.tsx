@@ -15,6 +15,7 @@ import {
 } from "react-icons/si";
 import { MdArrowBack } from "react-icons/md";
 import Link from "next/link";
+import Image from 'next/image';
 
 interface DataSource {
   id: string;
@@ -40,7 +41,7 @@ export default function IntegratedPage() {
     {
       id: 'craigslist',
       name: 'Craigslist',
-      icon: <img src="/datasource-icons/craigslist.png" alt="Craigslist" className="w-8 h-8" />,
+      icon: <Image src="/datasource-icons/craigslist.png" alt="Craigslist" width={32} height={32} />,
       status: 'available',
     },
     {
@@ -88,7 +89,7 @@ export default function IntegratedPage() {
     {
       id: 'glassdoor',
       name: 'Glassdoor',
-      icon: <img src="/datasource-icons/glassdoor.png" alt="Glassdoor" className="w-8 h-8" />,
+      icon: <Image src="/datasource-icons/glassdoor.png" alt="Glassdoor" width={32} height={32} />,
       status: 'coming_soon',
     },
   ];

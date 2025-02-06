@@ -1,17 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Dashboard } from '@/types/workspace';
 import DataSourceModal from './DataSourceModal';
 import DashboardCard from './DashboardCard';
-import { doc, updateDoc, collection, getDocs, getDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
-import { useAuthContext } from '@/contexts/AuthContext';
-
-type WorkspaceDisplay = {
-  id: string;
-  name: string;
-  role: 'Owner' | 'User';
-};
 
 interface DashboardListProps {
   dashboards: Dashboard[];
@@ -26,39 +19,8 @@ export default function DashboardList({
 }: DashboardListProps) {
   const [selectedDashboard, setSelectedDashboard] = useState<Dashboard | null>(null);
   const [isDataSourceModalOpen, setIsDataSourceModalOpen] = useState(false);
-  const [workspaces, setWorkspaces] = useState<WorkspaceDisplay[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const { selectedWorkspace, setSelectedWorkspace } = useWorkspace();
-  const { user } = useAuthContext();
-
-  useEffect(() => {
-    const fetchWorkspaces = async () => {
-      setIsLoading(true);
-      try {
-        // Adjust the collection path as needed (this example assumes all workspaces are in a top-level "workspaces" collection)
-        const querySnapshot = await getDocs(collection(db, 'workspaces'));
-        const fetchedWorkspaces = querySnapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            name: data.name,
-            // You may need to determine the role based on your data
-            role: data.owner?.uid === user?.uid ? 'Owner' : 'User'
-          };
-        });
-        setWorkspaces(fetchedWorkspaces);
-      } catch (error) {
-        console.error("Error fetching workspaces:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (user) {
-      fetchWorkspaces();
-    }
-  }, [user]);
 
   const handleSaveDataSources = useCallback(async (sources: string[]) => {
     if (!selectedDashboard || !selectedWorkspace?.id) return;
