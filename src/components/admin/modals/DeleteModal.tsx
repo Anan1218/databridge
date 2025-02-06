@@ -32,4 +32,4 @@ export default function DeleteModal({ onConfirm, onCancel }: DeleteModalProps) {
       </div>
     </div>
   );
-}
+} 

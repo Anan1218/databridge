@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Dashboard } from '@/types/workspace';
-import DataSourceModal from "@/app/admin/components/DataSourceModal";
+import DataSourceModal from "@/components/admin/dashboard/DataSourceModal";
 import DashboardCard from '@/components/admin/dashboard/DashboardCard';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
