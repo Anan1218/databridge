@@ -40,4 +40,4 @@ export default function DashboardInitialSetup({ onCustomIntegrationClick }: Dash
       </button>
     </div>
   );
-}
+} 

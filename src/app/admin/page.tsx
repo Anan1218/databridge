@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import DashboardList from "./components/DashboardList";
-import DashboardInitialSetup from "./components/DashboardInitialSetup";
+import DashboardInitialSetup from "@/components/admin/dashboard/DashboardInitialSetup";
 import DeleteModal from "./components/DeleteModal";
 import PremiumUpgradeModal from "@/components/PremiumUpgradeModal";
 import { useWorkspace } from '@/contexts/WorkspaceContext';
