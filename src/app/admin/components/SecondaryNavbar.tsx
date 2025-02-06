@@ -1,9 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection } from 'firebase/firestore';
 import { Workspace, DashboardType } from '@/types/workspace';
 import { useRouter } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
@@ -33,14 +33,58 @@ export default function SecondaryNavbar({
     setSelectedWorkspace: contextSetSelectedWorkspace,
     refreshDashboards,
   } = useWorkspace();
-  const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [workspaces] = useState<WorkspaceDisplay[]>([]);
-  const [isLoading] = useState(true);
   const { user, userData, refreshUserData } = useAuthContext();
   const router = useRouter();
+
+  const [workspaces, setWorkspaces] = useState<WorkspaceDisplay[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [showWorkspaceDropdown, setShowWorkspaceDropdown] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
+
+  const isPremium = userData?.subscription?.status === 'active';
+
+  useEffect(() => {
+    if (user) {
+      const fetchUserWorkspaces = async () => {
+        setIsLoading(true);
+        try {
+          const userDocSnap = await getDoc(doc(db, 'users', user.uid));
+          if (userDocSnap.exists()) {
+            const userDocData = userDocSnap.data();
+            const workspaceIds: string[] = userDocData.workspaces || [];
+            const workspacePromises = workspaceIds.map((id) =>
+              getDoc(doc(db, 'workspaces', id))
+            );
+            const workspaceDocs = await Promise.all(workspacePromises);
+            const fetchedWorkspaces = workspaceDocs.reduce(
+              (acc, docSnap) => {
+                if (docSnap.exists()) {
+                  const data = docSnap.data();
+                  acc.push({
+                    id: docSnap.id,
+                    name: data.name,
+                    role: data.owner?.uid === user.uid ? 'Owner' : 'User',
+                  } as WorkspaceDisplay);
+                }
+                return acc;
+              },
+              [] as WorkspaceDisplay[]
+            );
+            setWorkspaces(fetchedWorkspaces);
+          }
+        } catch (error) {
+          // Handle error if necessary
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchUserWorkspaces();
+    }
+  }, [user]);
 
   const handleNewWorkspace = () => {
     if (!isPremium) {
@@ -48,12 +92,12 @@ export default function SecondaryNavbar({
       setIsPremiumModalOpen(true);
       return;
     }
-    // Implementation for creating new workspace
+    // TODO: Implementation for creating a new workspace
   };
 
   const handleCreateDashboard = async (type: DashboardType) => {
     if (!contextWorkspace || !contextWorkspace.id) return;
-    
+
     try {
       const dashboardId = nanoid();
       const newDashboard = {
@@ -65,15 +109,18 @@ export default function SecondaryNavbar({
         settings: {},
         position: 0,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
-      await setDoc(doc(db, 'workspaces', contextWorkspace.id, 'dashboards', dashboardId), newDashboard);
+      await setDoc(
+        doc(db, 'workspaces', contextWorkspace.id, 'dashboards', dashboardId),
+        newDashboard
+      );
       await refreshUserData();
       refreshDashboards();
       setIsDashboardModalOpen(false);
     } catch (error) {
-      console.error('Failed to create dashboard:', error);
+      // Handle error if necessary
     }
   };
 
@@ -90,27 +137,30 @@ export default function SecondaryNavbar({
           (member) => member.uid === user.uid && member.role === 'owner'
         )));
 
-  const isPremium = userData?.subscription?.status === 'active';
-
   return (
     <nav className="bg-white border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-12 items-center">
           <div className="flex items-center gap-4">
-            <WorkspaceDropdown 
+            <WorkspaceDropdown
               showDropdown={showWorkspaceDropdown}
               selectedWorkspace={
                 contextWorkspace
                   ? {
                       id: contextWorkspace.id!,
                       name: contextWorkspace.name,
-                      role: user && contextWorkspace.owner?.uid === user.uid ? 'Owner' : 'User'
+                      role:
+                        user && contextWorkspace.owner?.uid === user.uid
+                          ? 'Owner'
+                          : 'User',
                     }
                   : null
               }
               workspaces={workspaces}
               isLoading={isLoading}
-              onToggleDropdown={() => setShowWorkspaceDropdown(!showWorkspaceDropdown)}
+              onToggleDropdown={() =>
+                setShowWorkspaceDropdown(!showWorkspaceDropdown)
+              }
               onSelectWorkspace={async (workspaceDisplay: WorkspaceDisplay) => {
                 const workspaceRef = doc(db, 'workspaces', workspaceDisplay.id);
                 const workspaceSnap = await getDoc(workspaceRef);
@@ -120,7 +170,7 @@ export default function SecondaryNavbar({
                     ...data,
                     id: workspaceSnap.id,
                     createdAt: data.createdAt?.toDate() || new Date(),
-                    updatedAt: data.updatedAt?.toDate() || new Date()
+                    updatedAt: data.updatedAt?.toDate() || new Date(),
                   } as Workspace);
                 }
                 setShowWorkspaceDropdown(false);
@@ -133,10 +183,7 @@ export default function SecondaryNavbar({
               }}
             />
 
-            <SearchBar 
-              value={searchQuery}
-              onChange={setSearchQuery}
-            />
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
           </div>
 
           <div className="flex items-center gap-4">
@@ -153,9 +200,9 @@ export default function SecondaryNavbar({
                 {isEditing ? 'Done Editing' : 'Edit Layout'}
               </button>
             )}
-            
-            <button 
-              onClick={() => setIsDashboardModalOpen(true)} 
+
+            <button
+              onClick={() => setIsDashboardModalOpen(true)}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700"
             >
               <MdAdd className="w-5 h-5" />
@@ -165,13 +212,13 @@ export default function SecondaryNavbar({
         </div>
       </div>
 
-      <DashboardModal 
+      <DashboardModal
         isOpen={isDashboardModalOpen}
         onClose={() => setIsDashboardModalOpen(false)}
         onCreateDashboard={handleCreateDashboard}
       />
 
-      <PremiumUpgradeModal 
+      <PremiumUpgradeModal
         isOpen={isPremiumModalOpen}
         onClose={() => setIsPremiumModalOpen(false)}
         onUpgrade={() => {
