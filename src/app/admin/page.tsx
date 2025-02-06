@@ -73,12 +73,6 @@ export default function AdminDashboard() {
     fetchWorkspaceData();
   }, [fetchWorkspaceData]);
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/");
-    }
-  }, [user, loading, router]);
-
   const handleDelete = async (dashboardId: string) => {
     try {
       await fetch(`/api/workspaces`, {
