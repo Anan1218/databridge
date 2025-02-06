@@ -51,32 +51,41 @@ export default function DashboardList({
   }, [selectedDashboard, selectedWorkspace, setSelectedWorkspace]);
 
   const handleRenameDashboard = useCallback(async (dashboardId: string, newTitle: string) => {
-    if (!selectedWorkspace) {
+    if (!selectedWorkspace?.id) {
       console.error('No workspace selected');
       return;
     }
 
+    if (!newTitle.trim()) {
+      console.error('Title cannot be empty');
+      return;
+    }
+
     try {
-      if (!selectedWorkspace?.id) throw new Error('Workspace ID is undefined');
-      const workspaceRef = doc(db, 'workspaces', selectedWorkspace.id);
+      // Reference to the specific dashboard document in the subcollection
+      const dashboardRef = doc(db, 'workspaces', selectedWorkspace.id, 'dashboards', dashboardId);
       
-      // Update the specific dashboard in the array
-      const updatedDashboards = dashboards.map(d => 
-        d.id === dashboardId ? { ...d, title: newTitle } : d
-      );
-      
-      await updateDoc(workspaceRef, {
-        dashboards: updatedDashboards,
+      // Update the dashboard document
+      await updateDoc(dashboardRef, {
+        title: newTitle.trim(),
         updatedAt: new Date()
       });
       
       // Update local state
-      setSelectedWorkspace(prev => prev ? { ...prev, dashboards: updatedDashboards } : null);
+      setSelectedWorkspace(prev => {
+        if (!prev || !prev.dashboards) return prev;
+        const updatedDashboards = prev.dashboards.map(d => 
+          d.id === dashboardId ? { ...d, title: newTitle.trim() } : d
+        );
+        return { ...prev, dashboards: updatedDashboards };
+      });
       
     } catch (error) {
       console.error('Error renaming dashboard:', error);
+      // You might want to add toast notification or other error feedback here
+      throw new Error('Failed to rename dashboard');
     }
-  }, [selectedWorkspace, dashboards, setSelectedWorkspace]);
+  }, [selectedWorkspace, setSelectedWorkspace]);
 
   return (
     <div className="grid grid-cols-1 gap-6">
