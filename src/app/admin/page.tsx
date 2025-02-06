@@ -3,9 +3,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/utils/firebase";
-import { Workspace } from "@/types/workspace";
+import { Workspace, Dashboard } from "@/types/workspace";
 import DashboardList from "./components/DashboardList";
 import DashboardInitialSetup from "./components/DashboardInitialSetup";
 import DeleteModal from "./components/DeleteModal";
@@ -13,7 +13,7 @@ import PremiumUpgradeModal from "@/components/PremiumUpgradeModal";
 import { useWorkspace } from '@/contexts/WorkspaceContext';
 
 export default function AdminDashboard() {
-  const { user, userData, refreshUserData } = useAuthContext();
+  const { user, userData, refreshUserData, loading } = useAuthContext();
   const router = useRouter();
 
   const { selectedWorkspace, setSelectedWorkspace, isEditing } = useWorkspace();
@@ -46,7 +46,21 @@ export default function AdminDashboard() {
       
       if (workspaceSnap.exists()) {
         const workspaceData = { id: workspaceSnap.id, ...workspaceSnap.data() } as Workspace;
-        setSelectedWorkspace(workspaceData);
+        
+        const dashboardsRef = collection(db, "workspaces", workspaceSnap.id, "dashboards");
+        const dashboardsSnap = await getDocs(dashboardsRef);
+        
+        const dashboards = dashboardsSnap.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate(),
+          updatedAt: doc.data().updatedAt?.toDate()
+        } as Dashboard));
+
+        setSelectedWorkspace({
+          ...workspaceData,
+          dashboards
+        });
       }
     } catch (error) {
       console.error("Error fetching workspace:", error);
@@ -59,13 +73,25 @@ export default function AdminDashboard() {
     fetchWorkspaceData();
   }, [fetchWorkspaceData]);
 
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/");
+    }
+  }, [user, loading, router]);
+
   const handleDelete = async (dashboardId: string) => {
     try {
-      await fetch(`/api/workspaces/${selectedWorkspace?.id}/dashboards/${dashboardId}`, {
+      await fetch(`/api/workspaces`, {
         method: "DELETE",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          workspaceId: selectedWorkspace?.id,
+          dashboardId
+        })
       });
-      const updatedDashboards = selectedWorkspace?.dashboards?.filter((d) => d.id !== dashboardId) ?? [];
-      setSelectedWorkspace(prev => (prev ? { ...prev, dashboards: updatedDashboards } : null));
+      
       await refreshUserData();
       await fetchWorkspaceData();
     } catch (error) {
@@ -83,14 +109,6 @@ export default function AdminDashboard() {
     router.push("/admin/custom-data");
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p>Loading...</p>
-      </div>
-    );
-  }
-  
   return (
     <div className="flex-1">
       <div className="max-w-6xl mx-auto px-4 py-12 text-center">

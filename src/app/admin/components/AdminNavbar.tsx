@@ -26,11 +26,6 @@ export default function AdminNavbar() {
       label: "Data Sources",
       href: "/admin/data-sources",
     },
-    {
-      // icon: <MdSettings className="w-5 h-5" />,
-      label: "Billing",
-      href: "/admin/billing"
-    },
   ];
 
   const handleLogout = async () => {

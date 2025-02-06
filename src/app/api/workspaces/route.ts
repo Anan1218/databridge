@@ -57,7 +57,6 @@ export async function POST(req: Request) {
         role: 'owner' as const
       }],
       memberEmails: [workspace.ownerEmail || ''],
-      dashboards: [],
       dataSources: []
     };
 
@@ -98,6 +97,35 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: false,
       error: errorMessage
+    }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { workspaceId, dashboardId } = await request.json();
+    
+    if (!workspaceId || !dashboardId) {
+      return NextResponse.json({
+        success: false,
+        error: 'Workspace ID and Dashboard ID are required'
+      }, { status: 400 });
+    }
+
+    // Delete the dashboard document from the subcollection
+    await adminDb
+      .collection('workspaces')
+      .doc(workspaceId)
+      .collection('dashboards')
+      .doc(dashboardId)
+      .delete();
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting dashboard:', error);
+    return NextResponse.json({
+      success: false,
+      error: 'Failed to delete dashboard'
     }, { status: 500 });
   }
 } 

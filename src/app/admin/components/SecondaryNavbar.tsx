@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
-import { doc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, arrayUnion, getDoc, setDoc } from 'firebase/firestore';
 import { Workspace, Dashboard, DashboardType } from '@/types/workspace';
 import { useRouter } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
@@ -131,24 +131,22 @@ export default function SecondaryNavbar({
     if (!contextWorkspace || !contextWorkspace.id) return;
     
     try {
-      const workspaceRef = doc(db, 'workspaces', contextWorkspace.id);
-      
-      const newDashboard: Dashboard = {
-        id: nanoid(),
+      const dashboardId = nanoid();
+      const newDashboard = {
+        id: dashboardId,
         type: type,
         title: 'New Leads Collection',
         workspaceId: contextWorkspace.id,
         dataSources: [],
         settings: {},
-        position: contextWorkspace.dashboards?.length || 0,
+        position: 0, // You might want to calculate this based on existing dashboards
         createdAt: new Date(),
         updatedAt: new Date()
       };
 
-      await updateDoc(workspaceRef, {
-        dashboards: arrayUnion(newDashboard),
-        updatedAt: new Date()
-      });
+      // Create a new document in the dashboards subcollection
+      const dashboardRef = doc(db, 'workspaces', contextWorkspace.id, 'dashboards', dashboardId);
+      await setDoc(dashboardRef, newDashboard);
 
       await refreshUserData();
       refreshDashboards();

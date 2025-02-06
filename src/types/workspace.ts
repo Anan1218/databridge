@@ -1,5 +1,5 @@
 export interface Workspace {
-  id?: string;
+  id: string;
   name: string;
   owner: {
     uid: string;
@@ -12,10 +12,10 @@ export interface Workspace {
     email: string;
     firstName: string;
     lastName: string;
-    role: 'owner' | 'member';
+    role: string;
   }>;
   memberEmails: string[];
-  dashboards: Array<Dashboard>;
+  dashboards?: Dashboard[]; // This will be populated from the subcollection
   createdAt: Date;
   updatedAt: Date;
 }

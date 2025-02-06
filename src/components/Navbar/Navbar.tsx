@@ -43,9 +43,6 @@ export default function Navbar() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-6">
-              {/* <button onClick={scrollToPricing} className="text-gray-600 hover:text-gray-900">
-                Pricing
-              </button> */}
               {user ? (
                 <>
                   <Link 

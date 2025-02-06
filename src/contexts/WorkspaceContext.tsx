@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
 import { Workspace } from '@/types/workspace';
 import { useAuthContext } from '@/contexts/AuthContext';
@@ -41,10 +41,25 @@ export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) =
         return;
       }
 
-      const workspaceRef = doc(db, 'workspaces', userSnap.data().defaultWorkspace);
+      const workspaceId = userSnap.data().defaultWorkspace;
+      const workspaceRef = doc(db, 'workspaces', workspaceId);
       const workspaceSnap = await getDoc(workspaceRef);
+      
       if (workspaceSnap.exists()) {
-        setSelectedWorkspace({ id: workspaceSnap.id, ...workspaceSnap.data() } as Workspace);
+        // Fetch all dashboards from the subcollection
+        const dashboardsRef = collection(db, 'workspaces', workspaceId, 'dashboards');
+        const dashboardsSnap = await getDocs(dashboardsRef);
+        
+        const dashboards = dashboardsSnap.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        setSelectedWorkspace({
+          id: workspaceSnap.id,
+          ...workspaceSnap.data(),
+          dashboards // Add the fetched dashboards
+        } as Workspace);
       }
     } catch (error) {
       console.error('Error fetching workspace:', error);
