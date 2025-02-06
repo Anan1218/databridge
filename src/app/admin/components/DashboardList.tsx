@@ -4,52 +4,51 @@ import DataSourceModal from './DataSourceModal';
 import DashboardCard from './DashboardCard';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
-import { Workspace } from '@/types/workspace';
+import { useWorkspace } from '@/contexts/WorkspaceContext';
 
 interface DashboardListProps {
   dashboards: Dashboard[];
   isEditing: boolean;
   onDeleteClick: (dashboardId: string) => void;
-  setDashboards: React.Dispatch<React.SetStateAction<Workspace | null>>;
-  selectedWorkspace: Workspace;
 }
 
-export default React.memo(function DashboardList({ 
+export default function DashboardList({ 
   dashboards, 
   isEditing, 
   onDeleteClick,
-  setDashboards,
-  selectedWorkspace 
 }: DashboardListProps) {
   const [selectedDashboard, setSelectedDashboard] = useState<Dashboard | null>(null);
   const [isDataSourceModalOpen, setIsDataSourceModalOpen] = useState(false);
 
-  // Memoize handlers
+  const { selectedWorkspace, setSelectedWorkspace } = useWorkspace();
+
   const handleSaveDataSources = useCallback(async (sources: string[]) => {
     if (!selectedDashboard || !selectedWorkspace?.id) return;
     
     try {
-      const workspaceRef = doc(db, 'workspaces', selectedWorkspace.id);
-      
-      // Update the specific dashboard in the array
-      const updatedDashboards = dashboards.map(d => 
-        d.id === selectedDashboard.id 
-          ? { ...d, dataSources: sources } 
-          : d
-      );
-      
-      await updateDoc(workspaceRef, {
-        dashboards: updatedDashboards,
+      const dashboardRef = doc(db, 'workspaces', selectedWorkspace.id, 'dashboards', selectedDashboard.id);
+
+      await updateDoc(dashboardRef, {
+        dataSources: sources,
         updatedAt: new Date()
       });
-      
+
       // Update local state
-      setDashboards(prev => prev ? { ...prev, dashboards: updatedDashboards } : null);
+      setSelectedWorkspace(prev => {
+        if (!prev) return null;
+        const updatedDashboards = prev.dashboards.map(d => 
+          d.id === selectedDashboard.id 
+            ? { ...d, dataSources: sources } 
+            : d
+        );
+        return { ...prev, dashboards: updatedDashboards };
+      });
+      
       setIsDataSourceModalOpen(false);
     } catch (error) {
       console.error('Error updating data sources:', error);
     }
-  }, [selectedDashboard, selectedWorkspace, dashboards, setDashboards]);
+  }, [selectedDashboard, selectedWorkspace, setSelectedWorkspace]);
 
   const handleRenameDashboard = useCallback(async (dashboardId: string, newTitle: string) => {
     if (!selectedWorkspace) {
@@ -72,12 +71,12 @@ export default React.memo(function DashboardList({
       });
       
       // Update local state
-      setDashboards(prev => prev ? { ...prev, dashboards: updatedDashboards } : null);
+      setSelectedWorkspace(prev => prev ? { ...prev, dashboards: updatedDashboards } : null);
       
     } catch (error) {
       console.error('Error renaming dashboard:', error);
     }
-  }, [selectedWorkspace, dashboards, setDashboards]);
+  }, [selectedWorkspace, dashboards, setSelectedWorkspace]);
 
   return (
     <div className="grid grid-cols-1 gap-6">
@@ -105,4 +104,4 @@ export default React.memo(function DashboardList({
       )}
     </div>
   );
-});
+}

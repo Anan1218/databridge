@@ -1,53 +1,58 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
-import { db } from '@/utils/firebase';
-import { Workspace } from '@/types/workspace';
-import { useAuthContext } from '@/contexts/AuthContext';
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { db } from "@/utils/firebase";
+import { Workspace } from "@/types/workspace";
+import { useAuthContext } from "@/contexts/AuthContext";
 
-export interface WorkspaceContextType {
+interface WorkspaceContextProps {
   selectedWorkspace: Workspace | null;
   setSelectedWorkspace: React.Dispatch<React.SetStateAction<Workspace | null>>;
-  refreshDashboards: () => Promise<void>;
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  refreshDashboards: () => Promise<void>;
+  isLoading: boolean;
 }
 
-const WorkspaceContext = createContext<WorkspaceContextType>({
-  selectedWorkspace: null,
-  setSelectedWorkspace: () => {},
-  refreshDashboards: async () => {},
-  isEditing: false,
-  setIsEditing: () => {},
-});
-
-export function useWorkspace() {
-  return useContext(WorkspaceContext);
-}
-
-export default WorkspaceContext;
+export const WorkspaceContext = createContext<WorkspaceContextProps | undefined>(undefined);
 
 export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuthContext();
   const [selectedWorkspace, setSelectedWorkspace] = useState<Workspace | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const updateSelectedWorkspace = useCallback((newData: Workspace) => {
+    setSelectedWorkspace(current => {
+      if (current?.dashboards?.length && !newData.dashboards) {
+        return {
+          ...newData,
+          dashboards: current.dashboards
+        };
+      }
+      return newData;
+    });
+  }, []);
 
   const refreshDashboards = useCallback(async () => {
     if (!user?.uid) return;
+    setIsLoading(true);
+
     try {
-      const userRef = doc(db, 'users', user.uid);
+      const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
+
       if (!userSnap.exists() || !userSnap.data().defaultWorkspace) {
-        console.error('No default workspace found');
+        console.error("No default workspace found");
+        setSelectedWorkspace(null);
         return;
       }
 
       const workspaceId = userSnap.data().defaultWorkspace;
-      const workspaceRef = doc(db, 'workspaces', workspaceId);
+      const workspaceRef = doc(db, "workspaces", workspaceId);
       const workspaceSnap = await getDoc(workspaceRef);
-      
+
       if (workspaceSnap.exists()) {
-        // Fetch all dashboards from the subcollection
-        const dashboardsRef = collection(db, 'workspaces', workspaceId, 'dashboards');
+        const dashboardsRef = collection(db, "workspaces", workspaceId, "dashboards");
         const dashboardsSnap = await getDocs(dashboardsRef);
         
         const dashboards = dashboardsSnap.docs.map(doc => ({
@@ -55,26 +60,47 @@ export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) =
           ...doc.data()
         }));
 
-        setSelectedWorkspace({
+        const workspaceData = {
           id: workspaceSnap.id,
           ...workspaceSnap.data(),
-          dashboards // Add the fetched dashboards
-        } as Workspace);
+          dashboards
+        } as Workspace;
+
+        updateSelectedWorkspace(workspaceData);
       }
     } catch (error) {
-      console.error('Error fetching workspace:', error);
+      console.error("Error fetching workspace:", error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [user?.uid]);
+  }, [user?.uid, updateSelectedWorkspace]);
 
   useEffect(() => {
-    refreshDashboards();
-  }, [user, refreshDashboards]);
+    if (user?.uid) {
+      refreshDashboards();
+    }
+  }, [user?.uid, refreshDashboards]);
 
   return (
     <WorkspaceContext.Provider
-      value={{ selectedWorkspace, setSelectedWorkspace, refreshDashboards, isEditing, setIsEditing }}
+      value={{ 
+        selectedWorkspace, 
+        setSelectedWorkspace: updateSelectedWorkspace, 
+        isEditing, 
+        setIsEditing, 
+        refreshDashboards,
+        isLoading 
+      }}
     >
       {children}
     </WorkspaceContext.Provider>
   );
-}; 
+};
+
+export const useWorkspace = () => {
+  const context = useContext(WorkspaceContext);
+  if (context === undefined) {
+    throw new Error("useWorkspace must be used within a WorkspaceProvider");
+  }
+  return context;
+};

@@ -1,9 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { MdAdd, MdEdit } from 'react-icons/md';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { db } from '@/utils/firebase';
-import { doc, updateDoc, arrayUnion, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { Workspace, Dashboard, DashboardType } from '@/types/workspace';
 import { useRouter } from 'next/navigation';
 import PremiumUpgradeModal from '@/components/PremiumUpgradeModal';
@@ -42,82 +42,6 @@ export default function SecondaryNavbar({
   const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
 
-  // Use the workspace IDs stored in the userData rather than querying a subcollection.
-  useEffect(() => {
-    const fetchWorkspaces = async () => {
-      if (!user?.uid) return;
-
-      try {
-        const workspaceIds: string[] = userData?.workspaces || [];
-        console.log("Workspace IDs from userData:", workspaceIds);
-
-        const workspacesData: WorkspaceDisplay[] = [];
-
-        // For each workspace ID, fetch the workspace document from the main "workspaces" collection
-        for (const id of workspaceIds) {
-          const workspaceRef = doc(db, 'workspaces', id);
-          const workspaceSnap = await getDoc(workspaceRef);
-
-          if (workspaceSnap.exists()) {
-            const data = workspaceSnap.data() as Workspace;
-            workspacesData.push({
-              id: workspaceSnap.id,
-              name: data.name,
-              role: data.owner.uid === user.uid ? 'Owner' : 'User',
-            });
-          }
-        }
-
-        setWorkspaces(workspacesData);
-
-        // Update context with the default workspace, if set
-        if (userData?.defaultWorkspace) {
-          const defaultWorkspaceItem = workspacesData.find(
-            w => w.id === userData.defaultWorkspace
-          );
-          if (defaultWorkspaceItem) {
-            const workspaceRef = doc(db, 'workspaces', defaultWorkspaceItem.id);
-            const workspaceSnap = await getDoc(workspaceRef);
-            if (workspaceSnap.exists()) {
-              const data = workspaceSnap.data();
-              contextSetSelectedWorkspace({
-                ...data,
-                id: workspaceSnap.id,
-                createdAt: data.createdAt?.toDate() || new Date(),
-                updatedAt: data.updatedAt?.toDate() || new Date(),
-              } as Workspace);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching workspaces:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchWorkspaces();
-  }, [user?.uid, userData?.workspaces, userData?.defaultWorkspace, contextSetSelectedWorkspace]);
-
-  useEffect(() => {
-    const selectFirstWorkspace = async () => {
-      if (workspaces.length > 0 && !contextWorkspace) {
-        const workspaceRef = doc(db, 'workspaces', workspaces[0].id);
-        const workspaceSnap = await getDoc(workspaceRef);
-        if (workspaceSnap.exists()) {
-          const data = workspaceSnap.data();
-          contextSetSelectedWorkspace({
-            ...data,
-            id: workspaceSnap.id,
-            createdAt: data.createdAt?.toDate() || new Date(),
-            updatedAt: data.updatedAt?.toDate() || new Date()
-          } as Workspace);
-        }
-      }
-    };
-    selectFirstWorkspace();
-  }, [workspaces, contextWorkspace, contextSetSelectedWorkspace]);
-
   const handleNewWorkspace = () => {
     if (!isPremium) {
       setShowWorkspaceDropdown(false);
@@ -139,15 +63,12 @@ export default function SecondaryNavbar({
         workspaceId: contextWorkspace.id,
         dataSources: [],
         settings: {},
-        position: 0, // You might want to calculate this based on existing dashboards
+        position: 0,
         createdAt: new Date(),
         updatedAt: new Date()
       };
 
-      // Create a new document in the dashboards subcollection
-      const dashboardRef = doc(db, 'workspaces', contextWorkspace.id, 'dashboards', dashboardId);
-      await setDoc(dashboardRef, newDashboard);
-
+      await setDoc(doc(db, 'workspaces', contextWorkspace.id, 'dashboards', dashboardId), newDashboard);
       await refreshUserData();
       refreshDashboards();
       setIsDashboardModalOpen(false);
@@ -160,7 +81,6 @@ export default function SecondaryNavbar({
     setIsEditing((prev) => !prev);
   };
 
-  // Only show the edit layout button if the current user is the owner or an admin.
   const isWorkspaceOwnerOrAdmin =
     user &&
     contextWorkspace &&
