@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { MdArrowDropDown, MdPerson, MdHelpOutline, MdLogout } from "react-icons/md";
-import NotificationBell from '@/app/admin/components/NotificationBell';
+import NotificationBell from './NotificationBell';
 
 interface NavItem {
   label: string;
