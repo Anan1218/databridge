@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Dashboard } from '@/types/workspace';
 import DataSourceModal from './DataSourceModal';
-import DashboardCard from './DashboardCard';
+import DashboardCard from '@/components/admin/dashboard/DashboardCard';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
