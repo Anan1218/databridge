@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Dashboard } from '@/types/workspace';
 import { MdDelete, MdSettings, MdEdit, MdCheck, MdDownload } from 'react-icons/md';
-import { LeadMonitoringTable } from '@/app/admin/components/leads/LeadMonitoringTable';
+import { LeadMonitoringTable } from "@/components/admin/leads/LeadMonitoringTable";
 
 interface DashboardCardProps {
   dashboard: Dashboard;
