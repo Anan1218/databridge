@@ -19,14 +19,6 @@ export default function NotificationBell({ notifications = [] }: NotificationBel
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuthContext();
 
-  // Log whenever notifications change
-  useEffect(() => {
-    console.log("NotificationBell: notifications prop updated:", notifications);
-  }, [notifications]);
-
-  // Log on every render
-  // console.log("NotificationBell render:", { notifications, user });
-
   const handleAcceptInvite = async (inviteId: string) => {
     console.log("Accept invite clicked for id:", inviteId);
     if (!user) {

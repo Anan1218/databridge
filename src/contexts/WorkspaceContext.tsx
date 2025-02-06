@@ -21,16 +21,8 @@ export const WorkspaceProvider = ({ children }: { children: React.ReactNode }) =
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const updateSelectedWorkspace = useCallback((newData: Workspace) => {
-    setSelectedWorkspace(current => {
-      if (current?.dashboards?.length && !newData.dashboards) {
-        return {
-          ...newData,
-          dashboards: current.dashboards
-        };
-      }
-      return newData;
-    });
+  const updateSelectedWorkspace = useCallback((newData: Workspace | null | ((prev: Workspace | null) => Workspace | null)) => {
+    setSelectedWorkspace(newData);
   }, []);
 
   const refreshDashboards = useCallback(async () => {

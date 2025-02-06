@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthContextProvider } from '@/contexts/AuthContext';
 import Script from 'next/script';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: "ProspectAI",
@@ -46,9 +47,9 @@ export default function RootLayout({
           `}
         </Script>
         <noscript>
-          <img 
-            height="1" 
-            width="1" 
+          <Image 
+            height={1}
+            width={1}
             style={{ display: 'none' }}
             src="https://www.facebook.com/tr?id=3277857709019595&ev=PageView&noscript=1"
             alt="Facebook Pixel"

@@ -60,7 +60,6 @@ export default function AdminDashboard() {
             dashboards={dashboards}
             isEditing={isEditing}
             onDeleteClick={setDashboardToDelete}
-            selectedWorkspace={selectedWorkspace}
           />
         ) : (
           <>

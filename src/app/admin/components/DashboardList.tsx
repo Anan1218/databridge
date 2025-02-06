@@ -35,7 +35,7 @@ export default function DashboardList({
 
       // Update local state
       setSelectedWorkspace(prev => {
-        if (!prev) return null;
+        if (!prev || !prev.dashboards) return null;
         const updatedDashboards = prev.dashboards.map(d => 
           d.id === selectedDashboard.id 
             ? { ...d, dataSources: sources } 
