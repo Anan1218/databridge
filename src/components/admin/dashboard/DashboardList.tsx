@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Dashboard } from '@/types/workspace';
-import DataSourceModal from './DataSourceModal';
+import DataSourceModal from "@/app/admin/components/DataSourceModal";
 import DashboardCard from '@/components/admin/dashboard/DashboardCard';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/utils/firebase';
@@ -27,15 +27,14 @@ export default function DashboardList({
     
     try {
       const dashboardRef = doc(db, 'workspaces', selectedWorkspace.id, 'dashboards', selectedDashboard.id);
-
       await updateDoc(dashboardRef, {
         dataSources: sources,
         updatedAt: new Date()
       });
 
-      // Update local state
+      // Update local workspace state with the new data sources for this dashboard.
       setSelectedWorkspace(prev => {
-        if (!prev || !prev.dashboards) return null;
+        if (!prev || !prev.dashboards) return prev;
         const updatedDashboards = prev.dashboards.map(d => 
           d.id === selectedDashboard.id 
             ? { ...d, dataSources: sources } 
@@ -55,23 +54,18 @@ export default function DashboardList({
       console.error('No workspace selected');
       return;
     }
-
     if (!newTitle.trim()) {
       console.error('Title cannot be empty');
       return;
     }
-
     try {
-      // Reference to the specific dashboard document in the subcollection
       const dashboardRef = doc(db, 'workspaces', selectedWorkspace.id, 'dashboards', dashboardId);
-      
-      // Update the dashboard document
       await updateDoc(dashboardRef, {
         title: newTitle.trim(),
         updatedAt: new Date()
       });
-      
-      // Update local state
+
+      // Update local workspace state with the new title for the dashboard.
       setSelectedWorkspace(prev => {
         if (!prev || !prev.dashboards) return prev;
         const updatedDashboards = prev.dashboards.map(d => 
@@ -82,7 +76,6 @@ export default function DashboardList({
       
     } catch (error) {
       console.error('Error renaming dashboard:', error);
-      // You might want to add toast notification or other error feedback here
       throw new Error('Failed to rename dashboard');
     }
   }, [selectedWorkspace, setSelectedWorkspace]);
@@ -113,4 +106,4 @@ export default function DashboardList({
       )}
     </div>
   );
-}
+} 

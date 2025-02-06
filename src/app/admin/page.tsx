@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import DashboardList from "./components/DashboardList";
+import DashboardList from "@/components/admin/dashboard/DashboardList";
 import DashboardInitialSetup from "@/components/admin/dashboard/DashboardInitialSetup";
 import DeleteModal from "./components/DeleteModal";
 import PremiumUpgradeModal from "@/components/PremiumUpgradeModal";
