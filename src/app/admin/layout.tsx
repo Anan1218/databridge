@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useWorkspace, WorkspaceProvider } from "@/contexts/WorkspaceContext";
-import AdminNavbar from "./components/AdminNavbar";
+import AdminNavbar from '@/components/admin/navigation/AdminNavbar';
 import SecondaryNavbar from "./components/SecondaryNavbar";
 
 function AdminLayout({
