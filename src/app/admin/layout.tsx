@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useWorkspace, WorkspaceProvider } from "@/contexts/WorkspaceContext";
 import AdminNavbar from '@/components/admin/navigation/AdminNavbar';
-import SecondaryNavbar from "./components/SecondaryNavbar";
+import SecondaryNavbar from '@/components/admin/navigation/SecondaryNavbar';
 
 function AdminLayout({
   children,
