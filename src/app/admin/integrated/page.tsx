@@ -1,8 +1,18 @@
 "use client";
 
 import { useAuthContext } from "@/contexts/AuthContext";
-import { FaYelp, FaReddit, FaLinkedin, FaProductHunt, FaYoutube } from "react-icons/fa";
-import { SiUpwork, SiFiverr } from "react-icons/si";
+import { 
+  FaYelp, 
+  FaReddit, 
+  FaLinkedin, 
+  FaProductHunt, 
+  FaYoutube 
+} from "react-icons/fa";
+import { 
+  SiUpwork, 
+  SiFiverr, 
+  SiIndeed, 
+} from "react-icons/si";
 import { MdArrowBack } from "react-icons/md";
 import Link from "next/link";
 
@@ -28,10 +38,16 @@ export default function IntegratedPage() {
       status: 'available',
     },
     {
+      id: 'craigslist',
+      name: 'Craigslist',
+      icon: <img src="/datasource-icons/craigslist.png" alt="Craigslist" className="w-8 h-8" />,
+      status: 'available',
+    },
+    {
       id: 'linkedin',
       name: 'LinkedIn',
       icon: <FaLinkedin className="w-8 h-8 text-blue-600" />,
-      status: 'available',
+      status: 'coming_soon',
     },
     {
       id: 'producthunt',
@@ -61,6 +77,18 @@ export default function IntegratedPage() {
       id: 'upwork',
       name: 'UpWork',
       icon: <SiUpwork className="w-8 h-8 text-green-600" />,
+      status: 'coming_soon',
+    },
+    {
+      id: 'indeed',
+      name: 'Indeed',
+      icon: <SiIndeed className="w-8 h-8 text-[#2164F2]" />,
+      status: 'coming_soon',
+    },
+    {
+      id: 'glassdoor',
+      name: 'Glassdoor',
+      icon: <img src="/datasource-icons/glassdoor.png" alt="Glassdoor" className="w-8 h-8" />,
       status: 'coming_soon',
     },
   ];
